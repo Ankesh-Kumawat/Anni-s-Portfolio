@@ -24,27 +24,58 @@ export function Window({
   defaultHeight = 600,
   zIndex,
 }: WindowProps) {
-  const { closeWindow, minimizeWindow, focusWindow, activeWindowId } = useOS();
+  const { closeWindow, minimizeWindow, focusWindow, activeWindowId, openWindows } = useOS();
   const nodeRef = useRef(null);
   const isActive = activeWindowId === id;
   const [isMaximized, setIsMaximized] = useState(false);
   const [size, setSize] = useState({ width: defaultWidth, height: defaultHeight });
   const [prevSize, setPrevSize] = useState({ width: defaultWidth, height: defaultHeight });
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [prevPosition, setPrevPosition] = useState({ x: 0, y: 0 });
   const isMobile = useIsMobile();
 
-  // Center window on mount
+  // Center window calculation
   const defaultX = typeof window !== 'undefined' ? (window.innerWidth - defaultWidth) / 2 : 50;
   const defaultY = typeof window !== 'undefined' ? (window.innerHeight - defaultHeight) / 2 : 50;
-
   const safeY = Math.max(defaultY, 60);
 
-  // Initialize position on mount
+  // Initialize position immediately (no useState delay)
+  const [position, setPosition] = useState({ x: defaultX, y: safeY });
+  const [prevPosition, setPrevPosition] = useState({ x: defaultX, y: safeY });
+
+  // Animation states
+  const [isOpening, setIsOpening] = useState(true);
+  const [isMinimizing, setIsMinimizing] = useState(false);
+  const [isRestoring, setIsRestoring] = useState(false);
+
+  // Get window state
+  const windowState = openWindows.find(w => w.id === id);
+  const isMinimized = windowState?.minimized || false;
+
+  // Opening animation
   useEffect(() => {
-    setPosition({ x: defaultX, y: safeY });
-    setPrevPosition({ x: defaultX, y: safeY });
+    setIsOpening(true);
+    const timer = setTimeout(() => {
+      setIsOpening(false);
+    }, 400);
+    return () => clearTimeout(timer);
   }, []);
+
+  // Handle minimize/restore animations
+  useEffect(() => {
+    if (isMinimized) {
+      setIsMinimizing(true);
+      const timer = setTimeout(() => {
+        setIsMinimizing(false);
+      }, 300);
+      return () => clearTimeout(timer);
+    } else if (windowState && !isOpening) {
+      // Restoring from minimize
+      setIsRestoring(true);
+      const timer = setTimeout(() => {
+        setIsRestoring(false);
+      }, 400);
+      return () => clearTimeout(timer);
+    }
+  }, [isMinimized]);
 
   // Auto-maximize on mobile
   useEffect(() => {
@@ -88,13 +119,19 @@ export function Window({
       onDrag={handleDrag}
       bounds="parent"
       position={isMaximized || isMobile ? { x: 0, y: 0 } : position}
-      disabled={isMaximized || isMobile}
+      disabled={isMaximized || isMobile || isOpening}
     >
       <div
         ref={nodeRef}
         className={cn(
           "absolute",
-          (isMaximized || isMobile) && "!inset-0 !transform-none !w-full !h-full transition-all duration-300 ease-in-out"
+          (isMaximized || isMobile) && "!inset-0 !transform-none !w-full !h-full transition-all duration-300 ease-in-out",
+          // Opening animation - scale up from taskbar
+          isOpening && "animate-window-open",
+          // Minimizing animation - scale down to taskbar
+          isMinimizing && "animate-window-minimize",
+          // Restoring animation - scale up from taskbar
+          isRestoring && "animate-window-restore"
         )}
         style={{
           zIndex,
@@ -106,6 +143,12 @@ export function Window({
             width: '100%',
             height: '100%',
             transform: 'none'
+          } : {}),
+          // Hide when minimized
+          ...(isMinimized && !isMinimizing ? {
+            opacity: 0,
+            pointerEvents: 'none',
+            transform: 'scale(0.3) translateY(100vh)'
           } : {})
         }}
       >

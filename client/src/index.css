@@ -149,6 +149,63 @@
       transform: translateX(-50%) translateY(0);
     }
   }
+
+  /* Premium Window Animations - Real OS Style */
+  @keyframes windowOpen {
+    0% {
+      opacity: 0;
+      transform: scale(0.5) translateY(50vh);
+    }
+
+    60% {
+      transform: scale(1.02) translateY(0);
+    }
+
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  @keyframes windowMinimize {
+    0% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+
+    100% {
+      opacity: 0;
+      transform: scale(0.3) translateY(100vh);
+    }
+  }
+
+  @keyframes windowRestore {
+    0% {
+      opacity: 0;
+      transform: scale(0.3) translateY(100vh);
+    }
+
+    60% {
+      transform: scale(1.02) translateY(0);
+    }
+
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  .animate-window-open {
+    animation: windowOpen 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  .animate-window-minimize {
+    animation: windowMinimize 0.3s cubic-bezier(0.4, 0, 1, 1) forwards;
+  }
+
+  .animate-window-restore {
+    animation: windowRestore 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
 }
 
 /* ===============================
