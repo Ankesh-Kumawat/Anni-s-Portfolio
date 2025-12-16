@@ -12,7 +12,7 @@ const SOCIAL_LINKS: Array<{ name: string; url: string; icon: LucideIcon; color: 
     { name: "LinkedIn", url: "https://linkedin.com/in/ankesh-kumawat", icon: Linkedin, color: "text-blue-600" },
     { name: "Instagram", url: "https://instagram.com", icon: Instagram, color: "text-pink-500" },
     { name: "Twitter", url: "https://twitter.com", icon: Twitter, color: "text-sky-500" },
-    { name: "YouTube", url: "https://youtube.com", icon: Youtube, color: "text-red-600" },
+    { name: "YouTube", url: "https://www.youtube.com/@DevStudio-2k25", icon: Youtube, color: "text-red-600" },
     { name: "Dev.to", url: "https://dev.to", icon: BookOpen, color: "text-gray-700" },
     { name: "Medium", url: "https://medium.com", icon: PenTool, color: "text-gray-900" },
 ];
@@ -36,16 +36,18 @@ export function BrowserHome({ onNavigate, onOpenApp }: BrowserHomeProps) {
         <div className="h-full overflow-y-auto no-scrollbar bg-gradient-to-br from-blue-50 via-white to-purple-50">
             <div className="max-w-6xl mx-auto px-6 py-12">
                 {/* Header */}
-                <div className="text-center mb-12">
-                    <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full mb-4 shadow-lg">
-                        <Globe className="w-10 h-10 text-white" />
+                <div className="flex items-center gap-4 mb-8 pb-6 border-b">
+                    <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg shadow-md">
+                        <Globe className="w-6 h-6 text-white" />
                     </div>
-                    <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                        Welcome to Browser
-                    </h1>
-                    <p className="text-muted-foreground">
-                        Quick access to OS apps and social media
-                    </p>
+                    <div className="flex-1">
+                        <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                            Browser Home
+                        </h1>
+                        <p className="text-sm text-muted-foreground">
+                            Quick access to apps and links
+                        </p>
+                    </div>
                 </div>
 
                 {/* OS Apps */}
@@ -105,8 +107,8 @@ export function BrowserHome({ onNavigate, onOpenApp }: BrowserHomeProps) {
                 </div>
 
                 {/* Footer */}
-                <div className="mt-12 text-center text-sm text-muted-foreground">
-                    <p>💡 Type any URL in the address bar to browse the web</p>
+                <div className="mt-8 text-center text-sm text-muted-foreground">
+                    <p>💡 Type URLs that support iframe embedding (most sites open externally)</p>
                 </div>
             </div>
         </div>
