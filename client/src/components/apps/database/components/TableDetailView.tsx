@@ -1,8 +1,8 @@
 import { DatabaseTable } from "../types";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Database, Info, List, Lightbulb, Table } from "lucide-react";
-import { USER_DATA } from "../data";
+import { ArrowLeft, Database, Table } from "lucide-react";
+import { USER_DATA, PROJECTS_DATA } from "../data";
 
 interface TableDetailViewProps {
     table: DatabaseTable;
@@ -13,14 +13,14 @@ export function TableDetailView({ table, onBack }: TableDetailViewProps) {
     return (
         <div className="flex flex-col h-full bg-background">
             {/* Header */}
-            <div className="border-b bg-muted/20 px-6 py-4">
-                <div className="flex items-center gap-4 mb-2">
+            <div className="border-b bg-muted/20 px-6 py-3">
+                <div className="flex items-center gap-4">
                     <Button variant="ghost" size="sm" onClick={onBack} className="h-8 w-8 p-0">
                         <ArrowLeft className="w-4 h-4" />
                     </Button>
                     <div className="flex items-center gap-3">
                         <Database className="w-5 h-5 text-primary" />
-                        <h2 className="text-2xl font-bold font-mono">{table.name}</h2>
+                        <h2 className="text-xl font-bold font-mono">{table.name}</h2>
                         <Badge variant={
                             table.status === 'Active' ? 'default' :
                                 table.status === 'Live' ? 'default' :
@@ -29,106 +29,43 @@ export function TableDetailView({ table, onBack }: TableDetailViewProps) {
                             {table.status}
                         </Badge>
                     </div>
-                </div>
-                <div className="flex items-center gap-6 text-sm text-muted-foreground ml-12">
-                    <span>{table.rows.toLocaleString()} rows</span>
-                    <span>•</span>
-                    <span>{table.size}</span>
-                    <span>•</span>
-                    <span>Updated {table.updated}</span>
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground ml-auto">
+                        <span>{table.rows.toLocaleString()} rows</span>
+                        <span>•</span>
+                        <span>{table.size}</span>
+                        <span>•</span>
+                        <span>Updated {table.updated}</span>
+                    </div>
                 </div>
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-6">
-                {/* Description */}
-                <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                        <Info className="w-4 h-4 text-blue-500" />
-                        Description
-                    </div>
-                    <p className="text-muted-foreground leading-relaxed pl-6">
-                        {table.description}
-                    </p>
-                </div>
-
-                {/* Actual Data (for users table only) */}
-                {table.id === 'users' && (
-                    <div className="space-y-3">
-                        <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                            <Table className="w-4 h-4 text-orange-500" />
-                            Current Data
-                        </div>
-                        <div className="pl-6">
-                            <div className="border rounded-lg overflow-hidden">
-                                <div className="grid grid-cols-2 gap-px bg-border">
-                                    {USER_DATA.map((row, index) => (
-                                        <div key={index} className="contents">
-                                            <div className="bg-muted/50 px-4 py-3 font-mono text-sm font-semibold text-foreground">
-                                                {row.field}
-                                            </div>
-                                            <div className="bg-background px-4 py-3 text-sm text-foreground">
-                                                {row.value}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* Common Fields */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-6 no-scrollbar">
+                {/* Actual Data */}
                 <div className="space-y-3">
                     <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                        <List className="w-4 h-4 text-green-500" />
-                        Field Schema
+                        <Table className="w-4 h-4 text-orange-500" />
+                        Current Data
                     </div>
-                    <div className="pl-6 space-y-2">
-                        {table.fields.map((field, index) => (
-                            <div
-                                key={index}
-                                className="flex items-start gap-4 p-3 bg-muted/30 rounded-lg border"
-                            >
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <span className="font-mono text-sm font-semibold text-foreground">
-                                            {field.name}
-                                        </span>
-                                        <span className="text-xs text-muted-foreground font-mono bg-muted px-2 py-0.5 rounded">
-                                            {field.type}
-                                        </span>
+                    <div className="pl-6">
+                        <div className="border rounded-lg overflow-hidden">
+                            <div className="grid grid-cols-2 gap-px bg-border">
+                                {(table.id === 'users' ? USER_DATA : PROJECTS_DATA).map((row, index) => (
+                                    <div key={index} className="contents">
+                                        <div className="bg-muted/50 px-4 py-3 font-mono text-sm font-semibold text-foreground">
+                                            {row.field}
+                                        </div>
+                                        <div className="bg-background px-4 py-3 text-sm text-foreground">
+                                            {row.value}
+                                        </div>
                                     </div>
-                                    <p className="text-xs text-muted-foreground">
-                                        {field.description}
-                                    </p>
-                                </div>
+                                ))}
                             </div>
-                        ))}
+                        </div>
                     </div>
                 </div>
 
-                {/* Usage */}
-                <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                        <Database className="w-4 h-4 text-purple-500" />
-                        Usage
-                    </div>
-                    <p className="text-muted-foreground leading-relaxed pl-6">
-                        {table.usage}
-                    </p>
-                </div>
 
-                {/* What This Represents */}
-                <div className="space-y-2 bg-blue-500/5 border border-blue-500/20 rounded-lg p-4">
-                    <div className="flex items-center gap-2 text-sm font-semibold text-blue-600 dark:text-blue-400">
-                        <Lightbulb className="w-4 h-4" />
-                        What This Represents
-                    </div>
-                    <p className="text-sm text-foreground/90 leading-relaxed pl-6">
-                        {table.represents}
-                    </p>
-                </div>
 
                 {/* Disclaimer */}
                 <div className="text-xs text-muted-foreground border-t pt-4 mt-6">

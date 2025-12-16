@@ -13,6 +13,18 @@ export const USER_DATA = [
     { field: "last_login", value: "Just now" },
 ];
 
+export const PROJECTS_DATA = [
+    { field: "project_id", value: "P-001" },
+    { field: "name", value: "OS-Style Portfolio" },
+    { field: "description", value: "Interactive portfolio website with desktop OS interface" },
+    { field: "tech_stack", value: "React, TypeScript, Tailwind CSS" },
+    { field: "status", value: "Live" },
+    { field: "github_url", value: "github.com/example/os-portfolio" },
+    { field: "demo_url", value: "portfolio.example.com" },
+    { field: "started_at", value: "2024-01-15" },
+    { field: "completed_at", value: "2024-12-16" },
+];
+
 export const DATABASE_TABLES: DatabaseTable[] = [
     {
         id: "users",
@@ -37,5 +49,26 @@ export const DATABASE_TABLES: DatabaseTable[] = [
         usage: "Stores portfolio owner information, professional details, and system metadata for this OS-style portfolio.",
         represents: "This is my actual profile data - demonstrating how I structure user information in a database. Shows understanding of data modeling and personal branding."
     },
-
+    {
+        id: "projects",
+        name: "projects",
+        status: "Active",
+        rows: 1,
+        size: "3.8 KB",
+        updated: "5 mins ago",
+        description: "Portfolio projects and work showcase.",
+        fields: [
+            { name: "project_id", type: "VARCHAR(10)", description: "Unique project identifier" },
+            { name: "name", type: "VARCHAR(200)", description: "Project name" },
+            { name: "description", type: "TEXT", description: "Project description" },
+            { name: "tech_stack", type: "VARCHAR(255)", description: "Technologies used" },
+            { name: "status", type: "VARCHAR(20)", description: "Project status" },
+            { name: "github_url", type: "VARCHAR(255)", description: "GitHub repository URL" },
+            { name: "demo_url", type: "VARCHAR(255)", description: "Live demo URL" },
+            { name: "started_at", type: "DATE", description: "Project start date" },
+            { name: "completed_at", type: "DATE", description: "Project completion date" },
+        ],
+        usage: "Tracks portfolio projects, technologies, and deployment information.",
+        represents: "Project portfolio and work history."
+    },
 ];

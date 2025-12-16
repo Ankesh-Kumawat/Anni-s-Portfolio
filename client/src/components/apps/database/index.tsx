@@ -51,7 +51,7 @@ export default function Database() {
             </div>
 
             {/* Table List */}
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto no-scrollbar">
                 {filteredTables.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
                         <DatabaseIcon className="w-16 h-16 mb-4 opacity-20" />
