@@ -1,0 +1,114 @@
+import { Globe, ExternalLink, User, Briefcase, Mail, Terminal as TerminalIcon, Code, FileText, Image, Database as DatabaseIcon, Settings as SettingsIcon, Music, Video, Palette, Github, Linkedin, Instagram, Twitter, Youtube, BookOpen, PenTool } from "lucide-react";
+import { LucideIcon } from "lucide-react";
+
+interface BrowserHomeProps {
+    onNavigate: (url: string) => void;
+    onOpenApp?: (appId: string) => void;
+}
+
+const SOCIAL_LINKS: Array<{ name: string; url: string; icon: LucideIcon; color: string }> = [
+    { name: "My Portfolio", url: "https://anni-portfolio-eight.vercel.app/", icon: Palette, color: "text-purple-500" },
+    { name: "GitHub", url: "https://github.com/ankeshkumawat", icon: Github, color: "text-gray-800" },
+    { name: "LinkedIn", url: "https://linkedin.com/in/ankesh-kumawat", icon: Linkedin, color: "text-blue-600" },
+    { name: "Instagram", url: "https://instagram.com", icon: Instagram, color: "text-pink-500" },
+    { name: "Twitter", url: "https://twitter.com", icon: Twitter, color: "text-sky-500" },
+    { name: "YouTube", url: "https://youtube.com", icon: Youtube, color: "text-red-600" },
+    { name: "Dev.to", url: "https://dev.to", icon: BookOpen, color: "text-gray-700" },
+    { name: "Medium", url: "https://medium.com", icon: PenTool, color: "text-gray-900" },
+];
+
+const OS_APPS: Array<{ id: string; name: string; icon: LucideIcon; color: string }> = [
+    { id: "about", name: "About Me", icon: User, color: "text-blue-500" },
+    { id: "projects", name: "Projects", icon: Briefcase, color: "text-purple-500" },
+    { id: "contact", name: "Contact", icon: Mail, color: "text-red-500" },
+    { id: "terminal", name: "Terminal", icon: TerminalIcon, color: "text-zinc-800" },
+    { id: "vscode", name: "VS Code", icon: Code, color: "text-blue-600" },
+    { id: "notepad", name: "Notepad", icon: FileText, color: "text-orange-500" },
+    { id: "gallery", name: "Gallery", icon: Image, color: "text-pink-500" },
+    { id: "db", name: "Database", icon: DatabaseIcon, color: "text-blue-400" },
+    { id: "settings", name: "Settings", icon: SettingsIcon, color: "text-gray-500" },
+    { id: "spotify", name: "Spotify", icon: Music, color: "text-green-600" },
+    { id: "youtube", name: "YouTube", icon: Video, color: "text-red-600" },
+];
+
+export function BrowserHome({ onNavigate, onOpenApp }: BrowserHomeProps) {
+    return (
+        <div className="h-full overflow-y-auto no-scrollbar bg-gradient-to-br from-blue-50 via-white to-purple-50">
+            <div className="max-w-6xl mx-auto px-6 py-12">
+                {/* Header */}
+                <div className="text-center mb-12">
+                    <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full mb-4 shadow-lg">
+                        <Globe className="w-10 h-10 text-white" />
+                    </div>
+                    <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                        Welcome to Browser
+                    </h1>
+                    <p className="text-muted-foreground">
+                        Quick access to OS apps and social media
+                    </p>
+                </div>
+
+                {/* OS Apps */}
+                {onOpenApp && (
+                    <div className="mb-12">
+                        <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                            <span className="text-purple-500">🖥️</span>
+                            OS Apps
+                        </h2>
+                        <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-3">
+                            {OS_APPS.map((app) => {
+                                const IconComponent = app.icon;
+                                return (
+                                    <button
+                                        key={app.id}
+                                        onClick={() => onOpenApp(app.id)}
+                                        className="group flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-accent/50 transition-colors cursor-pointer active:scale-95 duration-100"
+                                    >
+                                        <div className="w-14 h-14 p-3 bg-background border shadow-sm rounded-xl group-hover:shadow-md transition-all duration-200 flex items-center justify-center">
+                                            <IconComponent className={`w-full h-full ${app.color}`} />
+                                        </div>
+                                        <span className="text-xs font-medium text-foreground/80 group-hover:text-foreground text-center line-clamp-2 select-none leading-tight">
+                                            {app.name}
+                                        </span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+                )}
+
+                {/* Social Media & Links */}
+                <div className="mb-12">
+                    <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                        <ExternalLink className="w-5 h-5 text-blue-500" />
+                        Social Media & Links
+                    </h2>
+                    <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-3">
+                        {SOCIAL_LINKS.map((link) => {
+                            const IconComponent = link.icon;
+                            return (
+                                <button
+                                    key={link.url}
+                                    onClick={() => onNavigate(link.url)}
+                                    className="group flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-accent/50 transition-colors cursor-pointer active:scale-95 duration-100"
+                                >
+                                    <div className="w-14 h-14 p-3 bg-background border shadow-sm rounded-xl group-hover:shadow-md transition-all duration-200 flex items-center justify-center">
+                                        <IconComponent className={`w-full h-full ${link.color}`} />
+                                    </div>
+                                    <span className="text-xs font-medium text-foreground/80 group-hover:text-foreground text-center line-clamp-2 select-none leading-tight">
+                                        {link.name}
+                                    </span>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+
+                {/* Footer */}
+                <div className="mt-12 text-center text-sm text-muted-foreground">
+                    <p>💡 Type any URL in the address bar to browse the web</p>
+                </div>
+            </div>
+        </div>
+    );
+}
