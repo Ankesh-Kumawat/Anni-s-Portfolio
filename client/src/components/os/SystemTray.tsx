@@ -20,26 +20,20 @@ export function SystemTray() {
     return () => clearInterval(interval);
   }, []);
 
-  // Detect browser zoom level
+  // Detect browser zoom level (not screen DPI)
   useEffect(() => {
     const detectZoom = () => {
-      const zoom = Math.round((window.devicePixelRatio || 1) * 100);
+      // Get actual browser zoom by comparing window.outerWidth to window.innerWidth
+      // This works better than devicePixelRatio which includes screen DPI
+      const zoom = Math.round((window.outerWidth / window.innerWidth) * 100);
       setZoomLevel(zoom);
     };
 
     detectZoom();
     window.addEventListener('resize', detectZoom);
 
-    // Also listen for zoom changes via visualViewport
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', detectZoom);
-    }
-
     return () => {
       window.removeEventListener('resize', detectZoom);
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', detectZoom);
-      }
     };
   }, []);
 
@@ -59,9 +53,9 @@ export function SystemTray() {
         <div
           className={cn(
             "flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-colors",
-            zoomLevel !== 135 ? "bg-orange-500/10 text-orange-600 dark:text-orange-400" : "bg-green-500/10 text-green-600 dark:text-green-400"
+            zoomLevel !== 133 ? "bg-orange-500/10 text-orange-600 dark:text-orange-400" : "bg-green-500/10 text-green-600 dark:text-green-400"
           )}
-          title={`Browser zoom: ${zoomLevel}% (Recommended: 135% for best experience)`}
+          title={`Browser zoom: ${zoomLevel}% (Recommended: 133% for best experience)`}
         >
           <ZoomIn className="w-3.5 h-3.5" />
           <span className="hidden sm:inline">{zoomLevel}%</span>
