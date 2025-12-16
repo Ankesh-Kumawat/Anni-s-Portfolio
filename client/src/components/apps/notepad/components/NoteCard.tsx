@@ -1,6 +1,7 @@
 import { Note } from "../types";
 import { Pin, Trash2, Calendar } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import ReactMarkdown from 'react-markdown';
 
 interface NoteCardProps {
     note: Note;
@@ -11,6 +12,7 @@ interface NoteCardProps {
 }
 
 export function NoteCard({ note, viewMode, onSelect, onDelete, onTogglePin }: NoteCardProps) {
+    // Get first 150 chars for preview
     const preview = note.content.slice(0, 150);
 
     if (viewMode === 'list') {
@@ -24,7 +26,25 @@ export function NoteCard({ note, viewMode, onSelect, onDelete, onTogglePin }: No
                         {note.isPinned && <Pin className="w-3 h-3 text-orange-500 fill-orange-500" />}
                         <h3 className="font-semibold text-sm truncate">{note.title}</h3>
                     </div>
-                    <p className="text-xs text-muted-foreground truncate whitespace-pre-wrap">{preview}</p>
+                    <div className="text-xs text-muted-foreground truncate prose prose-sm dark:prose-invert max-w-none [&>*]:inline">
+                        <ReactMarkdown
+                            components={{
+                                h1: ({ children }) => <span className="font-bold">{children}</span>,
+                                h2: ({ children }) => <span className="font-semibold">{children}</span>,
+                                h3: ({ children }) => <span className="font-medium">{children}</span>,
+                                p: ({ children }) => <span>{children}</span>,
+                                strong: ({ children }) => <strong>{children}</strong>,
+                                em: ({ children }) => <em>{children}</em>,
+                                a: ({ children }) => <span className="text-blue-500">{children}</span>,
+                                ul: ({ children }) => <span>{children}</span>,
+                                ol: ({ children }) => <span>{children}</span>,
+                                li: ({ children }) => <span>• {children} </span>,
+                                code: ({ children }) => <code className="bg-muted px-1 rounded">{children}</code>,
+                            }}
+                        >
+                            {preview}
+                        </ReactMarkdown>
+                    </div>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Calendar className="w-3 h-3" />
@@ -63,7 +83,25 @@ export function NoteCard({ note, viewMode, onSelect, onDelete, onTogglePin }: No
                 <Pin className="absolute top-2 right-2 w-4 h-4 text-orange-500 fill-orange-500" />
             )}
             <h3 className="font-semibold mb-2 pr-6 truncate">{note.title}</h3>
-            <p className="text-sm text-muted-foreground line-clamp-3 mb-3 whitespace-pre-wrap">{preview}</p>
+            <div className="text-sm text-muted-foreground line-clamp-3 mb-3 prose prose-sm dark:prose-invert max-w-none [&>*]:mb-0 [&>*]:mt-0">
+                <ReactMarkdown
+                    components={{
+                        h1: ({ children }) => <span className="font-bold text-base">{children}</span>,
+                        h2: ({ children }) => <span className="font-semibold text-sm">{children}</span>,
+                        h3: ({ children }) => <span className="font-medium text-sm">{children}</span>,
+                        p: ({ children }) => <span>{children}</span>,
+                        strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+                        em: ({ children }) => <em>{children}</em>,
+                        a: ({ children }) => <span className="text-blue-500">{children}</span>,
+                        ul: ({ children }) => <span>{children}</span>,
+                        ol: ({ children }) => <span>{children}</span>,
+                        li: ({ children }) => <span>• {children} </span>,
+                        code: ({ children }) => <code className="bg-muted px-1 rounded text-xs">{children}</code>,
+                    }}
+                >
+                    {preview}
+                </ReactMarkdown>
+            </div>
             <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>{formatDistanceToNow(note.updatedAt, { addSuffix: true })}</span>
                 <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
