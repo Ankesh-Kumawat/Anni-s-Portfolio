@@ -1,8 +1,8 @@
 import { Battery, Volume2, BatteryCharging } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { FocusModeToggle } from "./FocusModeToggle";
-import { VolumeAndBrightness } from "./VolumeAndBrightness";
-import { StatusInfo } from "./StatusInfo";
+import { FocusModeToggle } from "./FocusModeToggle.tsx";
+import { VolumeAndBrightness } from "./VolumeAndBrightness.tsx";
+import { StatusInfo } from "./StatusInfo.tsx";
 
 interface ControlCenterPopoverProps {
     volume: number[];
