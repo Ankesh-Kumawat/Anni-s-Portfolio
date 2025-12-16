@@ -1,5 +1,4 @@
 import { useOS, AppConfig } from "@/lib/os-context";
-import { useSystemState } from "@/lib/system-state-context";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -15,7 +14,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Grid, Search, Power, Settings as SettingsIcon, Lock } from "lucide-react";
+import { Grid, Search, Settings as SettingsIcon } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -25,7 +24,6 @@ interface StartMenuProps {
 
 export function StartMenu({ apps }: StartMenuProps) {
   const { launchApp } = useOS();
-  const { lock, shutdown } = useSystemState();
   const [open, setOpen] = useState(false);
 
   return (
@@ -76,14 +74,6 @@ export function StartMenu({ apps }: StartMenuProps) {
               <CommandItem onSelect={() => { launchApp('settings'); setOpen(false); }} className="flex items-center gap-2 cursor-pointer">
                 <SettingsIcon className="w-4 h-4" />
                 <span>Settings</span>
-              </CommandItem>
-              <CommandItem onSelect={() => { lock(); setOpen(false); }} className="flex items-center gap-2 cursor-pointer">
-                <Lock className="w-4 h-4" />
-                <span>Lock</span>
-              </CommandItem>
-              <CommandItem onSelect={() => { shutdown(); setOpen(false); }} className="flex items-center gap-2 cursor-pointer text-destructive focus:text-destructive">
-                <Power className="w-4 h-4" />
-                <span>Shut Down</span>
               </CommandItem>
             </CommandGroup>
           </CommandList>
