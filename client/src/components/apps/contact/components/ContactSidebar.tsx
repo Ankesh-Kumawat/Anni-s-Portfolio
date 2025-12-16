@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, MapPin } from "lucide-react";
 
 export function ContactSidebar() {
     return (
@@ -16,17 +16,7 @@ export function ContactSidebar() {
                         </div>
                         <div className="min-w-0">
                             <p className="text-xs opacity-70 uppercase tracking-wider">Email Me</p>
-                            <p className="font-medium truncate">hello@example.com</p>
-                        </div>
-                    </div>
-
-                    <div className="flex items-center gap-4">
-                        <div className="p-3 bg-white/10 rounded-full shrink-0">
-                            <Phone className="w-5 h-5" />
-                        </div>
-                        <div className="min-w-0">
-                            <p className="text-xs opacity-70 uppercase tracking-wider">Call Me</p>
-                            <p className="font-medium truncate">+1 (555) 000-0000</p>
+                            <p className="font-medium truncate">ankeshkumawat155@gmail.com</p>
                         </div>
                     </div>
 
@@ -35,8 +25,8 @@ export function ContactSidebar() {
                             <MapPin className="w-5 h-5" />
                         </div>
                         <div className="min-w-0">
-                            <p className="text-xs opacity-70 uppercase tracking-wider">Location</p>
-                            <p className="font-medium truncate">San Francisco, CA</p>
+                            <p className="text-xs opacity-70 uppercase tracking-wider">Address</p>
+                            <p className="font-medium">Rajasthan, India</p>
                         </div>
                     </div>
                 </div>
