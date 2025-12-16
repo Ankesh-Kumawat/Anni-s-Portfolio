@@ -5,17 +5,26 @@ import { generateSongsFromFolder } from "./utils/metadata";
 // This will be populated on app load
 export let songs: Song[] = [];
 
-// Initialize songs with metadata
+// Initialize songs with metadata (progressive loading)
 let songsInitialized = false;
-export async function initializeSongs(): Promise<Song[]> {
+export async function initializeSongs(
+    onProgress?: (songs: Song[], loadedCount: number, totalCount: number) => void
+): Promise<Song[]> {
     if (songsInitialized && songs.length > 0) {
         return songs;
     }
 
     try {
-        songs = await generateSongsFromFolder();
-        songsInitialized = true;
-        console.log(`✅ Loaded ${songs.length} songs with metadata`);
+        songs = await generateSongsFromFolder((loadedSongs, loadedCount, totalCount) => {
+            songs = loadedSongs;
+            if (onProgress) {
+                onProgress(loadedSongs, loadedCount, totalCount);
+            }
+            if (loadedCount === totalCount) {
+                songsInitialized = true;
+                console.log(`✅ Loaded ${songs.length} songs with metadata`);
+            }
+        });
     } catch (error) {
         console.error("Failed to load songs:", error);
         songs = [];

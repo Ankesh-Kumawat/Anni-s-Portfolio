@@ -21,14 +21,22 @@ export default function DevTunes() {
     const isMobile = useIsMobile();
     const [songsLoaded, setSongsLoaded] = useState(false);
     const [showMobilePlayer, setShowMobilePlayer] = useState(false);
+    const [loadingProgress, setLoadingProgress] = useState({ loaded: 0, total: 0 });
 
     useEffect(() => {
         const loadSongs = async () => {
-            await initializeSongs();
-            setSongsLoaded(true);
-            if (songs.length > 0 && !currentSong) {
-                setCurrentSong(songs[0]);
-            }
+            await initializeSongs((loadedSongs, loadedCount, totalCount) => {
+                // Update loading progress
+                setLoadingProgress({ loaded: loadedCount, total: totalCount });
+
+                // Show app as soon as first song loads
+                if (loadedSongs.length > 0) {
+                    setSongsLoaded(true);
+                    if (!currentSong) {
+                        setCurrentSong(loadedSongs[0]);
+                    }
+                }
+            });
         };
         loadSongs();
     }, []);
@@ -181,9 +189,16 @@ export default function DevTunes() {
 
     if (!songsLoaded) {
         return (
-            <div className="flex flex-col h-full bg-background items-center justify-center">
-                <Loader2 className="w-8 h-8 animate-spin text-primary mb-3" />
-                <p className="text-sm text-muted-foreground">Loading music library...</p>
+            <div className="flex flex-col h-full bg-background items-center justify-center gap-3">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                <div className="text-center">
+                    <p className="text-sm text-muted-foreground">Loading music library...</p>
+                    {loadingProgress.total > 0 && (
+                        <p className="text-xs text-muted-foreground/70 mt-1">
+                            {loadingProgress.loaded} / {loadingProgress.total} songs
+                        </p>
+                    )}
+                </div>
             </div>
         );
     }

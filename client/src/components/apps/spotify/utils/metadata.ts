@@ -138,36 +138,49 @@ const musicFiles = [
     "Woh by Khatth, Sthiti - G8nlhcmDXNE.m4a",
 ];
 
+// Load a single song with metadata
+async function loadSongMetadata(filename: string, index: number): Promise<Song> {
+    const audioUrl = `/music/${filename}`;
+
+    // Extract metadata from filename first (fallback)
+    const filenameMetadata = extractMetadataFromFilename(filename);
+
+    // Try to extract metadata from file
+    const fileMetadata = await extractMetadataFromFile(audioUrl);
+
+    // Get audio duration
+    const durationSeconds = await getAudioDuration(audioUrl);
+    const duration = formatDuration(durationSeconds);
+
+    // Merge metadata (file metadata takes priority)
+    return {
+        id: (index + 1).toString(),
+        title: fileMetadata.title || filenameMetadata.title || "Unknown Title",
+        artist: fileMetadata.artist || filenameMetadata.artist || "Unknown Artist",
+        album: fileMetadata.album || filenameMetadata.album || "Singles",
+        duration: duration || "0:00",
+        coverUrl: fileMetadata.coverUrl || generateCoverUrl(index),
+        audioUrl: audioUrl,
+    };
+}
+
 // Auto-generate songs from music folder files with metadata extraction
-export async function generateSongsFromFolder(): Promise<Song[]> {
+// Progressive loading: Load one by one and show immediately
+export async function generateSongsFromFolder(
+    onProgress?: (songs: Song[], loadedCount: number, totalCount: number) => void
+): Promise<Song[]> {
     const songs: Song[] = [];
+    const totalCount = musicFiles.length;
 
+    // Load songs one by one
     for (let i = 0; i < musicFiles.length; i++) {
-        const filename = musicFiles[i];
-        const audioUrl = `/music/${filename}`;
-
-        // Extract metadata from filename first (fallback)
-        const filenameMetadata = extractMetadataFromFilename(filename);
-
-        // Try to extract metadata from file
-        const fileMetadata = await extractMetadataFromFile(audioUrl);
-
-        // Get audio duration
-        const durationSeconds = await getAudioDuration(audioUrl);
-        const duration = formatDuration(durationSeconds);
-
-        // Merge metadata (file metadata takes priority)
-        const song: Song = {
-            id: (i + 1).toString(),
-            title: fileMetadata.title || filenameMetadata.title || "Unknown Title",
-            artist: fileMetadata.artist || filenameMetadata.artist || "Unknown Artist",
-            album: fileMetadata.album || filenameMetadata.album || "Singles",
-            duration: duration || "0:00",
-            coverUrl: fileMetadata.coverUrl || generateCoverUrl(i),
-            audioUrl: audioUrl,
-        };
-
+        const song = await loadSongMetadata(musicFiles[i], i);
         songs.push(song);
+
+        // Notify progress after each song
+        if (onProgress) {
+            onProgress([...songs], i + 1, totalCount);
+        }
     }
 
     return songs;
