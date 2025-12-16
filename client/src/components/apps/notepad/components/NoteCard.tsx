@@ -24,7 +24,7 @@ export function NoteCard({ note, viewMode, onSelect, onDelete, onTogglePin }: No
                         {note.isPinned && <Pin className="w-3 h-3 text-orange-500 fill-orange-500" />}
                         <h3 className="font-semibold text-sm truncate">{note.title}</h3>
                     </div>
-                    <p className="text-xs text-muted-foreground truncate">{preview}</p>
+                    <p className="text-xs text-muted-foreground truncate whitespace-pre-wrap">{preview}</p>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Calendar className="w-3 h-3" />
@@ -63,7 +63,7 @@ export function NoteCard({ note, viewMode, onSelect, onDelete, onTogglePin }: No
                 <Pin className="absolute top-2 right-2 w-4 h-4 text-orange-500 fill-orange-500" />
             )}
             <h3 className="font-semibold mb-2 pr-6 truncate">{note.title}</h3>
-            <p className="text-sm text-muted-foreground line-clamp-3 mb-3">{preview}</p>
+            <p className="text-sm text-muted-foreground line-clamp-3 mb-3 whitespace-pre-wrap">{preview}</p>
             <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>{formatDistanceToNow(note.updatedAt, { addSuffix: true })}</span>
                 <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">

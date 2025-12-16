@@ -132,7 +132,7 @@ export function NoteEditor({ note, onSave, onBack }: NoteEditorProps) {
                     <Textarea
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
-                        className="h-full resize-none border-none focus-visible:ring-0 p-6 font-mono text-sm leading-relaxed rounded-none"
+                        className="h-full resize-none border-none focus-visible:ring-0 p-6 font-mono text-sm leading-relaxed rounded-none whitespace-pre-wrap"
                         placeholder={editorMode === 'markdown' ? "# Start writing in Markdown..." : "Start typing..."}
                         spellCheck={false}
                     />
