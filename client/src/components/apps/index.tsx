@@ -22,8 +22,8 @@ export const APPS: AppConfig[] = [
     title: "About Me",
     icon: <User className="w-full h-full text-blue-500" />,
     component: <About />,
-    width: 800,
-    height: 600
+    width: 1000,
+    height: 700
   },
   {
     id: "projects",
@@ -38,8 +38,8 @@ export const APPS: AppConfig[] = [
     title: "Terminal",
     icon: <TerminalIcon className="w-full h-full text-zinc-800 dark:text-zinc-200" />,
     component: <Terminal />,
-    width: 700,
-    height: 500
+    width: 900,
+    height: 650
   },
   {
     id: "settings",
@@ -70,8 +70,8 @@ export const APPS: AppConfig[] = [
     title: "Notepad",
     icon: <FileText className="w-full h-full text-orange-500" />,
     component: <Notepad />,
-    width: 600,
-    height: 500
+    width: 1000,
+    height: 700
   },
   {
     id: "calculator",
@@ -86,16 +86,16 @@ export const APPS: AppConfig[] = [
     title: "Gallery",
     icon: <Image className="w-full h-full text-pink-500" />,
     component: <Gallery />,
-    width: 800,
-    height: 600
+    width: 1000,
+    height: 700
   },
   {
     id: "contact",
     title: "Contact",
     icon: <Mail className="w-full h-full text-red-500" />,
     component: <Contact />,
-    width: 800,
-    height: 600
+    width: 900,
+    height: 650
   },
   {
     id: "spotify" as any,
@@ -118,7 +118,7 @@ export const APPS: AppConfig[] = [
     title: "Database",
     icon: <DatabaseIcon className="w-full h-full text-blue-400" />,
     component: <Database />,
-    width: 900,
-    height: 600
+    width: 1000,
+    height: 700
   }
 ];

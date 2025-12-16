@@ -9,31 +9,40 @@ import { NoteEditor } from "./components/NoteEditor";
 const DEFAULT_NOTES: Note[] = [
     {
         id: "welcome",
-        title: "Welcome to Advanced Notepad",
-        content: `# Welcome! 👋
+        title: "About This Portfolio",
+        content: `# Hello, I'm Anni 👋
 
-This is a fully-featured notepad application with:
+I'm a developer who builds OS-like interfaces and creative web applications.
 
-✨ Multiple notes support
-📝 Text, Markdown, and Checklist modes
-📌 Pin important notes
-🔍 Search functionality
-📊 Grid and List views
-💾 Auto-save (localStorage)
+## Current Projects
+- OS-style portfolio (this!)
+- Flutter applications
+- AI-assisted tools
+- Creative UI experiments
 
-Try creating a new note or switching to checklist mode!`,
+## Tech Stack
+React • TypeScript • Tailwind CSS
+Node.js • PostgreSQL • Docker
+
+## Philosophy
+Simple > Flashy
+Working > Perfect
+Honest > Fake
+
+---
+Feel free to explore the apps and features!`,
         createdAt: new Date(),
         updatedAt: new Date(),
         isPinned: true,
         tags: []
     },
     {
-        id: "sample-checklist",
-        title: "Sample Checklist",
-        content: `[ ] Learn React
-[x] Build notepad app
-[ ] Add more features
-[ ] Deploy to production`,
+        id: "quick-tasks",
+        title: "Quick Tasks",
+        content: `[ ] Explore all apps
+[x] Open notepad
+[ ] Try terminal commands
+[ ] Check out projects`,
         createdAt: new Date(),
         updatedAt: new Date(),
         isPinned: false,
