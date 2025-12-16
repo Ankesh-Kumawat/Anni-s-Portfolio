@@ -8,44 +8,59 @@ import { NoteEditor } from "./components/NoteEditor";
 
 const DEFAULT_NOTES: Note[] = [
     {
-        id: "welcome",
-        title: "About This Portfolio",
+        id: "about-me",
+        title: "About Me",
         content: `# Hello, I'm Anni 👋
 
-I'm a developer who builds OS-like interfaces and creative web applications.
+I'm a passionate developer who loves building creative and functional web applications. I specialize in creating OS-like interfaces and modern web experiences that feel native and intuitive.
 
-## Current Projects
-- OS-style portfolio (this!)
-- Flutter applications
-- AI-assisted tools
-- Creative UI experiments
+## Who Am I?
+A full-stack developer with a keen eye for design and user experience. I believe in building products that are not just functional, but delightful to use.
+
+## What I Do
+- 🎨 Design & develop OS-style interfaces
+- 💻 Build full-stack web applications
+- 📱 Create Flutter mobile apps
+- 🤖 Experiment with AI-assisted tools
+- ✨ Focus on creative UI/UX solutions
 
 ## Tech Stack
-React • TypeScript • Tailwind CSS
-Node.js • PostgreSQL • Docker
+**Frontend:** React, TypeScript, Tailwind CSS, Next.js
+**Backend:** Node.js, Express, PostgreSQL, MongoDB
+**Mobile:** Flutter, Dart
+**Tools:** Docker, Git, VS Code, Figma
 
-## Philosophy
+## My Philosophy
 Simple > Flashy
 Working > Perfect
 Honest > Fake
+User Experience > Everything
+
+## What I've Created
+- OS-style Portfolio (this website!)
+- Flutter E-commerce App
+- AI Chat Assistant
+- Task Management System
+- Weather Dashboard
+- Music Player App
+- Real-time Chat Application
+- Portfolio Generator Tool
+
+## Current Focus
+Building interfaces that feel like real operating systems - complete with windows, taskbars, file systems, and native interactions. Making the web feel more tangible and interactive.
+
+## Get in Touch
+📧 Email: hello@example.com
+🐙 GitHub: github.com/example
+🐦 Twitter: @example
+💼 LinkedIn: linkedin.com/in/example
 
 ---
-Feel free to explore the apps and features!`,
+
+Feel free to explore all the apps and features in this portfolio. Each app is fully functional and demonstrates different aspects of my work!`,
         createdAt: new Date(),
         updatedAt: new Date(),
         isPinned: true,
-        tags: []
-    },
-    {
-        id: "quick-tasks",
-        title: "Quick Tasks",
-        content: `[ ] Explore all apps
-[x] Open notepad
-[ ] Try terminal commands
-[ ] Check out projects`,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        isPinned: false,
         tags: []
     }
 ];
