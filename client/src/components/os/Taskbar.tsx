@@ -31,19 +31,36 @@ interface TaskbarProps {
 }
 
 export function Taskbar({ apps, hasOpenWindows = false }: TaskbarProps) {
-  const { launchApp, isAppOpen, activeWindowId, minimizeWindow } = useOS();
+  const { launchApp, isAppOpen, activeWindowId, minimizeWindow, openWindows } = useOS();
   const [startOpen, setStartOpen] = useState(false);
   const isMobile = useIsMobile();
   const { behavior, isVisible, setIsVisible } = useTaskbar();
   const [isHovering, setIsHovering] = useState(false);
 
-  // On mobile, only show first 5 apps + Start menu
+  // Pinned apps (always show these in taskbar)
+  const pinnedAppIds: AppConfig['id'][] = ['about', 'projects', 'terminal', 'notepad', 'browser', 'gallery'];
+
+  // Show pinned apps + open apps (real OS behavior)
   const displayApps = useMemo(() => {
+    // Get pinned apps
+    const pinned = apps.filter(app => pinnedAppIds.includes(app.id));
+
+    // Get open apps that are not pinned
+    const openNotPinned = apps.filter(app =>
+      isAppOpen(app.id) && !pinnedAppIds.includes(app.id)
+    );
+
+    // Combine: pinned first, then open apps
+    const combined = [...pinned, ...openNotPinned];
+
+    // Limit to 8 apps total
+    const limited = combined.slice(0, 8);
+
     if (isMobile) {
-      return apps.slice(0, 5);
+      return limited.slice(0, 5);
     }
-    return apps;
-  }, [apps, isMobile]);
+    return limited;
+  }, [apps, isMobile, openWindows, pinnedAppIds]);
 
   const handleAppClick = (app: AppConfig) => {
     const isOpen = isAppOpen(app.id);
@@ -56,17 +73,22 @@ export function Taskbar({ apps, hasOpenWindows = false }: TaskbarProps) {
     }
   };
 
+  // Check if all windows are minimized
+  const allWindowsMinimized = useMemo(() => {
+    return openWindows.length > 0 && openWindows.every(w => w.minimized);
+  }, [openWindows]);
+
   // Handle taskbar visibility based on behavior
   useEffect(() => {
     if (behavior === "always-show") {
-      // Hide taskbar when any app is open
-      setIsVisible(!hasOpenWindows);
+      // Show taskbar when: no apps open OR all apps minimized
+      setIsVisible(!hasOpenWindows || allWindowsMinimized);
     } else if (behavior === "always-hide") {
       setIsVisible(false);
     } else if (behavior === "auto-hide") {
       setIsVisible(isHovering);
     }
-  }, [behavior, hasOpenWindows, isHovering, setIsVisible]);
+  }, [behavior, hasOpenWindows, allWindowsMinimized, isHovering, setIsVisible]);
 
   // Don't render on mobile
   if (isMobile) return null;
