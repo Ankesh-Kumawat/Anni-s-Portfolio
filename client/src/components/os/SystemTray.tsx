@@ -59,9 +59,9 @@ export function SystemTray() {
         <div
           className={cn(
             "flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-colors",
-            zoomLevel !== 100 ? "bg-orange-500/10 text-orange-600 dark:text-orange-400" : "text-muted-foreground"
+            zoomLevel !== 135 ? "bg-orange-500/10 text-orange-600 dark:text-orange-400" : "bg-green-500/10 text-green-600 dark:text-green-400"
           )}
-          title={`Browser zoom: ${zoomLevel}% (Recommended: 100%)`}
+          title={`Browser zoom: ${zoomLevel}% (Recommended: 135% for best experience)`}
         >
           <ZoomIn className="w-3.5 h-3.5" />
           <span className="hidden sm:inline">{zoomLevel}%</span>
