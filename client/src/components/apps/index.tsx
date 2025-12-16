@@ -1,6 +1,6 @@
 import React from "react";
 import { AppConfig } from "@/lib/os-context";
-import { User, Briefcase, Terminal as TerminalIcon, Settings as SettingsIcon, Mail, Code, Globe, Image, FileText, Music, Video, Database as DatabaseIcon, Calculator as CalculatorIcon } from "lucide-react";
+import { User, Briefcase, Terminal as TerminalIcon, Settings as SettingsIcon, Mail, Code, Globe, Image, FileText, Music, Video, Database as DatabaseIcon } from "lucide-react";
 
 import About from "./about";
 import Projects from "./projects";
@@ -14,7 +14,7 @@ import Contact from "./contact";
 import Spotify from "./spotify";
 import YouTube from "./youtube";
 import Database from "./database";
-import Calculator from "./calculator";
+
 
 export const APPS: AppConfig[] = [
   {
@@ -73,14 +73,7 @@ export const APPS: AppConfig[] = [
     width: 1000,
     height: 700
   },
-  {
-    id: "calculator",
-    title: "Calculator",
-    icon: <CalculatorIcon className="w-full h-full text-orange-400" />,
-    component: <Calculator />,
-    width: 350,
-    height: 500
-  },
+
   {
     id: "gallery" as any, // ID for Gallery
     title: "Gallery",
