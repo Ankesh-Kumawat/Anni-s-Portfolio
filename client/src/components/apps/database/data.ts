@@ -13,17 +13,40 @@ export const USER_DATA = [
     { field: "last_login", value: "Just now" },
 ];
 
-export const PROJECTS_DATA = [
-    { field: "project_id", value: "P-001" },
-    { field: "name", value: "OS-Style Portfolio" },
-    { field: "description", value: "Interactive portfolio website with desktop OS interface" },
-    { field: "tech_stack", value: "React, TypeScript, Tailwind CSS" },
-    { field: "status", value: "Live" },
-    { field: "github_url", value: "github.com/example/os-portfolio" },
-    { field: "demo_url", value: "portfolio.example.com" },
-    { field: "started_at", value: "2024-01-15" },
-    { field: "completed_at", value: "2024-12-16" },
-];
+export const PROJECTS_DATA = {
+    "P-001": [
+        { field: "project_id", value: "P-001" },
+        { field: "name", value: "CineVerse" },
+        { field: "type", value: "Mobile Application" },
+        { field: "stack", value: "Flutter, Firebase, Google Drive API, AI (Gemini)" },
+        { field: "status", value: "Active" },
+        { field: "description", value: "Anime & K-drama streaming platform with offline playback, AI assistant, and community features" },
+    ],
+    "P-002": [
+        { field: "project_id", value: "P-002" },
+        { field: "name", value: "DevStudio" },
+        { field: "type", value: "Platform / Learning App" },
+        { field: "stack", value: "Flutter, Web, AI Tools" },
+        { field: "status", value: "In Development" },
+        { field: "description", value: "Developer learning platform with AI-assisted workflows and community-driven resources" },
+    ],
+    "P-003": [
+        { field: "project_id", value: "P-003" },
+        { field: "name", value: "Portfolio OS" },
+        { field: "type", value: "Web Application" },
+        { field: "stack", value: "React, Vite, Tailwind CSS" },
+        { field: "status", value: "Active" },
+        { field: "description", value: "OS-style interactive portfolio with desktop environment simulation" },
+    ],
+    "P-004": [
+        { field: "project_id", value: "P-004" },
+        { field: "name", value: "MentorHub" },
+        { field: "type", value: "Management System" },
+        { field: "stack", value: "Flutter (rebuild), Web (legacy)" },
+        { field: "status", value: "Rebuilding" },
+        { field: "description", value: "School/college management system with multi-role architecture" },
+    ],
+};
 
 export const DATABASE_TABLES: DatabaseTable[] = [
     {
@@ -53,20 +76,17 @@ export const DATABASE_TABLES: DatabaseTable[] = [
         id: "projects",
         name: "projects",
         status: "Active",
-        rows: 1,
-        size: "3.8 KB",
+        rows: 4,
+        size: "12.5 KB",
         updated: "5 mins ago",
         description: "Portfolio projects and work showcase.",
         fields: [
             { name: "project_id", type: "VARCHAR(10)", description: "Unique project identifier" },
             { name: "name", type: "VARCHAR(200)", description: "Project name" },
+            { name: "type", type: "VARCHAR(100)", description: "Project type" },
+            { name: "stack", type: "VARCHAR(255)", description: "Technologies used" },
+            { name: "status", type: "VARCHAR(50)", description: "Project status" },
             { name: "description", type: "TEXT", description: "Project description" },
-            { name: "tech_stack", type: "VARCHAR(255)", description: "Technologies used" },
-            { name: "status", type: "VARCHAR(20)", description: "Project status" },
-            { name: "github_url", type: "VARCHAR(255)", description: "GitHub repository URL" },
-            { name: "demo_url", type: "VARCHAR(255)", description: "Live demo URL" },
-            { name: "started_at", type: "DATE", description: "Project start date" },
-            { name: "completed_at", type: "DATE", description: "Project completion date" },
         ],
         usage: "Tracks portfolio projects, technologies, and deployment information.",
         represents: "Project portfolio and work history."

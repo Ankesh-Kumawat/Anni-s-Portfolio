@@ -45,23 +45,42 @@ export function TableDetailView({ table, onBack }: TableDetailViewProps) {
                 <div className="space-y-3">
                     <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
                         <Table className="w-4 h-4 text-orange-500" />
-                        Current Data
+                        Current Data ({table.rows} {table.rows === 1 ? 'row' : 'rows'})
                     </div>
-                    <div className="pl-6">
-                        <div className="border rounded-lg overflow-hidden">
-                            <div className="grid grid-cols-2 gap-px bg-border">
-                                {(table.id === 'users' ? USER_DATA : PROJECTS_DATA).map((row, index) => (
-                                    <div key={index} className="contents">
-                                        <div className="bg-muted/50 px-4 py-3 font-mono text-sm font-semibold text-foreground">
-                                            {row.field}
+                    <div className="pl-6 space-y-4">
+                        {table.id === 'users' ? (
+                            <div className="border rounded-lg overflow-hidden">
+                                <div className="grid grid-cols-2 gap-px bg-border">
+                                    {USER_DATA.map((row, index) => (
+                                        <div key={index} className="contents">
+                                            <div className="bg-muted/50 px-4 py-3 font-mono text-sm font-semibold text-foreground">
+                                                {row.field}
+                                            </div>
+                                            <div className="bg-background px-4 py-3 text-sm text-foreground">
+                                                {row.value}
+                                            </div>
                                         </div>
-                                        <div className="bg-background px-4 py-3 text-sm text-foreground">
-                                            {row.value}
-                                        </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
-                        </div>
+                        ) : (
+                            Object.entries(PROJECTS_DATA).map(([id, data]) => (
+                                <div key={id} className="border rounded-lg overflow-hidden">
+                                    <div className="grid grid-cols-2 gap-px bg-border">
+                                        {data.map((row, index) => (
+                                            <div key={index} className="contents">
+                                                <div className="bg-muted/50 px-4 py-3 font-mono text-sm font-semibold text-foreground">
+                                                    {row.field}
+                                                </div>
+                                                <div className="bg-background px-4 py-3 text-sm text-foreground">
+                                                    {row.value}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))
+                        )}
                     </div>
                 </div>
 
