@@ -36,11 +36,13 @@ export function Taskbar({ apps, hasOpenWindows = false }: TaskbarProps) {
   const isMobile = useIsMobile();
   const { behavior, isVisible, setIsVisible } = useTaskbar();
   const [isHovering, setIsHovering] = useState(false);
+  const [hoveredApp, setHoveredApp] = useState<AppConfig['id'] | null>(null);
+  const [hoverTimeout, setHoverTimeout] = useState<NodeJS.Timeout | null>(null);
 
   // Pinned apps (always show these in taskbar)
   const pinnedAppIds: AppConfig['id'][] = ['about', 'projects', 'terminal', 'notepad', 'browser', 'gallery'];
 
-  // Show pinned apps + open apps (real OS behavior)
+  // Show pinned apps + open apps (real OS behavior) - NO LIMIT
   const displayApps = useMemo(() => {
     // Get pinned apps
     const pinned = apps.filter(app => pinnedAppIds.includes(app.id));
@@ -50,16 +52,13 @@ export function Taskbar({ apps, hasOpenWindows = false }: TaskbarProps) {
       isAppOpen(app.id) && !pinnedAppIds.includes(app.id)
     );
 
-    // Combine: pinned first, then open apps
+    // Combine: pinned first, then open apps (unlimited)
     const combined = [...pinned, ...openNotPinned];
 
-    // Limit to 8 apps total
-    const limited = combined.slice(0, 8);
-
     if (isMobile) {
-      return limited.slice(0, 5);
+      return combined.slice(0, 5);
     }
-    return limited;
+    return combined; // No limit on desktop
   }, [apps, isMobile, openWindows, pinnedAppIds]);
 
   const handleAppClick = (app: AppConfig) => {
@@ -184,29 +183,115 @@ export function Taskbar({ apps, hasOpenWindows = false }: TaskbarProps) {
             {displayApps.map((app) => {
               const isOpen = isAppOpen(app.id);
               const isActive = activeWindowId === app.id;
+              const windowState = openWindows.find(w => w.id === app.id);
+              const isMinimized = windowState?.minimized || false;
+              const showPreview = hoveredApp === app.id && isOpen;
 
               return (
-                <Tooltip key={app.id}>
-                  <TooltipTrigger asChild>
-                    <button
-                      onClick={() => handleAppClick(app)}
-                      className={cn(
-                        "relative w-14 h-14 flex items-center justify-center rounded-lg transition-all duration-200 group",
-                        isActive ? "bg-accent text-accent-foreground" : "hover:bg-muted text-muted-foreground hover:text-foreground"
-                      )}
+                <div key={app.id} className="relative">
+                  {/* Advanced Window Preview on Hover */}
+                  {showPreview && (
+                    <div
+                      className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-[60] cursor-pointer"
+                      style={{ animation: "fadeIn 0.2s ease-out" }}
+                      onMouseEnter={() => {
+                        // Clear timeout when hovering preview
+                        if (hoverTimeout) {
+                          clearTimeout(hoverTimeout);
+                        }
+                        setHoveredApp(app.id);
+                      }}
+                      onMouseLeave={() => {
+                        // Delay hiding preview by 300ms
+                        const timeout = setTimeout(() => {
+                          setHoveredApp(null);
+                        }, 300);
+                        setHoverTimeout(timeout);
+                      }}
+                      onClick={() => {
+                        handleAppClick(app);
+                        setHoveredApp(null);
+                        if (hoverTimeout) {
+                          clearTimeout(hoverTimeout);
+                        }
+                      }}
                     >
-                      <div className="w-8 h-8 transition-transform group-hover:scale-110 group-active:scale-95">
-                        {app.icon}
+                      <div className="bg-background/98 backdrop-blur-xl border-2 shadow-2xl rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-200 hover:scale-105" style={{ width: '320px' }}>
+                        {/* Preview Header */}
+                        <div className="bg-muted/30 border-b px-3 py-2 flex items-center gap-2">
+                          <div className="w-5 h-5 flex items-center justify-center text-primary">
+                            {app.icon}
+                          </div>
+                          <span className="font-semibold text-sm flex-1">{app.title}</span>
+                          <div className={cn(
+                            "text-xs px-2 py-0.5 rounded-full",
+                            isMinimized ? "bg-yellow-500/20 text-yellow-600 dark:text-yellow-400" : "bg-green-500/20 text-green-600 dark:text-green-400"
+                          )}>
+                            {isMinimized ? "Minimized" : "Active"}
+                          </div>
+                        </div>
+
+                        {/* Preview Content - Scaled Window */}
+                        <div className="p-3 bg-gradient-to-br from-muted/20 to-muted/5">
+                          <div className="w-full aspect-video bg-background/80 rounded-lg border-2 shadow-inner overflow-hidden relative">
+                            {/* Mini window content preview */}
+                            <div className="absolute inset-0 scale-[0.25] origin-top-left pointer-events-none" style={{ width: '400%', height: '400%' }}>
+                              <div className="w-full h-full p-8 overflow-hidden">
+                                {app.component}
+                              </div>
+                            </div>
+                            {/* Overlay to block interaction with content */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent" />
+                          </div>
+                        </div>
+
+                        {/* Preview Footer */}
+                        <div className="px-3 py-2 bg-muted/20 border-t text-center">
+                          <p className="text-xs text-muted-foreground font-medium">
+                            Click to {isActive ? "minimize" : "restore"}
+                          </p>
+                        </div>
                       </div>
-                      {isOpen && (
-                        <span className="absolute bottom-1 w-1 h-1 rounded-full bg-primary" />
-                      )}
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" className="mb-2">
-                    <p>{app.title}</p>
-                  </TooltipContent>
-                </Tooltip>
+                    </div>
+                  )}
+
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        onClick={() => handleAppClick(app)}
+                        onMouseEnter={() => {
+                          // Clear any existing timeout
+                          if (hoverTimeout) {
+                            clearTimeout(hoverTimeout);
+                          }
+                          // Set hover immediately
+                          setHoveredApp(app.id);
+                        }}
+                        onMouseLeave={() => {
+                          // Delay hiding preview by 300ms
+                          const timeout = setTimeout(() => {
+                            setHoveredApp(null);
+                          }, 300);
+                          setHoverTimeout(timeout);
+                        }}
+                        className={cn(
+                          "relative w-14 h-14 flex items-center justify-center rounded-lg transition-all duration-200 group",
+                          isActive ? "bg-accent text-accent-foreground" : "hover:bg-muted text-muted-foreground hover:text-foreground"
+                        )}
+                      >
+                        <div className="w-8 h-8 transition-transform group-hover:scale-110 group-active:scale-95">
+                          {app.icon}
+                        </div>
+                        {isOpen && (
+                          <span className="absolute bottom-1 w-1 h-1 rounded-full bg-primary" />
+                        )}
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="mb-2">
+                      <p>{app.title}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
               );
             })}
           </TooltipProvider>
