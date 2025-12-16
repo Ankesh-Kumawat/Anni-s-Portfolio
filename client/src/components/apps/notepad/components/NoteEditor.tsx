@@ -2,9 +2,10 @@ import { Note, EditorMode, TodoItem } from "../types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Save, Type, ListChecks, FileText } from "lucide-react";
+import { ArrowLeft, Save, Eye, Edit3, ListChecks } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ChecklistEditor } from "./ChecklistEditor";
+import { MarkdownPreview } from "./MarkdownPreview";
 
 interface NoteEditorProps {
     note: Note | null;
@@ -17,6 +18,7 @@ export function NoteEditor({ note, onSave, onBack }: NoteEditorProps) {
     const [content, setContent] = useState(note?.content || "");
     const [editorMode, setEditorMode] = useState<EditorMode>('text');
     const [todos, setTodos] = useState<TodoItem[]>([]);
+    const [isPreviewMode, setIsPreviewMode] = useState(true); // Default to preview
 
     useEffect(() => {
         if (note) {
@@ -90,33 +92,45 @@ export function NoteEditor({ note, onSave, onBack }: NoteEditorProps) {
                     />
                 </div>
                 <div className="flex items-center gap-2">
-                    {/* Editor Mode Switcher */}
-                    <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
-                        <button
-                            onClick={() => setEditorMode('text')}
-                            className={`p-1.5 rounded transition-colors ${editorMode === 'text' ? 'bg-background shadow-sm' : 'hover:bg-background/50'
-                                }`}
-                            title="Text Mode"
-                        >
-                            <Type className="w-4 h-4" />
-                        </button>
-                        <button
-                            onClick={() => setEditorMode('checklist')}
-                            className={`p-1.5 rounded transition-colors ${editorMode === 'checklist' ? 'bg-background shadow-sm' : 'hover:bg-background/50'
-                                }`}
-                            title="Checklist Mode"
-                        >
-                            <ListChecks className="w-4 h-4" />
-                        </button>
-                        <button
-                            onClick={() => setEditorMode('markdown')}
-                            className={`p-1.5 rounded transition-colors ${editorMode === 'markdown' ? 'bg-background shadow-sm' : 'hover:bg-background/50'
-                                }`}
-                            title="Markdown Mode"
-                        >
-                            <FileText className="w-4 h-4" />
-                        </button>
-                    </div>
+                    {/* Preview/Edit Toggle */}
+                    {editorMode !== 'checklist' && (
+                        <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
+                            <button
+                                onClick={() => setIsPreviewMode(true)}
+                                className={`p-1.5 rounded transition-colors ${isPreviewMode ? 'bg-background shadow-sm' : 'hover:bg-background/50'
+                                    }`}
+                                title="Preview Mode"
+                            >
+                                <Eye className="w-4 h-4" />
+                            </button>
+                            <button
+                                onClick={() => setIsPreviewMode(false)}
+                                className={`p-1.5 rounded transition-colors ${!isPreviewMode ? 'bg-background shadow-sm' : 'hover:bg-background/50'
+                                    }`}
+                                title="Edit Mode"
+                            >
+                                <Edit3 className="w-4 h-4" />
+                            </button>
+                        </div>
+                    )}
+
+                    {/* Checklist Mode Toggle */}
+                    <button
+                        onClick={() => {
+                            if (editorMode === 'checklist') {
+                                setEditorMode('text');
+                            } else {
+                                setEditorMode('checklist');
+                                setIsPreviewMode(false);
+                            }
+                        }}
+                        className={`p-1.5 rounded transition-colors ${editorMode === 'checklist' ? 'bg-primary text-primary-foreground' : 'bg-muted hover:bg-muted/80'
+                            }`}
+                        title="Checklist Mode"
+                    >
+                        <ListChecks className="w-4 h-4" />
+                    </button>
+
                     <Button onClick={handleSave} size="sm" className="gap-2">
                         <Save className="w-4 h-4" />
                         Save
@@ -128,12 +142,21 @@ export function NoteEditor({ note, onSave, onBack }: NoteEditorProps) {
             <div className="flex-1 overflow-y-auto">
                 {editorMode === 'checklist' ? (
                     <ChecklistEditor todos={todos} setTodos={setTodos} />
+                ) : isPreviewMode ? (
+                    <MarkdownPreview content={content} />
                 ) : (
                     <Textarea
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
                         className="h-full resize-none border-none focus-visible:ring-0 p-6 font-mono text-sm leading-relaxed rounded-none whitespace-pre-wrap"
-                        placeholder={editorMode === 'markdown' ? "# Start writing in Markdown..." : "Start typing..."}
+                        placeholder="# Start writing in Markdown...
+
+Use markdown syntax:
+- # Heading 1
+- ## Heading 2
+- **bold** or *italic*
+- [link](url)
+- - bullet list"
                         spellCheck={false}
                     />
                 )}
@@ -141,7 +164,9 @@ export function NoteEditor({ note, onSave, onBack }: NoteEditorProps) {
 
             {/* Status Bar */}
             <div className="border-t bg-muted/20 px-4 py-1.5 text-xs text-muted-foreground flex items-center justify-between">
-                <span className="capitalize">{editorMode} Mode</span>
+                <span>
+                    {editorMode === 'checklist' ? 'Checklist' : isPreviewMode ? 'Preview' : 'Edit'} Mode
+                </span>
                 <div className="flex items-center gap-4">
                     {editorMode === 'checklist' ? (
                         <span>{todos.length} items</span>
