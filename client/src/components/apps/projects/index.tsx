@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ProjectCard } from "./components/ProjectCard";
 import { ProjectDetail } from "./components/ProjectDetail";
 import { PROJECTS } from "./data";
@@ -7,6 +7,34 @@ import { Briefcase } from "lucide-react";
 
 export default function Projects() {
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+    const [columns, setColumns] = useState(2);
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    // Dynamically adjust columns based on container width
+    useEffect(() => {
+        const updateColumns = () => {
+            if (!containerRef.current) return;
+            const width = containerRef.current.offsetWidth;
+
+            if (width < 600) {
+                setColumns(1);
+            } else if (width < 900) {
+                setColumns(2);
+            } else if (width < 1200) {
+                setColumns(3);
+            } else {
+                setColumns(4);
+            }
+        };
+
+        updateColumns();
+        const resizeObserver = new ResizeObserver(updateColumns);
+        if (containerRef.current) {
+            resizeObserver.observe(containerRef.current);
+        }
+
+        return () => resizeObserver.disconnect();
+    }, []);
 
     if (selectedProject) {
         return (
@@ -33,8 +61,11 @@ export default function Projects() {
             </div>
 
             {/* Projects Grid */}
-            <div className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl mx-auto">
+            <div ref={containerRef} className="p-6 h-full overflow-y-auto no-scrollbar">
+                <div
+                    className="grid gap-4 w-full transition-all duration-300"
+                    style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
+                >
                     {PROJECTS.map((project) => (
                         <ProjectCard
                             key={project.id}
