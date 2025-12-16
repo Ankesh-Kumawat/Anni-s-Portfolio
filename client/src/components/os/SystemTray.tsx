@@ -2,13 +2,14 @@ import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { HelpCircle } from "lucide-react";
 import { useOS } from "@/lib/os-context";
+import { useVolume } from "@/lib/volume-context";
 import { ControlCenterPopover } from "./system-tray/ControlCenterPopover";
 import { ZoomIndicator } from "./system-tray/ZoomIndicator";
 
 export function SystemTray() {
   const { launchApp } = useOS();
   const [time, setTime] = useState(new Date());
-  const [volume, setVolume] = useState([75]);
+  const { volume, setVolume } = useVolume();
   const [brightness, setBrightness] = useState([100]);
   const [focusMode, setFocusMode] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(100);
@@ -86,13 +87,13 @@ export function SystemTray() {
 
       <div className="flex items-center gap-2 md:gap-4">
         <ControlCenterPopover
-          volume={volume}
+          volume={[volume * 100]}
           brightness={brightness}
           focusMode={focusMode}
           zoomLevel={zoomLevel}
           batteryLevel={batteryLevel}
           isCharging={isCharging}
-          onVolumeChange={setVolume}
+          onVolumeChange={(val) => setVolume(val[0] / 100)}
           onBrightnessChange={setBrightness}
           onFocusModeToggle={() => setFocusMode(!focusMode)}
         />
