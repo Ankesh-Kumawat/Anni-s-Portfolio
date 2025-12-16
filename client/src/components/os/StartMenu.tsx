@@ -1,8 +1,8 @@
 import { useOS, AppConfig } from "@/lib/os-context";
+import { useSystemState } from "@/lib/system-state-context";
 import { Button } from "@/components/ui/button";
-import { 
+import {
   Command,
-  CommandDialog,
   CommandEmpty,
   CommandGroup,
   CommandInput,
@@ -10,12 +10,12 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
-import { 
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Grid, Search, Power, Settings as SettingsIcon, User } from "lucide-react";
+import { Grid, Search, Power, Settings as SettingsIcon, Lock } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -25,14 +25,15 @@ interface StartMenuProps {
 
 export function StartMenu({ apps }: StartMenuProps) {
   const { launchApp } = useOS();
+  const { lock, shutdown } = useSystemState();
   const [open, setOpen] = useState(false);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button 
-          variant="ghost" 
-          size="icon" 
+        <Button
+          variant="ghost"
+          size="icon"
           className={cn(
             "fixed bottom-6 left-6 z-50 rounded-full h-10 w-10 bg-background/80 backdrop-blur-md border shadow-lg transition-all hover:scale-105 active:scale-95",
             open && "bg-primary text-primary-foreground ring-2 ring-primary ring-offset-2"
@@ -41,9 +42,9 @@ export function StartMenu({ apps }: StartMenuProps) {
           <Grid className="w-5 h-5" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent 
-        className="w-80 p-0 mb-4 ml-6 bg-background/95 backdrop-blur-xl border shadow-2xl rounded-xl overflow-hidden" 
-        side="top" 
+      <PopoverContent
+        className="w-80 p-0 mb-4 ml-6 bg-background/95 backdrop-blur-xl border shadow-2xl rounded-xl overflow-hidden"
+        side="top"
         align="start"
       >
         <Command className="rounded-xl border-none">
@@ -72,15 +73,15 @@ export function StartMenu({ apps }: StartMenuProps) {
             </CommandGroup>
             <CommandSeparator />
             <CommandGroup heading="System">
-              <CommandItem onSelect={() => launchApp('settings')} className="flex items-center gap-2 cursor-pointer">
+              <CommandItem onSelect={() => { launchApp('settings'); setOpen(false); }} className="flex items-center gap-2 cursor-pointer">
                 <SettingsIcon className="w-4 h-4" />
                 <span>Settings</span>
               </CommandItem>
-              <CommandItem className="flex items-center gap-2 cursor-pointer text-muted-foreground">
-                <User className="w-4 h-4" />
-                <span>Log Out...</span>
+              <CommandItem onSelect={() => { lock(); setOpen(false); }} className="flex items-center gap-2 cursor-pointer">
+                <Lock className="w-4 h-4" />
+                <span>Lock</span>
               </CommandItem>
-              <CommandItem className="flex items-center gap-2 cursor-pointer text-destructive focus:text-destructive">
+              <CommandItem onSelect={() => { shutdown(); setOpen(false); }} className="flex items-center gap-2 cursor-pointer text-destructive focus:text-destructive">
                 <Power className="w-4 h-4" />
                 <span>Shut Down</span>
               </CommandItem>
