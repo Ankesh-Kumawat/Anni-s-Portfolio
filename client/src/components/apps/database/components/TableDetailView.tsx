@@ -1,7 +1,8 @@
 import { DatabaseTable } from "../types";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Database, Info, List, Lightbulb } from "lucide-react";
+import { ArrowLeft, Database, Info, List, Lightbulb, Table } from "lucide-react";
+import { USER_DATA } from "../data";
 
 interface TableDetailViewProps {
     table: DatabaseTable;
@@ -51,11 +52,37 @@ export function TableDetailView({ table, onBack }: TableDetailViewProps) {
                     </p>
                 </div>
 
+                {/* Actual Data (for users table only) */}
+                {table.id === 'users' && (
+                    <div className="space-y-3">
+                        <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                            <Table className="w-4 h-4 text-orange-500" />
+                            Current Data
+                        </div>
+                        <div className="pl-6">
+                            <div className="border rounded-lg overflow-hidden">
+                                <div className="grid grid-cols-2 gap-px bg-border">
+                                    {USER_DATA.map((row, index) => (
+                                        <div key={index} className="contents">
+                                            <div className="bg-muted/50 px-4 py-3 font-mono text-sm font-semibold text-foreground">
+                                                {row.field}
+                                            </div>
+                                            <div className="bg-background px-4 py-3 text-sm text-foreground">
+                                                {row.value}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {/* Common Fields */}
                 <div className="space-y-3">
                     <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
                         <List className="w-4 h-4 text-green-500" />
-                        Common Fields
+                        Field Schema
                     </div>
                     <div className="pl-6 space-y-2">
                         {table.fields.map((field, index) => (
