@@ -1,7 +1,8 @@
 import React from "react";
 import { AppId } from "@/lib/os-context";
+import { CheckCircle2, XCircle, Info, Folder, File } from "lucide-react";
 
-export function handleCommand(cmd: string, launchApp: (id: AppId) => void): string | React.ReactNode {
+export function handleCommand(cmd: string, launchApp: (AppId: AppId) => void): string | React.ReactNode {
     const cleanCmd = cmd.trim().toLowerCase();
     const parts = cleanCmd.split(" ");
     const command = parts[0];
@@ -10,60 +11,157 @@ export function handleCommand(cmd: string, launchApp: (id: AppId) => void): stri
     switch (command) {
         case "help":
             return (
-                <div className="grid grid-cols-[100px_1fr] gap-2">
-                    <span className="text-primary font-bold">ls</span>
-                    <span>List available sections</span>
-                    <span className="text-primary font-bold">cat</span>
-                    <span>Read file (e.g., cat about)</span>
-                    <span className="text-primary font-bold">open</span>
-                    <span>Open application (e.g., open projects)</span>
-                    <span className="text-primary font-bold">whoami</span>
-                    <span>Current user info</span>
-                    <span className="text-primary font-bold">clear</span>
-                    <span>Clear terminal history</span>
-                    <span className="text-primary font-bold">date</span>
-                    <span>Show current date/time</span>
-                    <span className="text-primary font-bold">echo</span>
-                    <span>Print text to screen</span>
+                <div className="space-y-4">
+                    <div className="text-cyan-400 font-bold flex items-center gap-2">
+                        <Info className="w-4 h-4" />
+                        Command Reference
+                    </div>
+                    <div className="grid gap-2">
+                        <div className="grid grid-cols-[140px_1fr] gap-4 p-2 rounded bg-zinc-900/50">
+                            <span className="text-cyan-400 font-mono">commands</span>
+                            <span className="text-zinc-400">Show interactive command list</span>
+                        </div>
+                        <div className="grid grid-cols-[140px_1fr] gap-4 p-2 rounded bg-zinc-900/50">
+                            <span className="text-cyan-400 font-mono">ls</span>
+                            <span className="text-zinc-400">List available files</span>
+                        </div>
+                        <div className="grid grid-cols-[140px_1fr] gap-4 p-2 rounded bg-zinc-900/50">
+                            <span className="text-cyan-400 font-mono">cat &lt;file&gt;</span>
+                            <span className="text-zinc-400">Read file contents</span>
+                        </div>
+                        <div className="grid grid-cols-[140px_1fr] gap-4 p-2 rounded bg-zinc-900/50">
+                            <span className="text-cyan-400 font-mono">open &lt;app&gt;</span>
+                            <span className="text-zinc-400">Launch application</span>
+                        </div>
+                        <div className="grid grid-cols-[140px_1fr] gap-4 p-2 rounded bg-zinc-900/50">
+                            <span className="text-cyan-400 font-mono">whoami</span>
+                            <span className="text-zinc-400">Display current user</span>
+                        </div>
+                        <div className="grid grid-cols-[140px_1fr] gap-4 p-2 rounded bg-zinc-900/50">
+                            <span className="text-cyan-400 font-mono">date</span>
+                            <span className="text-zinc-400">Show current date/time</span>
+                        </div>
+                        <div className="grid grid-cols-[140px_1fr] gap-4 p-2 rounded bg-zinc-900/50">
+                            <span className="text-cyan-400 font-mono">echo &lt;text&gt;</span>
+                            <span className="text-zinc-400">Print text to terminal</span>
+                        </div>
+                        <div className="grid grid-cols-[140px_1fr] gap-4 p-2 rounded bg-zinc-900/50">
+                            <span className="text-cyan-400 font-mono">clear</span>
+                            <span className="text-zinc-400">Clear terminal screen</span>
+                        </div>
+                    </div>
+                    <div className="text-zinc-500 text-xs pt-2 border-t border-zinc-800">
+                        💡 Tip: Type <span className="text-cyan-400">commands</span> for an interactive command browser
+                    </div>
                 </div>
             );
 
         case "ls":
             return (
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-blue-400">
-                    <span>about.txt</span>
-                    <span>projects/</span>
-                    <span>skills.json</span>
-                    <span>contact.md</span>
-                    <span>settings.conf</span>
-                    <span>resume.pdf</span>
+                <div className="space-y-3">
+                    <div className="text-zinc-500 text-xs">Listing directory contents...</div>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        <div className="flex items-center gap-2 p-2 rounded bg-zinc-900/50 border border-zinc-800">
+                            <File className="w-4 h-4 text-blue-400" />
+                            <span className="text-blue-400">about.txt</span>
+                        </div>
+                        <div className="flex items-center gap-2 p-2 rounded bg-zinc-900/50 border border-zinc-800">
+                            <Folder className="w-4 h-4 text-yellow-400" />
+                            <span className="text-yellow-400">projects/</span>
+                        </div>
+                        <div className="flex items-center gap-2 p-2 rounded bg-zinc-900/50 border border-zinc-800">
+                            <File className="w-4 h-4 text-green-400" />
+                            <span className="text-green-400">skills.json</span>
+                        </div>
+                        <div className="flex items-center gap-2 p-2 rounded bg-zinc-900/50 border border-zinc-800">
+                            <File className="w-4 h-4 text-purple-400" />
+                            <span className="text-purple-400">contact.md</span>
+                        </div>
+                        <div className="flex items-center gap-2 p-2 rounded bg-zinc-900/50 border border-zinc-800">
+                            <File className="w-4 h-4 text-orange-400" />
+                            <span className="text-orange-400">settings.conf</span>
+                        </div>
+                        <div className="flex items-center gap-2 p-2 rounded bg-zinc-900/50 border border-zinc-800">
+                            <File className="w-4 h-4 text-red-400" />
+                            <span className="text-red-400">resume.pdf</span>
+                        </div>
+                    </div>
                 </div>
             );
 
         case "whoami":
-            return "visitor@portfolio-os";
+            return (
+                <div className="space-y-2">
+                    <div className="text-cyan-400 font-bold">visitor@portfolio-os</div>
+                    <div className="text-zinc-500 text-xs">Guest user • Read-only access</div>
+                </div>
+            );
 
         case "date":
-            return new Date().toString();
+            const now = new Date();
+            return (
+                <div className="space-y-1">
+                    <div className="text-cyan-400">{now.toLocaleString()}</div>
+                    <div className="text-zinc-500 text-xs">
+                        {now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                    </div>
+                </div>
+            );
 
         case "echo":
-            return args;
+            return args || "";
 
         case "cat":
             if (args === "about.txt" || args === "about") {
-                return "Design Engineer based in SF. Passionate about UI/UX and Creative Coding.";
+                return (
+                    <div className="space-y-2 p-4 rounded-lg bg-zinc-900/50 border border-zinc-800">
+                        <div className="text-cyan-400 font-bold">📄 about.txt</div>
+                        <div className="text-zinc-300">
+                            Design Engineer based in SF. Passionate about UI/UX and Creative Coding.
+                            Building beautiful, functional interfaces that users love.
+                        </div>
+                    </div>
+                );
             } else if (args === "contact.md" || args === "contact") {
-                return "Email: hello@example.com\nTwitter: @example\nGitHub: github.com/example";
+                return (
+                    <div className="space-y-2 p-4 rounded-lg bg-zinc-900/50 border border-zinc-800">
+                        <div className="text-cyan-400 font-bold">📧 contact.md</div>
+                        <div className="space-y-1 text-zinc-300">
+                            <div>Email: hello@example.com</div>
+                            <div>Twitter: @example</div>
+                            <div>GitHub: github.com/example</div>
+                            <div>LinkedIn: linkedin.com/in/example</div>
+                        </div>
+                    </div>
+                );
             } else if (args === "skills.json" || args === "skills") {
-                return JSON.stringify({
-                    languages: ["TypeScript", "Python", "Rust"],
-                    frameworks: ["React", "Next.js", "Tailwind"],
-                    tools: ["Figma", "Docker", "Git"]
-                }, null, 2);
+                return (
+                    <div className="space-y-2 p-4 rounded-lg bg-zinc-900/50 border border-zinc-800">
+                        <div className="text-cyan-400 font-bold">⚙️ skills.json</div>
+                        <pre className="text-green-400 text-xs overflow-x-auto">
+                            {JSON.stringify({
+                                languages: ["TypeScript", "Python", "Rust", "Go"],
+                                frameworks: ["React", "Next.js", "Tailwind", "Node.js"],
+                                tools: ["Figma", "Docker", "Git", "VS Code"],
+                                databases: ["PostgreSQL", "MongoDB", "Redis"]
+                            }, null, 2)}
+                        </pre>
+                    </div>
+                );
             } else if (!args) {
-                return "usage: cat <filename>";
+                return (
+                    <div className="flex items-center gap-2 text-orange-400">
+                        <XCircle className="w-4 h-4" />
+                        <span>usage: cat &lt;filename&gt;</span>
+                    </div>
+                );
             } else {
-                return `cat: ${args}: No such file or directory`;
+                return (
+                    <div className="flex items-center gap-2 text-red-400">
+                        <XCircle className="w-4 h-4" />
+                        <span>cat: {args}: No such file or directory</span>
+                    </div>
+                );
             }
 
         case "open":
@@ -78,15 +176,33 @@ export function handleCommand(cmd: string, launchApp: (id: AppId) => void): stri
                 "calculator": "calculator",
                 "gallery": "gallery",
                 "contact": "contact",
+                "spotify": "spotify",
+                "youtube": "youtube",
+                "database": "database",
             };
 
             if (appsMap[args]) {
                 launchApp(appsMap[args]);
-                return `Launching ${args}...`;
+                return (
+                    <div className="flex items-center gap-2 text-green-400">
+                        <CheckCircle2 className="w-4 h-4" />
+                        <span>Launching {args}...</span>
+                    </div>
+                );
             } else if (!args) {
-                return "usage: open <app_name>";
+                return (
+                    <div className="flex items-center gap-2 text-orange-400">
+                        <XCircle className="w-4 h-4" />
+                        <span>usage: open &lt;app_name&gt;</span>
+                    </div>
+                );
             } else {
-                return `open: application '${args}' not found`;
+                return (
+                    <div className="flex items-center gap-2 text-red-400">
+                        <XCircle className="w-4 h-4" />
+                        <span>open: application '{args}' not found</span>
+                    </div>
+                );
             }
 
         case "clear":
@@ -96,6 +212,16 @@ export function handleCommand(cmd: string, launchApp: (id: AppId) => void): stri
             return "";
 
         default:
-            return `command not found: ${command}`;
+            return (
+                <div className="space-y-2">
+                    <div className="flex items-center gap-2 text-red-400">
+                        <XCircle className="w-4 h-4" />
+                        <span>command not found: {command}</span>
+                    </div>
+                    <div className="text-zinc-500 text-xs">
+                        Type <span className="text-cyan-400">help</span> or <span className="text-cyan-400">commands</span> to see available commands
+                    </div>
+                </div>
+            );
     }
 }
