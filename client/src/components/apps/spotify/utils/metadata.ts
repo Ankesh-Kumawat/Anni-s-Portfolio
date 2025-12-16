@@ -1,4 +1,5 @@
-import jsmediatags from "jsmediatags";
+// @ts-ignore - Using minified browser build
+import jsmediatags from "jsmediatags/dist/jsmediatags.min.js";
 import { Song } from "../types";
 
 // Extract metadata from audio file using jsmediatags

@@ -28,14 +28,10 @@ export default defineConfig({
       "@": path.resolve(import.meta.dirname, "client", "src"),
       "@shared": path.resolve(import.meta.dirname, "shared"),
       "@assets": path.resolve(import.meta.dirname, "attached_assets"),
-      "jsmediatags": path.resolve(import.meta.dirname, "node_modules/jsmediatags/build2/jsmediatags.js"),
     },
   },
   optimizeDeps: {
-    include: ["jsmediatags"],
-    esbuildOptions: {
-      mainFields: ['module', 'main'],
-    },
+    exclude: ['jsmediatags'],
   },
   css: {
     postcss: {
