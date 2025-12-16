@@ -1,10 +1,15 @@
-import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Volume2, Monitor } from "lucide-react";
+import { useVolume } from "@/lib/volume-context";
 
 export function SoundSettings() {
-    const [volume, setVolume] = useState([75]);
+    const { volume: globalVolume, setVolume: setGlobalVolume } = useVolume();
+    const volumePercent = Math.round(globalVolume * 100);
+
+    const handleVolumeChange = (value: number[]) => {
+        setGlobalVolume(value[0] / 100);
+    };
 
     return (
         <>
@@ -16,9 +21,9 @@ export function SoundSettings() {
                 <div className="space-y-4">
                     <div className="flex justify-between">
                         <Label>Output Volume</Label>
-                        <span className="text-sm text-muted-foreground">{volume}%</span>
+                        <span className="text-sm text-muted-foreground">{volumePercent}%</span>
                     </div>
-                    <Slider value={volume} onValueChange={setVolume} max={100} step={1} />
+                    <Slider value={[volumePercent]} onValueChange={handleVolumeChange} max={100} step={1} />
                 </div>
                 <div className="space-y-2">
                     <Label>Output Device</Label>

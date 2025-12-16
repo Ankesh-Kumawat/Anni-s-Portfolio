@@ -1,15 +1,18 @@
 import { useOS } from "@/lib/os-context";
+import { useSpotify } from "@/lib/spotify-context";
 import { Window } from "./Window";
 import { MobileAppView } from "./MobileAppView";
 import { DesktopIcon } from "./DesktopIcon";
 import { Taskbar } from "./Taskbar";
 import { SystemTray } from "./SystemTray";
+import { WidgetsPanel } from "./widgets/WidgetsPanel";
 import { APPS } from "../apps";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 export function Desktop() {
   const { openWindows } = useOS();
   const isMobile = useIsMobile();
+  const spotifyContext = useSpotify();
 
   // On mobile, check if any app is open to show full-screen view
   const mobileActiveApp = isMobile && openWindows.length > 0 && !openWindows[0].minimized
@@ -56,13 +59,27 @@ export function Desktop() {
               ))}
             </div>
 
+            {/* Widgets Panel - Desktop only */}
+            {!isMobile && (
+              <WidgetsPanel
+                spotifyData={{
+                  currentSong: spotifyContext.currentSong,
+                  isPlaying: spotifyContext.isPlaying,
+                  onTogglePlay: spotifyContext.togglePlay,
+                  onNext: spotifyContext.nextSong,
+                  onPrevious: spotifyContext.previousSong,
+                }}
+              />
+            )}
+
             {/* Windows Area - Desktop only */}
             {!isMobile && (
               <div className="absolute inset-0 pointer-events-none [&>*]:pointer-events-auto z-10">
                 {openWindows.map((windowState) => {
                   const app = APPS.find((a) => a.id === windowState.id);
-                  if (!app || windowState.minimized) return null;
+                  if (!app) return null;
 
+                  // Render all windows (including minimized) so audio/video continues
                   return (
                     <Window
                       key={windowState.id}
