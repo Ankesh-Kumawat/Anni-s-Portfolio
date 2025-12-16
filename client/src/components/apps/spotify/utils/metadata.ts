@@ -1,48 +1,49 @@
-// @ts-ignore - Using minified browser build
-import jsmediatags from "jsmediatags/dist/jsmediatags.min.js";
+import * as mm from "music-metadata";
 import { Song } from "../types";
 
-// Extract metadata from audio file using jsmediatags
-export function extractMetadataFromFile(audioUrl: string): Promise<Partial<Song>> {
-    return new Promise((resolve) => {
-        jsmediatags.read(audioUrl, {
-            onSuccess: (tag) => {
-                const tags = tag.tags;
-                const metadata: Partial<Song> = {};
+// Extract metadata from audio file using music-metadata
+export async function extractMetadataFromFile(audioUrl: string): Promise<Partial<Song>> {
+    try {
+        // Fetch the audio file as a blob
+        const response = await fetch(audioUrl);
+        const blob = await response.blob();
 
-                // Extract title
-                if (tags.title) {
-                    metadata.title = tags.title;
-                }
+        // Parse metadata
+        const metadata = await mm.parseBlob(blob);
+        const result: Partial<Song> = {};
 
-                // Extract artist
-                if (tags.artist) {
-                    metadata.artist = tags.artist;
-                }
+        // Extract title
+        if (metadata.common.title) {
+            result.title = metadata.common.title;
+        }
 
-                // Extract album
-                if (tags.album) {
-                    metadata.album = tags.album;
-                }
+        // Extract artist
+        if (metadata.common.artist) {
+            result.artist = metadata.common.artist;
+        }
 
-                // Extract album art
-                if (tags.picture) {
-                    const picture = tags.picture;
-                    const base64String = picture.data.reduce((acc: string, byte: number) => {
-                        return acc + String.fromCharCode(byte);
-                    }, '');
-                    const base64 = btoa(base64String);
-                    metadata.coverUrl = `data:${picture.format};base64,${base64}`;
-                }
+        // Extract album
+        if (metadata.common.album) {
+            result.album = metadata.common.album;
+        }
 
-                resolve(metadata);
-            },
-            onError: (error) => {
-                console.warn("Failed to read metadata:", error);
-                resolve({});
+        // Extract album art
+        if (metadata.common.picture && metadata.common.picture.length > 0) {
+            const picture = metadata.common.picture[0];
+            const uint8Array = new Uint8Array(picture.data);
+            let binary = '';
+            for (let i = 0; i < uint8Array.length; i++) {
+                binary += String.fromCharCode(uint8Array[i]);
             }
-        });
-    });
+            const base64 = btoa(binary);
+            result.coverUrl = `data:${picture.format};base64,${base64}`;
+        }
+
+        return result;
+    } catch (error) {
+        console.warn("Failed to read metadata:", error);
+        return {};
+    }
 }
 
 // Extract metadata from filename as fallback

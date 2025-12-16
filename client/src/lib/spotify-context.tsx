@@ -19,32 +19,47 @@ const SpotifyContext = createContext<SpotifyContextType | undefined>(undefined);
 export function SpotifyProvider({ children }: { children: ReactNode }) {
     const [currentSong, setCurrentSong] = useState<{ title: string; artist: string; coverUrl: string } | null>(null);
     const [isPlaying, setIsPlaying] = useState(false);
-    const [togglePlayCallback, setTogglePlayCallback] = useState<(() => void) | null>(null);
-    const [nextSongCallback, setNextSongCallback] = useState<(() => void) | null>(null);
-    const [previousSongCallback, setPreviousSongCallback] = useState<(() => void) | null>(null);
+
+    // Use refs to store callbacks so they don't cause re-renders
+    const togglePlayCallbackRef = React.useRef<(() => void) | null>(null);
+    const nextSongCallbackRef = React.useRef<(() => void) | null>(null);
+    const previousSongCallbackRef = React.useRef<(() => void) | null>(null);
 
     const togglePlay = () => {
-        if (togglePlayCallback) togglePlayCallback();
+        if (togglePlayCallbackRef.current) {
+            togglePlayCallbackRef.current();
+        }
     };
 
     const nextSong = () => {
-        if (nextSongCallback) nextSongCallback();
+        if (nextSongCallbackRef.current) {
+            nextSongCallbackRef.current();
+        }
     };
 
     const previousSong = () => {
-        if (previousSongCallback) previousSongCallback();
+        if (previousSongCallbackRef.current) {
+            previousSongCallbackRef.current();
+        }
+    };
+
+    // Expose refs for DevTunes app to register callbacks
+    const contextValue = {
+        currentSong,
+        isPlaying,
+        setCurrentSong,
+        setIsPlaying,
+        togglePlay,
+        nextSong,
+        previousSong,
+        // Internal refs for callback registration
+        _togglePlayCallbackRef: togglePlayCallbackRef,
+        _nextSongCallbackRef: nextSongCallbackRef,
+        _previousSongCallbackRef: previousSongCallbackRef,
     };
 
     return (
-        <SpotifyContext.Provider value={{
-            currentSong,
-            isPlaying,
-            setCurrentSong,
-            setIsPlaying,
-            togglePlay,
-            nextSong,
-            previousSong,
-        }}>
+        <SpotifyContext.Provider value={contextValue as any}>
             {children}
         </SpotifyContext.Provider>
     );

@@ -33,7 +33,7 @@ export function SpotifyWidget({
                 </div>
                 <div className="flex-1">
                     <span className="font-bold text-sm block">Now Playing</span>
-                    <span className="text-xs text-muted-foreground">Spotify</span>
+                    <span className="text-xs text-muted-foreground">DevTunes</span>
                 </div>
             </div>
 
