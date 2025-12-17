@@ -10,6 +10,7 @@ import { SpotifyProvider } from "@/lib/spotify-context";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Desktop } from "@/components/os/Desktop";
 import NotFound from "@/pages/not-found";
+import Editor from "@/pages/editor";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
                   <Toaster />
                   <Switch>
                     <Route path="/" component={Desktop} />
+                    <Route path="/editor" component={Editor} />
                     <Route component={NotFound} />
                   </Switch>
                 </OSProvider>
