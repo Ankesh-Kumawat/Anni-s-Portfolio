@@ -31,14 +31,26 @@ interface WindowState {
   zIndex: number;
 }
 
+export interface OSNotification {
+  id: string;
+  title: string;
+  message: string;
+  timestamp: Date;
+  read: boolean;
+}
+
 interface OSContextType {
   openWindows: WindowState[];
   activeWindowId: AppId | null;
+  notifications: OSNotification[];
   launchApp: (id: AppId) => void;
   closeWindow: (id: AppId) => void;
   minimizeWindow: (id: AppId) => void;
   focusWindow: (id: AppId) => void;
   isAppOpen: (id: AppId) => boolean;
+  addNotification: (title: string, message: string) => void;
+  markNotificationRead: (id: string) => void;
+  clearNotifications: () => void;
 }
 
 const OSContext = createContext<OSContextType | undefined>(undefined);
@@ -47,6 +59,7 @@ export function OSProvider({ children }: { children: ReactNode }) {
   const [openWindows, setOpenWindows] = useState<WindowState[]>([]);
   const [activeWindowId, setActiveWindowId] = useState<AppId | null>(null);
   const [zIndexCounter, setZIndexCounter] = useState(10);
+  const [notifications, setNotifications] = useState<OSNotification[]>([]);
 
   const launchApp = (id: AppId) => {
     // Check if running on mobile
@@ -112,16 +125,46 @@ export function OSProvider({ children }: { children: ReactNode }) {
     return openWindows.some((w) => w.id === id);
   };
 
+  const addNotification = (title: string, message: string) => {
+    const notification: OSNotification = {
+      id: Date.now().toString(),
+      title,
+      message,
+      timestamp: new Date(),
+      read: false,
+    };
+    setNotifications((prev) => [notification, ...prev]);
+
+    // Play notification sound
+    const audio = new Audio('/assets/notification/notification.mp3');
+    audio.volume = 0.5;
+    audio.play().catch(() => console.log('Notification added'));
+
+    // Notifications will be auto-removed by the component after 10 seconds
+  };
+
+  const markNotificationRead = (id: string) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
+  };
+
+  const clearNotifications = () => {
+    setNotifications([]);
+  };
+
   return (
     <OSContext.Provider
       value={{
         openWindows,
         activeWindowId,
+        notifications,
         launchApp,
         closeWindow,
         minimizeWindow,
         focusWindow,
         isAppOpen,
+        addNotification,
+        markNotificationRead,
+        clearNotifications,
       }}
     >
       {children}

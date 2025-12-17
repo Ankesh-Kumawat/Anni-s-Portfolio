@@ -10,6 +10,7 @@ import { SpotifyProvider } from "@/lib/spotify-context";
 import { BrightnessProvider } from "@/lib/brightness-context";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Desktop } from "@/components/os/Desktop";
+import { OSNotificationContainer } from "@/components/os/OSNotificationContainer";
 import NotFound from "@/pages/not-found";
 import Editor from "@/pages/editor";
 
@@ -24,6 +25,7 @@ function App() {
                 <TaskbarProvider>
                   <OSProvider>
                     <Toaster />
+                    <OSNotificationContainer />
                     <Switch>
                       <Route path="/" component={Desktop} />
                       <Route path="/editor" component={Editor} />

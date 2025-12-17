@@ -4,8 +4,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Send, MessageSquare, CheckCircle2, AlertCircle } from "lucide-react";
+import { useOS } from "@/lib/os-context";
 
 export function ContactForm() {
+    const { addNotification } = useOS();
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -39,18 +41,35 @@ export function ContactForm() {
                     type: "success",
                     message: data.message || "Message sent successfully!"
                 });
+
+                // Show OS notification in System Status widget
+                addNotification(
+                    "✉️ Email Sent Successfully!",
+                    `Message from ${formData.name} has been delivered to your inbox.`
+                );
+
                 setFormData({ name: "", email: "", subject: "", message: "" });
             } else {
                 setSubmitStatus({
                     type: "error",
                     message: data.message || "Failed to send message"
                 });
+
+                addNotification(
+                    "❌ Email Failed",
+                    data.message || "Failed to send message. Please try again."
+                );
             }
         } catch (error) {
             setSubmitStatus({
                 type: "error",
                 message: "Network error. Please try again later."
             });
+
+            addNotification(
+                "❌ Network Error",
+                "Please check your connection and try again."
+            );
         } finally {
             setIsSubmitting(false);
         }
@@ -143,7 +162,7 @@ export function ContactForm() {
                             value={formData.message}
                             onChange={handleChange}
                             placeholder="Tell me about your project, ideas, or just say hi..."
-                            className="min-h-[150px] md:min-h-[180px] lg:min-h-[200px] text-sm md:text-base resize-none"
+                            className="min-h-[150px] md:min-h-[180px] lg:min-h-[200px] text-sm md:text-base resize-none no-scrollbar"
                             required
                             disabled={isSubmitting}
                         />
