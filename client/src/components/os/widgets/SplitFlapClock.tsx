@@ -119,8 +119,8 @@ export function SplitFlapClock() {
                 .flipUnitContainer {
                     display: block;
                     position: relative;
-                    width: 100px;
-                    height: 90px;
+                    width: 80px;
+                    height: 45px;
                     perspective-origin: 50% 50%;
                     perspective: 300px;
                     background-color: #1a1510;
@@ -139,7 +139,7 @@ export function SplitFlapClock() {
                 }
 
                 .upperCard span, .lowerCard span {
-                    font-size: 3.5rem;
+                    font-size: 2.5rem;
                     font-family: 'Droid Sans Mono', monospace;
                     font-weight: lighter;
                     background: linear-gradient(to bottom, #ff6b35 0%, #ff8c42 50%, #ffa600 100%);
@@ -186,7 +186,7 @@ export function SplitFlapClock() {
 
                 .flipCard span {
                     font-family: 'Droid Sans Mono', monospace;
-                    font-size: 3.5rem;
+                    font-size: 2.5rem;
                     font-weight: lighter;
                     background: linear-gradient(to bottom, #ff6b35 0%, #ff8c42 50%, #ffa600 100%);
                     -webkit-background-clip: text;
@@ -256,12 +256,12 @@ export function SplitFlapClock() {
                 }
             `}</style>
 
-            <div className="bg-gradient-to-br from-zinc-900 via-zinc-950 to-black border border-zinc-800 rounded-2xl p-5 shadow-2xl">
+            <div className="bg-gradient-to-br from-zinc-900 via-zinc-950 to-black border border-zinc-800 rounded-xl p-3 shadow-2xl">
                 {/* Header */}
-                <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
-                        <span className="text-xs font-medium uppercase tracking-wider"
+                <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-1.5">
+                        <div className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
+                        <span className="text-[10px] font-medium uppercase tracking-wider"
                             style={{
                                 background: 'linear-gradient(to right, #ff6b35, #ff8c42, #ffa600)',
                                 WebkitBackgroundClip: 'text',
@@ -275,10 +275,10 @@ export function SplitFlapClock() {
                 </div>
 
                 {/* Flip Clock */}
-                <div className="flipClock mb-4">
-                    <div className="flex flex-col items-center gap-1.5">
+                <div className="flipClock mb-3">
+                    <div className="flex flex-col items-center gap-1">
                         <FlipUnitContainer unit="hours" digit={hours} shuffle={hoursShuffle} />
-                        <span className="text-[10px] uppercase tracking-wide font-medium"
+                        <span className="text-[9px] uppercase tracking-wide font-medium"
                             style={{
                                 background: 'linear-gradient(to right, #ff6b35, #ffa600)',
                                 WebkitBackgroundClip: 'text',
@@ -288,14 +288,14 @@ export function SplitFlapClock() {
                             }}>Hours</span>
                     </div>
 
-                    <div className="flex flex-col items-center justify-center gap-3 h-[90px] mb-[22px]">
-                        <div className="w-2 h-2 rounded-full bg-orange-500/70" style={{ boxShadow: '0 0 6px rgba(255, 107, 53, 0.6)' }} />
-                        <div className="w-2 h-2 rounded-full bg-orange-500/70" style={{ boxShadow: '0 0 6px rgba(255, 107, 53, 0.6)' }} />
+                    <div className="flex flex-col items-center justify-center gap-2 h-[45px] mb-[18px]">
+                        <div className="w-1.5 h-1.5 rounded-full bg-orange-500/70" style={{ boxShadow: '0 0 6px rgba(255, 107, 53, 0.6)' }} />
+                        <div className="w-1.5 h-1.5 rounded-full bg-orange-500/70" style={{ boxShadow: '0 0 6px rgba(255, 107, 53, 0.6)' }} />
                     </div>
 
-                    <div className="flex flex-col items-center gap-1.5">
+                    <div className="flex flex-col items-center gap-1">
                         <FlipUnitContainer unit="minutes" digit={minutes} shuffle={minutesShuffle} />
-                        <span className="text-[10px] uppercase tracking-wide font-medium"
+                        <span className="text-[9px] uppercase tracking-wide font-medium"
                             style={{
                                 background: 'linear-gradient(to right, #ff6b35, #ffa600)',
                                 WebkitBackgroundClip: 'text',
@@ -305,14 +305,14 @@ export function SplitFlapClock() {
                             }}>Minutes</span>
                     </div>
 
-                    <div className="flex flex-col items-center justify-center gap-3 h-[90px] mb-[22px]">
-                        <div className="w-2 h-2 rounded-full bg-orange-500/70" style={{ boxShadow: '0 0 6px rgba(255, 107, 53, 0.6)' }} />
-                        <div className="w-2 h-2 rounded-full bg-orange-500/70" style={{ boxShadow: '0 0 6px rgba(255, 107, 53, 0.6)' }} />
+                    <div className="flex flex-col items-center justify-center gap-2 h-[45px] mb-[18px]">
+                        <div className="w-1.5 h-1.5 rounded-full bg-orange-500/70" style={{ boxShadow: '0 0 6px rgba(255, 107, 53, 0.6)' }} />
+                        <div className="w-1.5 h-1.5 rounded-full bg-orange-500/70" style={{ boxShadow: '0 0 6px rgba(255, 107, 53, 0.6)' }} />
                     </div>
 
-                    <div className="flex flex-col items-center gap-1.5">
+                    <div className="flex flex-col items-center gap-1">
                         <FlipUnitContainer unit="seconds" digit={seconds} shuffle={secondsShuffle} />
-                        <span className="text-[10px] uppercase tracking-wide font-medium"
+                        <span className="text-[9px] uppercase tracking-wide font-medium"
                             style={{
                                 background: 'linear-gradient(to right, #ff6b35, #ffa600)',
                                 WebkitBackgroundClip: 'text',
@@ -324,7 +324,7 @@ export function SplitFlapClock() {
                 </div>
 
                 {/* Footer */}
-                <div className="pt-4 border-t border-orange-900/30 flex items-center justify-between text-xs">
+                <div className="pt-2 border-t border-orange-900/30 flex items-center justify-between text-[10px]">
                     <span style={{
                         background: 'linear-gradient(to right, #ff6b35, #ffa600)',
                         WebkitBackgroundClip: 'text',

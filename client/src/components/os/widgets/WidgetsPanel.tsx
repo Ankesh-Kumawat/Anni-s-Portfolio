@@ -1,5 +1,6 @@
-import { SpotifyWidget } from "./SpotifyWidget";
+import { DevTunesWidget } from "./DevTunesWidget";
 import { SplitFlapClock } from "./SplitFlapClock";
+import { SystemStatus } from "./SystemStatus";
 import { useOS } from "@/lib/os-context";
 
 interface WidgetsPanelProps {
@@ -20,13 +21,16 @@ export function WidgetsPanel({ spotifyData }: WidgetsPanelProps) {
     const { launchApp } = useOS();
 
     return (
-        <div className="hidden md:block absolute top-20 right-6 w-[420px] space-y-4 pointer-events-none [&>*]:pointer-events-auto z-20">
+        <div className="hidden md:block absolute top-20 right-6 w-[360px] space-y-3 pointer-events-none [&>*]:pointer-events-auto z-20">
             {/* Split-Flap Clock - Desktop only */}
             <SplitFlapClock />
 
-            {/* Spotify Widget - Only show when song is playing or paused */}
+            {/* System Status Widget */}
+            <SystemStatus />
+
+            {/* DevTunes Widget - Only show when song is playing or paused */}
             {spotifyData?.currentSong && (
-                <SpotifyWidget
+                <DevTunesWidget
                     currentSong={spotifyData.currentSong}
                     isPlaying={spotifyData.isPlaying}
                     onTogglePlay={spotifyData.onTogglePlay}
