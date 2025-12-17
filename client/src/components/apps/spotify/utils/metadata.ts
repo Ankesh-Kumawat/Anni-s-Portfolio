@@ -57,16 +57,33 @@ export function extractMetadataFromFilename(filename: string): Partial<Song> {
 
     if (byMatch) {
         const [, title, artist] = byMatch;
+        // Clean title: remove extra info in parentheses, brackets, and after pipes
+        let cleanTitle = title.trim()
+            .replace(/\s*\(Official.*?\)/gi, '')  // Remove (Official Music Video), etc.
+            .replace(/\s*\[.*?\]/g, '')            // Remove [anything]
+            .replace(/\s*\|.*$/g, '')              // Remove | and everything after
+            .replace(/\s*_.*$/g, '')               // Remove _ and everything after
+            .replace(/\s+/g, ' ')                  // Normalize spaces
+            .trim();
+
         return {
-            title: title.trim(),
+            title: cleanTitle,
             artist: artist.trim(),
             album: "Singles",
         };
     }
 
-    // Fallback: use filename as title
+    // Fallback: use filename as title (cleaned)
+    let cleanTitle = nameWithoutExt
+        .replace(/\s*\(Official.*?\)/gi, '')
+        .replace(/\s*\[.*?\]/g, '')
+        .replace(/\s*\|.*$/g, '')
+        .replace(/\s*_.*$/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+
     return {
-        title: nameWithoutExt,
+        title: cleanTitle,
         artist: "Unknown Artist",
         album: "Singles",
     };
@@ -108,34 +125,33 @@ export function getAudioDuration(audioUrl: string): Promise<number> {
 
 // List of all music files in /public/music/ folder
 const musicFiles = [
-    "4U by Maanu - UO_QEkZtMAw.m4a",
-    "Apna Bana Le by Arijit Singh - ElZfdU54Cp8.m4a",
-    "AUR - ME (Official Lyrical Video) by AUR - X6GeSTxnB3Y.m4a",
-    "AUR - YOU (Official Lyrical Video) by AUR - jYXN8xd_OPc.m4a",
-    "Bye by Aditya Bhardwaj - DbiRVNeZPnw.m4a",
-    "Chalo Door Kahin by Samar Jafri - piyLXuSrDYo.m4a",
-    "Coke Studio _ Season 14 _ Pasoori _ Ali Sethi x Shae Gill by Coke Studio Pakistan - 5Eqb_-j3FDA.m4a",
-    "Darmiyaan Mashup 2024 - Shafqat Amanat Ali, Armaan Malik, Yasser - Sad Chillout  - BICKY OFFICIAL by BICKY OFFICIAL - DTNtQ-FkA-4.m4a",
-    "Dil Tu Jaan Tu by Gurnazar Chattha - kyjg5kX4pT0.m4a",
-    "Finding Her (Female Version) by Tanishka Bahl, Kushagra, Bharath, Saaheal - 6VKrB1PYsS8.m4a",
-    "Kabhi Kabhi by AUR _ کبھی کبھی  (Official Visualizer) by AUR - yLAcnCtvsJU.m4a",
-    "Kya Chahiye by AUR _ کیا چاہیے  (Official Music Video) by AUR - -qLQ10H9gfA.m4a",
-    "kya karoon_ by Zaeden - v4peso5bOY8.m4a",
-    "Love Again Song _ 1Min Music _ Sanju Rathod & Nilima Chavhan by Anant Ghule Official - xVl3U75C-Lc.m4a",
-    "Main Kho Gaya (Visualiser) by Kushagra, Showkidd - MldmN-0b9j4.m4a",
-    "Maiyya Mainu by Sachet-Parampara - 3zFgrvoE.m4a",
-    "Meri Banogi Kya by Rito Riba, Rajat Nagpal - uoLC9u_M-E8.m4a",
-    "Paaro by Aditya Rikhari - DxsDekHDKXo.m4a",
-    "Phool by AUR _ پھول by AUR - cKjxvTMAvpI.m4a",
-    "Raaz by Zaeden - 6Cfd3EOvHzw.m4a",
-    "Sahiba by Aditya Rikhari - n2dVFdqMYGA.m4a",
-    "socha na tha by Zaeden - Cxg6xPmSFFU.m4a",
-    "Suniyan Suniyan by Juss, MixSingh - AKH6ZNSnWOA.m4a",
-    "Sunn Le Jaane Ja by Avinash Kumar, Abhishek Shukla, Aviverse - fJDpn251gbo.m4a",
-    "Tara by Deepak Rathore Project - B3LyKf21ibo.m4a",
-    "Tumhare Aane Se by Ashu Shukla - FzjorhJJwuA.m4a",
-    "Ve Haaniyaan (feat. Avvy Sra) by Danny - E_SbwSe15y0.m4a",
-    "Woh by Khatth, Sthiti - G8nlhcmDXNE.m4a",
+    "4U.m4a",
+    "Apna Bana Le.m4a",
+    "AUR - ME.m4a",
+    "AUR - YOU.m4a",
+    "Bye.m4a",
+    "Chalo Door Kahin.m4a",
+    "Pasoori.m4a",
+    "Dil Tu Jaan Tu.m4a",
+    "Finding Her.m4a",
+    "Kabhi Kabhi.m4a",
+    "Kya Chahiye.m4a",
+    "Kya Karoon.m4a",
+    "Love Again.m4a",
+    "Main Kho Gaya.m4a",
+    "Maiyya Mainu.m4a",
+    "Meri Banogi Kya.m4a",
+    "Paaro.m4a",
+    "Phool.m4a",
+    "Raaz.m4a",
+    "Sahiba.m4a",
+    "Socha Na Tha.m4a",
+    "Suniyan Suniyan.m4a",
+    "Sunn Le Jaane Ja.m4a",
+    "Tara.m4a",
+    "Tumhare Aane Se.m4a",
+    "Ve Haaniyaan.m4a",
+    "Woh.m4a",
 ];
 
 // Load a single song with metadata
