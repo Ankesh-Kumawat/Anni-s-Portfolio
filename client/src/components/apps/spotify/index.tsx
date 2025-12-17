@@ -232,7 +232,6 @@ export default function DevTunes() {
                     <div className="text-center space-y-1 w-full">
                         <h2 className="text-2xl font-bold truncate">{currentSong.title}</h2>
                         <p className="text-muted-foreground truncate">{currentSong.artist}</p>
-                        <p className="text-sm text-muted-foreground/70">{currentSong.album}</p>
                     </div>
 
                     <div className="w-full space-y-2">
@@ -492,7 +491,6 @@ export default function DevTunes() {
                             <div className="text-center space-y-1">
                                 <h2 className="text-2xl font-bold">{currentSong.title}</h2>
                                 <p className="text-muted-foreground">{currentSong.artist}</p>
-                                <p className="text-sm text-muted-foreground/70">{currentSong.album}</p>
                             </div>
 
                             {/* Progress Bar */}

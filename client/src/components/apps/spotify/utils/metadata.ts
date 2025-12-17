@@ -168,10 +168,10 @@ async function loadSongMetadata(filename: string, index: number): Promise<Song> 
     const durationSeconds = await getAudioDuration(audioUrl);
     const duration = formatDuration(durationSeconds);
 
-    // Merge metadata (file metadata takes priority)
+    // Use filename for title only, use file metadata for artist, album, and cover art
     return {
         id: (index + 1).toString(),
-        title: fileMetadata.title || filenameMetadata.title || "Unknown Title",
+        title: filenameMetadata.title || "Unknown Title",
         artist: fileMetadata.artist || filenameMetadata.artist || "Unknown Artist",
         album: fileMetadata.album || filenameMetadata.album || "Singles",
         duration: duration || "0:00",

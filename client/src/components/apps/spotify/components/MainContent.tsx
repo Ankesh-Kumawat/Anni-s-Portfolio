@@ -63,10 +63,9 @@ export function MainContent({ songs, currentSong, isPlaying, onPlaySong, onToggl
                     </div>
                 ) : (
                     <>
-                        <div className="hidden md:grid grid-cols-[40px_2fr_1fr_100px] gap-4 text-white/50 text-sm border-b border-white/10 pb-2 mb-4 px-4 uppercase tracking-wider font-medium">
+                        <div className="hidden md:grid grid-cols-[40px_3fr_100px] gap-4 text-white/50 text-sm border-b border-white/10 pb-2 mb-4 px-4 uppercase tracking-wider font-medium">
                             <span className="text-center">#</span>
                             <span>Title</span>
-                            <span>Album</span>
                             <span className="text-right">Duration</span>
                         </div>
 
@@ -78,7 +77,7 @@ export function MainContent({ songs, currentSong, isPlaying, onPlaySong, onToggl
                                 return (
                                     <div
                                         key={song.id}
-                                        className={`flex md:grid md:grid-cols-[40px_2fr_1fr_100px] gap-4 px-4 py-3 hover:bg-white/10 rounded-md group text-sm items-center cursor-pointer transition-colors ${isCurrentSong ? 'bg-white/5' : 'text-white/70'}`}
+                                        className={`flex md:grid md:grid-cols-[40px_3fr_100px] gap-4 px-4 py-3 hover:bg-white/10 rounded-md group text-sm items-center cursor-pointer transition-colors ${isCurrentSong ? 'bg-white/5' : 'text-white/70'}`}
                                         onClick={() => {
                                             if (isCurrentSong) {
                                                 onTogglePlay();
@@ -102,7 +101,6 @@ export function MainContent({ songs, currentSong, isPlaying, onPlaySong, onToggl
                                                 <p className="text-xs group-hover:text-white truncate">{song.artist}</p>
                                             </div>
                                         </div>
-                                        <span className="group-hover:text-white hidden md:block truncate">{song.album}</span>
                                         <span className="text-right ml-auto md:ml-0 shrink-0">{song.duration}</span>
                                     </div>
                                 );
