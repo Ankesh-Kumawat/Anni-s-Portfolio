@@ -115,6 +115,15 @@ export interface EditorData {
             joined_date: string;
             last_active: string;
         };
+        projects: Array<{
+            project_id: string;
+            name: string;
+            status: string;
+            platform: string;
+            tech_stack: string;
+            created_date: string;
+            last_updated: string;
+        }>;
     };
     settings: {
         account: {
@@ -139,4 +148,5 @@ export interface EditorData {
 export interface StepProps {
     data: EditorData;
     setData: React.Dispatch<React.SetStateAction<EditorData>>;
+    onDownload?: () => Promise<void>;
 }

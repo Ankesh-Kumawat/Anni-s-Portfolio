@@ -6,10 +6,9 @@ import Step1Personal from "./steps/Step1Personal";
 import Step2Contact from "./steps/Step2Contact";
 import Step3Social from "./steps/Step3Social";
 import Step4Projects from "./steps/Step4Projects";
-import Step5Gallery from "./steps/Step5Gallery";
-import Step6Notepad from "./steps/Step6Notepad";
-import Step7Advanced from "./steps/Step7Advanced";
-import Step8Review from "./steps/Step8Review";
+import Step5Notepad from "./steps/Step5Notepad";
+import Step6Advanced from "./steps/Step6Advanced";
+import Step7Review from "./steps/Step7Review";
 import { generateZip } from "./lib/generator";
 import type { EditorData } from "./types";
 
@@ -42,11 +41,10 @@ const STEPS = [
     { id: 1, title: "Personal Info", component: Step1Personal },
     { id: 2, title: "Contact", component: Step2Contact },
     { id: 3, title: "Social Links", component: Step3Social },
-    { id: 4, title: "Projects", component: Step4Projects },
-    { id: 5, title: "Gallery", component: Step5Gallery },
-    { id: 6, title: "Notepad", component: Step6Notepad },
-    { id: 7, title: "Advanced", component: Step7Advanced },
-    { id: 8, title: "Review & Download", component: Step8Review },
+    { id: 4, title: "Projects & Gallery", component: Step4Projects },
+    { id: 5, title: "Notepad", component: Step5Notepad },
+    { id: 6, title: "Advanced", component: Step6Advanced },
+    { id: 7, title: "Review & Download", component: Step7Review },
 ];
 
 export default function Editor() {
@@ -102,6 +100,7 @@ export default function Editor() {
                 joined_date: "",
                 last_active: "",
             },
+            projects: [],
         },
         settings: {
             account: {
@@ -167,6 +166,15 @@ export default function Editor() {
                     joined_date: now,
                     last_active: now,
                 },
+                projects: prev.projects.projects.map((project, index) => ({
+                    project_id: `P-${String(index + 1).padStart(4, '0')}`,
+                    name: project.name,
+                    status: project.status,
+                    platform: project.platform,
+                    tech_stack: project.techStack.join(", "),
+                    created_date: now,
+                    last_updated: now,
+                })),
             };
 
             // Sync to Settings data
@@ -207,15 +215,13 @@ export default function Editor() {
                 );
             case 3: // Social Links - Optional
                 return true;
-            case 4: // Projects - Optional
+            case 4: // Projects & Gallery - Optional
                 return true;
-            case 5: // Gallery - Optional
+            case 5: // Notepad - Optional
                 return true;
-            case 6: // Notepad - Optional
+            case 6: // Advanced - Optional
                 return true;
-            case 7: // Advanced - Optional
-                return true;
-            case 8: // Review
+            case 7: // Review
                 return true;
             default:
                 return true;
@@ -248,36 +254,25 @@ export default function Editor() {
             {/* Header */}
             <div className="flex-shrink-0 border-b bg-white/90 backdrop-blur-md shadow-sm">
                 <div className="max-w-[1800px] mx-auto px-8 py-5">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-6">
-                            <div>
-                                <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                                    Portfolio Editor
-                                </h1>
-                                <p className="text-sm text-gray-500 mt-1 font-medium">
-                                    Step {currentStep} of {STEPS.length}: {STEPS[currentStep - 1].title}
-                                </p>
+                    <div className="flex items-center gap-6">
+                        <div>
+                            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                                Portfolio Editor
+                            </h1>
+                            <p className="text-sm text-gray-500 mt-1 font-medium">
+                                Step {currentStep} of {STEPS.length}: {STEPS[currentStep - 1].title}
+                            </p>
+                        </div>
+                        <div className="h-12 w-px bg-gray-200" />
+                        <div className="flex items-center gap-3">
+                            <div className="text-right">
+                                <div className="text-xs text-gray-500 uppercase tracking-wide">Progress</div>
+                                <div className="text-lg font-bold text-gray-900">{Math.round(progress)}%</div>
                             </div>
-                            <div className="h-12 w-px bg-gray-200" />
-                            <div className="flex items-center gap-3">
-                                <div className="text-right">
-                                    <div className="text-xs text-gray-500 uppercase tracking-wide">Progress</div>
-                                    <div className="text-lg font-bold text-gray-900">{Math.round(progress)}%</div>
-                                </div>
-                                <div className="w-32">
-                                    <Progress value={progress} className="h-2" />
-                                </div>
+                            <div className="w-32">
+                                <Progress value={progress} className="h-2" />
                             </div>
                         </div>
-                        <Button
-                            onClick={handleDownload}
-                            disabled={currentStep !== STEPS.length}
-                            size="lg"
-                            className="gap-2 px-6"
-                        >
-                            <Download className="w-4 h-4" />
-                            Download ZIP
-                        </Button>
                     </div>
                 </div>
             </div>
@@ -323,7 +318,11 @@ export default function Editor() {
                         {/* Right Content */}
                         <div className="h-full flex flex-col bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
                             <div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide p-10">
-                                <CurrentStepComponent data={data} setData={setData} />
+                                <CurrentStepComponent
+                                    data={data}
+                                    setData={setData}
+                                    {...(currentStep === 7 && { onDownload: handleDownload })}
+                                />
                             </div>
 
                             {/* Navigation */}
@@ -336,7 +335,7 @@ export default function Editor() {
                                         </p>
                                     </div>
                                 )}
-                                <div className="flex items-center justify-between">
+                                <div className={`flex items-center ${currentStep === STEPS.length ? 'justify-start' : 'justify-between'}`}>
                                     <Button
                                         onClick={handlePrev}
                                         disabled={currentStep === 1}
@@ -347,19 +346,28 @@ export default function Editor() {
                                         <ChevronLeft className="w-4 h-4" />
                                         Previous
                                     </Button>
-                                    <div className="text-sm font-medium text-gray-500">
-                                        Step {currentStep} of {STEPS.length}
-                                    </div>
-                                    <Button
-                                        onClick={handleNext}
-                                        disabled={currentStep === STEPS.length || !isStepValid(currentStep)}
-                                        size="lg"
-                                        className="gap-2 px-6"
-                                        title={!isStepValid(currentStep) ? "Please fill all required fields" : ""}
-                                    >
-                                        Next
-                                        <ChevronRight className="w-4 h-4" />
-                                    </Button>
+                                    {currentStep < STEPS.length && (
+                                        <>
+                                            <div className="text-sm font-medium text-gray-500">
+                                                Step {currentStep} of {STEPS.length}
+                                            </div>
+                                            <Button
+                                                onClick={handleNext}
+                                                disabled={!isStepValid(currentStep)}
+                                                size="lg"
+                                                className="gap-2 px-6"
+                                                title={!isStepValid(currentStep) ? "Please fill all required fields" : ""}
+                                            >
+                                                Next
+                                                <ChevronRight className="w-4 h-4" />
+                                            </Button>
+                                        </>
+                                    )}
+                                    {currentStep === STEPS.length && (
+                                        <div className="ml-4 text-sm font-medium text-gray-500">
+                                            Final Step - Review & Download
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
