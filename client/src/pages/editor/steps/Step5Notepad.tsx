@@ -287,23 +287,23 @@ export default function Step5Notepad({ data, setData }: StepProps) {
                     {/* Stats Card */}
                     <div className="bg-card rounded-2xl p-6 border-2 border shadow-md">
                         <div className="flex items-center gap-2 mb-5">
-                            <Sparkles className="w-5 h-5 text-blue-600" />
+                            <Sparkles className="w-5 h-5 text-primary" />
                             <h4 className="font-bold text-foreground">Statistics</h4>
                         </div>
                         <div className="space-y-4">
                             <div className="flex items-center justify-between p-4 bg-primary/10 rounded-xl border border-primary/30">
-                                <span className="text-sm font-medium text-primary">Total Notes</span>
-                                <span className="text-2xl font-bold text-blue-600">{data.notepad.defaultNotes.length}</span>
+                                <span className="text-sm font-medium text-foreground">Total Notes</span>
+                                <span className="text-2xl font-bold text-primary">{data.notepad.defaultNotes.length}</span>
                             </div>
-                            <div className="flex items-center justify-between p-4 bg-yellow-50 rounded-xl border border-yellow-200">
-                                <span className="text-sm font-medium text-yellow-900">Pinned</span>
-                                <span className="text-2xl font-bold text-yellow-600">
+                            <div className="flex items-center justify-between p-4 bg-yellow-500/10 rounded-xl border border-yellow-500/30">
+                                <span className="text-sm font-medium text-foreground">Pinned</span>
+                                <span className="text-2xl font-bold text-yellow-600 dark:text-yellow-500">
                                     {data.notepad.defaultNotes.filter(n => n.isPinned).length}
                                 </span>
                             </div>
-                            <div className="flex items-center justify-between p-4 bg-green-50 rounded-xl border border-green-500/30">
-                                <span className="text-sm font-medium text-green-700 dark:text-green-400">Complete</span>
-                                <span className="text-2xl font-bold text-green-600">
+                            <div className="flex items-center justify-between p-4 bg-green-500/10 rounded-xl border border-green-500/30">
+                                <span className="text-sm font-medium text-foreground">Complete</span>
+                                <span className="text-2xl font-bold text-green-600 dark:text-green-500">
                                     {data.notepad.defaultNotes.filter(n => n.title && n.content).length}
                                 </span>
                             </div>
@@ -311,7 +311,7 @@ export default function Step5Notepad({ data, setData }: StepProps) {
                     </div>
 
                     {/* Markdown Guide */}
-                    <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl p-6 border-2 border-purple-200">
+                    <div className="bg-gradient-to-br from-purple-500/10 to-primary/10 rounded-2xl p-6 border-2 border-purple-500/30">
                         <h4 className="font-bold text-foreground mb-3">📝 Markdown Guide</h4>
                         <div className="space-y-2 text-sm text-foreground font-mono">
                             <div className="flex items-center gap-2">

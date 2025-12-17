@@ -279,23 +279,23 @@ export default function Step3Social({ data, setData }: StepProps) {
                     {/* Stats Card */}
                     <div className="bg-card rounded-2xl p-6 border-2 border shadow-md">
                         <div className="flex items-center gap-2 mb-5">
-                            <Sparkles className="w-5 h-5 text-blue-600" />
+                            <Sparkles className="w-5 h-5 text-primary" />
                             <h4 className="font-bold text-foreground">Statistics</h4>
                         </div>
                         <div className="space-y-4">
                             <div className="flex items-center justify-between p-4 bg-primary/10 rounded-xl border border-primary/30">
-                                <span className="text-sm font-medium text-primary">Selected</span>
-                                <span className="text-2xl font-bold text-blue-600">{data.social.links.length}</span>
+                                <span className="text-sm font-medium text-foreground">Selected</span>
+                                <span className="text-2xl font-bold text-primary">{data.social.links.length}</span>
                             </div>
-                            <div className="flex items-center justify-between p-4 bg-green-50 rounded-xl border border-green-500/30">
-                                <span className="text-sm font-medium text-green-700 dark:text-green-400">With URL</span>
-                                <span className="text-2xl font-bold text-green-600">
+                            <div className="flex items-center justify-between p-4 bg-green-500/10 rounded-xl border border-green-500/30">
+                                <span className="text-sm font-medium text-foreground">With URL</span>
+                                <span className="text-2xl font-bold text-green-600 dark:text-green-500">
                                     {data.social.links.filter(link => link.url).length}
                                 </span>
                             </div>
-                            <div className="flex items-center justify-between p-4 bg-purple-50 rounded-xl border border-purple-200">
-                                <span className="text-sm font-medium text-purple-900">Available</span>
-                                <span className="text-2xl font-bold text-purple-600">{POPULAR_PLATFORMS.length}</span>
+                            <div className="flex items-center justify-between p-4 bg-purple-500/10 rounded-xl border border-purple-500/30">
+                                <span className="text-sm font-medium text-foreground">Available</span>
+                                <span className="text-2xl font-bold text-purple-600 dark:text-purple-500">{POPULAR_PLATFORMS.length}</span>
                             </div>
                         </div>
                     </div>
@@ -304,8 +304,8 @@ export default function Step3Social({ data, setData }: StepProps) {
                     {data.social.links.length > 0 && (
                         <div className="bg-gradient-to-br from-muted/30 to-muted/50 rounded-2xl p-6 border-2 border shadow-md">
                             <div className="flex items-center gap-2 mb-5">
-                                <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center">
-                                    <Link2 className="w-4 h-4 text-white" />
+                                <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-primary to-purple-600 flex items-center justify-center">
+                                    <Link2 className="w-4 h-4 text-primary-foreground" />
                                 </div>
                                 <h4 className="font-bold text-foreground">Live Preview</h4>
                             </div>

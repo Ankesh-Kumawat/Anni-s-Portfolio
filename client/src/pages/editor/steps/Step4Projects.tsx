@@ -704,15 +704,15 @@ export default function Step4Projects({ data, setData }: StepProps) {
                                 <span className="text-sm font-medium text-primary">Total Projects</span>
                                 <span className="text-2xl font-bold text-primary">{data.projects.projects.length}</span>
                             </div>
-                            <div className="flex items-center justify-between p-4 bg-green-50 rounded-xl border border-green-500/30">
-                                <span className="text-sm font-medium text-green-700 dark:text-green-400">Complete</span>
-                                <span className="text-2xl font-bold text-green-600">
+                            <div className="flex items-center justify-between p-4 bg-green-500/10 rounded-xl border border-green-500/30">
+                                <span className="text-sm font-medium text-foreground">Complete</span>
+                                <span className="text-2xl font-bold text-green-600 dark:text-green-500">
                                     {data.projects.projects.filter(p => p.name && p.tagline && p.description).length}
                                 </span>
                             </div>
-                            <div className="flex items-center justify-between p-4 bg-purple-50 rounded-xl border border-purple-200">
-                                <span className="text-sm font-medium text-purple-900">Total Images</span>
-                                <span className="text-2xl font-bold text-purple-600">
+                            <div className="flex items-center justify-between p-4 bg-purple-500/10 rounded-xl border border-purple-500/30">
+                                <span className="text-sm font-medium text-foreground">Total Images</span>
+                                <span className="text-2xl font-bold text-purple-600 dark:text-purple-500">
                                     {data.projects.projects.reduce((acc, p) => acc + p.images.length, 0)}
                                 </span>
                             </div>
