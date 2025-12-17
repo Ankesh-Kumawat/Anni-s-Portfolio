@@ -78,7 +78,11 @@ export function ImageGallery({ project, index, data, handlers }: ImageGalleryPro
                                         const isCover = imgIndex === 0;
 
                                         return (
-                                            <Draggable key={imagePath} draggableId={imagePath} index={imgIndex}>
+                                            <Draggable
+                                                key={`${index}-${imgIndex}`}
+                                                draggableId={`${index}-${imgIndex}`}
+                                                index={imgIndex}
+                                            >
                                                 {(provided, snapshot) => (
                                                     <div
                                                         ref={provided.innerRef}
@@ -87,13 +91,10 @@ export function ImageGallery({ project, index, data, handlers }: ImageGalleryPro
                                                         style={{
                                                             ...provided.draggableProps.style,
                                                             transform: snapshot.isDragging
-                                                                ? `${provided.draggableProps.style?.transform} scale(1.08) rotate(3deg)`
+                                                                ? `${provided.draggableProps.style?.transform} scale(1.05)`
                                                                 : provided.draggableProps.style?.transform,
-                                                            transition: snapshot.isDragging
-                                                                ? 'none'
-                                                                : 'transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, border-color 0.2s ease',
                                                         }}
-                                                        className={`relative group rounded-xl overflow-hidden border-4 cursor-grab active:cursor-grabbing transition-all ${snapshot.isDragging
+                                                        className={`draggable-image relative group rounded-xl overflow-hidden border-4 cursor-grab active:cursor-grabbing ${snapshot.isDragging
                                                             ? "border-primary shadow-2xl opacity-95 z-50 ring-4 ring-primary/30"
                                                             : droppableSnapshot.isDraggingOver
                                                                 ? isInTop6
