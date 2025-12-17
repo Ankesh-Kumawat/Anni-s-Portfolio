@@ -69,7 +69,17 @@ export async function generateZip(data: EditorData) {
     dataFolder.file("about.json", JSON.stringify(data.about, null, 2));
     dataFolder.file("contact.json", JSON.stringify(data.contact, null, 2));
     dataFolder.file("social.json", JSON.stringify(data.social, null, 2));
-    dataFolder.file("projects.json", JSON.stringify(data.projects, null, 2));
+
+    // Projects JSON - Only top 6 images per project
+    const projectsForJson = {
+        projects: data.projects.projects.map(project => ({
+            ...project,
+            images: project.images.slice(0, 6) // Only top 6 images
+        }))
+    };
+    dataFolder.file("projects.json", JSON.stringify(projectsForJson, null, 2));
+
+    // Gallery JSON - All images
     dataFolder.file("gallery.json", JSON.stringify(data.gallery, null, 2));
     dataFolder.file("notepad.json", JSON.stringify(data.notepad, null, 2));
     dataFolder.file("terminal.json", JSON.stringify(data.terminal, null, 2));

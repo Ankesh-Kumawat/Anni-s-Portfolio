@@ -116,14 +116,14 @@ export default function Step3Social({ data, setData }: StepProps) {
                         <h2 className="text-4xl font-bold text-foreground mb-2">Social Links</h2>
                         <p className="text-muted-foreground text-lg">Select platforms and add your profile links</p>
                     </div>
-                    <div className="flex items-center gap-3 bg-gradient-to-r from-primary/10 to-purple-500/10 px-6 py-4 rounded-2xl border border-primary/30">
+                    <div className="flex items-center gap-3 bg-card px-6 py-4 rounded-2xl border-2 border">
                         <div className="text-right">
                             <div className="text-xs text-muted-foreground uppercase tracking-wide font-medium">Completion</div>
-                            <div className="text-2xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                            <div className="text-2xl font-bold text-primary">
                                 {completionPercentage()}%
                             </div>
                         </div>
-                        <Sparkles className="w-6 h-6 text-purple-500" />
+                        <Sparkles className="w-6 h-6 text-primary" />
                     </div>
                 </div>
             </div>
@@ -148,8 +148,8 @@ export default function Step3Social({ data, setData }: StepProps) {
                     {/* Platform Selection Grid */}
                     <div className="bg-card rounded-2xl p-8 border-2 border shadow-md">
                         <div className="flex items-center gap-3 mb-6">
-                            <div className="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center">
-                                <Sparkles className="w-5 h-5 text-purple-600" />
+                            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                <Sparkles className="w-5 h-5 text-primary" />
                             </div>
                             <div>
                                 <h3 className="text-xl font-bold text-foreground">Select Platforms</h3>
@@ -166,19 +166,19 @@ export default function Step3Social({ data, setData }: StepProps) {
                                         key={platform.value}
                                         onClick={() => togglePlatform(platform.value)}
                                         className={`relative p-3 rounded-xl border-2 transition-all text-center group ${isAdded
-                                            ? "border-green-500 bg-green-50 shadow-lg scale-105"
-                                            : "border bg-card hover:border-blue-400 hover:shadow-md hover:scale-105"
+                                            ? "border-primary bg-primary/10 shadow-lg scale-105"
+                                            : "border bg-card hover:border-primary hover:shadow-md hover:scale-105"
                                             }`}
                                     >
                                         {isAdded && (
-                                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-600 rounded-full flex items-center justify-center shadow-lg z-10">
-                                                <Check className="w-4 h-4 text-white" />
+                                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center shadow-lg z-10">
+                                                <Check className="w-4 h-4 text-primary-foreground" />
                                             </div>
                                         )}
                                         <div className={`w-14 h-14 rounded-xl ${platform.color} flex items-center justify-center mx-auto mb-2 shadow-md`}>
                                             <Icon className="w-8 h-8 text-white" />
                                         </div>
-                                        <p className={`text-[10px] font-bold leading-tight ${isAdded ? "text-green-700 dark:text-green-400" : "text-foreground"}`}>
+                                        <p className={`text-[10px] font-bold leading-tight ${isAdded ? "text-primary" : "text-foreground"}`}>
                                             {platform.label}
                                         </p>
                                     </button>
@@ -191,8 +191,8 @@ export default function Step3Social({ data, setData }: StepProps) {
                     {data.social.links.length > 0 && (
                         <div className="bg-card rounded-2xl p-8 border-2 border shadow-md">
                             <div className="flex items-center gap-3 mb-6">
-                                <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
-                                    <Link2 className="w-5 h-5 text-blue-600" />
+                                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                    <Link2 className="w-5 h-5 text-primary" />
                                 </div>
                                 <div>
                                     <h3 className="text-xl font-bold text-foreground">Your Links</h3>
@@ -207,7 +207,7 @@ export default function Step3Social({ data, setData }: StepProps) {
                                     const isComplete = !!link.url;
 
                                     return (
-                                        <div key={index} className="p-5 bg-gradient-to-br from-muted/30 to-muted/50 rounded-xl border-2 border">
+                                        <div key={index} className="p-5 bg-muted rounded-xl border-2 border">
                                             <div className="flex items-start justify-between mb-4">
                                                 <div className="flex items-center gap-3">
                                                     <div className={`w-10 h-10 rounded-xl ${platformInfo.color} flex items-center justify-center`}>
@@ -216,7 +216,7 @@ export default function Step3Social({ data, setData }: StepProps) {
                                                     <div>
                                                         <h4 className="font-bold text-foreground">{platformInfo.label}</h4>
                                                         {isComplete && (
-                                                            <Badge className="bg-green-100 text-green-700 border-green-500/30 mt-1">
+                                                            <Badge className="bg-primary/10 text-primary border-primary mt-1">
                                                                 <Check className="w-3 h-3 mr-1" />
                                                                 Complete
                                                             </Badge>
@@ -283,28 +283,28 @@ export default function Step3Social({ data, setData }: StepProps) {
                             <h4 className="font-bold text-foreground">Statistics</h4>
                         </div>
                         <div className="space-y-4">
-                            <div className="flex items-center justify-between p-4 bg-primary/10 rounded-xl border border-primary/30">
+                            <div className="flex items-center justify-between p-4 bg-primary/10 rounded-xl border border-primary">
                                 <span className="text-sm font-medium text-foreground">Selected</span>
                                 <span className="text-2xl font-bold text-primary">{data.social.links.length}</span>
                             </div>
-                            <div className="flex items-center justify-between p-4 bg-green-500/10 rounded-xl border border-green-500/30">
+                            <div className="flex items-center justify-between p-4 bg-primary/10 rounded-xl border border-primary">
                                 <span className="text-sm font-medium text-foreground">With URL</span>
-                                <span className="text-2xl font-bold text-green-600 dark:text-green-500">
+                                <span className="text-2xl font-bold text-primary">
                                     {data.social.links.filter(link => link.url).length}
                                 </span>
                             </div>
-                            <div className="flex items-center justify-between p-4 bg-purple-500/10 rounded-xl border border-purple-500/30">
+                            <div className="flex items-center justify-between p-4 bg-muted rounded-xl border border">
                                 <span className="text-sm font-medium text-foreground">Available</span>
-                                <span className="text-2xl font-bold text-purple-600 dark:text-purple-500">{POPULAR_PLATFORMS.length}</span>
+                                <span className="text-2xl font-bold text-foreground">{POPULAR_PLATFORMS.length}</span>
                             </div>
                         </div>
                     </div>
 
                     {/* Preview Card */}
                     {data.social.links.length > 0 && (
-                        <div className="bg-gradient-to-br from-muted/30 to-muted/50 rounded-2xl p-6 border-2 border shadow-md">
+                        <div className="bg-card rounded-2xl p-6 border-2 border shadow-md">
                             <div className="flex items-center gap-2 mb-5">
-                                <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-primary to-purple-600 flex items-center justify-center">
+                                <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
                                     <Link2 className="w-4 h-4 text-primary-foreground" />
                                 </div>
                                 <h4 className="font-bold text-foreground">Live Preview</h4>
@@ -336,23 +336,23 @@ export default function Step3Social({ data, setData }: StepProps) {
                     )}
 
                     {/* Help Card */}
-                    <div className="bg-gradient-to-br from-primary/10 to-purple-500/10 rounded-2xl p-6 border-2 border-primary/30">
+                    <div className="bg-card rounded-2xl p-6 border-2 border">
                         <h4 className="font-bold text-foreground mb-3">💡 Quick Tips</h4>
-                        <ul className="space-y-2 text-sm text-foreground">
+                        <ul className="space-y-2 text-sm text-muted-foreground">
                             <li className="flex items-start gap-2">
-                                <span className="text-blue-600 mt-0.5">•</span>
+                                <span className="text-primary mt-0.5">•</span>
                                 <span>Click any platform to add it</span>
                             </li>
                             <li className="flex items-start gap-2">
-                                <span className="text-blue-600 mt-0.5">•</span>
+                                <span className="text-primary mt-0.5">•</span>
                                 <span>All fields are optional</span>
                             </li>
                             <li className="flex items-start gap-2">
-                                <span className="text-blue-600 mt-0.5">•</span>
+                                <span className="text-primary mt-0.5">•</span>
                                 <span>Add as many or few as you like</span>
                             </li>
                             <li className="flex items-start gap-2">
-                                <span className="text-blue-600 mt-0.5">•</span>
+                                <span className="text-primary mt-0.5">•</span>
                                 <span>Test links before moving on</span>
                             </li>
                         </ul>
@@ -362,6 +362,8 @@ export default function Step3Social({ data, setData }: StepProps) {
         </div>
     );
 }
+
+
 
 
 

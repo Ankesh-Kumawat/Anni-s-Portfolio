@@ -154,14 +154,14 @@ export default function Step1Personal({ data, setData }: StepProps) {
                         <h2 className="text-4xl font-bold mb-2">Personal Information</h2>
                         <p className="text-muted-foreground text-lg">Build your professional profile with essential details</p>
                     </div>
-                    <div className="flex items-center gap-3 bg-primary/10 px-6 py-4 rounded-2xl border">
+                    <div className="flex items-center gap-3 bg-card px-6 py-4 rounded-2xl border-2 border">
                         <div className="text-right">
                             <div className="text-xs text-muted-foreground uppercase tracking-wide font-medium">Completion</div>
-                            <div className="text-2xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                            <div className="text-2xl font-bold text-primary">
                                 {completionPercentage()}%
                             </div>
                         </div>
-                        <Sparkles className="w-6 h-6 text-purple-500" />
+                        <Sparkles className="w-6 h-6 text-primary" />
                     </div>
                 </div>
             </div>
@@ -171,7 +171,7 @@ export default function Step1Personal({ data, setData }: StepProps) {
                 {/* Left Column - Avatar & Quick Info */}
                 <div className="space-y-6">
                     {/* Avatar Upload Card */}
-                    <div className="bg-gradient-to-br from-primary/10 to-purple-500/10 rounded-3xl p-8 border-2 border-blue-100 shadow-lg">
+                    <div className="bg-card rounded-3xl p-8 border-2 border shadow-md">
                         <div className="text-center space-y-6">
                             <div className="relative inline-block">
                                 {avatarPreview ? (
@@ -186,13 +186,13 @@ export default function Step1Personal({ data, setData }: StepProps) {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="w-48 h-48 rounded-3xl bg-gradient-to-br from-muted to-muted/80 flex items-center justify-center border-4 border-background shadow-2xl">
+                                    <div className="w-48 h-48 rounded-3xl bg-muted flex items-center justify-center border-4 border-background shadow-2xl">
                                         <User className="w-20 h-20 text-muted-foreground/60" />
                                     </div>
                                 )}
                             </div>
                             <label className="cursor-pointer block">
-                                <div className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:shadow-lg transition-all text-sm font-semibold">
+                                <div className="px-6 py-3 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-all text-sm font-semibold">
                                     {avatarPreview ? "Change Photo" : "Upload Photo"}
                                 </div>
                                 <input
@@ -209,7 +209,7 @@ export default function Step1Personal({ data, setData }: StepProps) {
                     {/* Profile Checklist Card */}
                     <div className="bg-card rounded-2xl p-6 border-2 border shadow-md">
                         <div className="flex items-center gap-2 mb-5">
-                            <Award className="w-5 h-5 text-blue-600" />
+                            <Award className="w-5 h-5 text-primary" />
                             <h4 className="font-bold text-foreground">Profile Checklist</h4>
                         </div>
                         <div className="space-y-3">
@@ -226,18 +226,18 @@ export default function Step1Personal({ data, setData }: StepProps) {
                                 return (
                                     <div
                                         key={idx}
-                                        className={`flex items-center justify-between p-3 rounded-xl transition-all ${isComplete ? "bg-green-50 border border-green-500/30" : "bg-muted border border"
+                                        className={`flex items-center justify-between p-3 rounded-xl transition-all ${isComplete ? "bg-primary/10 border border-primary" : "bg-muted border border"
                                             }`}
                                     >
                                         <div className="flex items-center gap-3">
-                                            <Icon className={`w-4 h-4 ${isComplete ? "text-green-600" : "text-muted-foreground/60"}`} />
-                                            <span className={`text-sm font-medium ${isComplete ? "text-green-700 dark:text-green-400" : "text-muted-foreground"}`}>
+                                            <Icon className={`w-4 h-4 ${isComplete ? "text-primary" : "text-muted-foreground/60"}`} />
+                                            <span className={`text-sm font-medium ${isComplete ? "text-primary" : "text-muted-foreground"}`}>
                                                 {item.label}
                                                 {!item.required && <span className="text-xs text-muted-foreground/60 ml-1">(Optional)</span>}
                                             </span>
                                         </div>
                                         {isComplete ? (
-                                            <Check className="w-5 h-5 text-green-600" />
+                                            <Check className="w-5 h-5 text-primary" />
                                         ) : (
                                             <div className="w-5 h-5 rounded-full border-2 border" />
                                         )}
@@ -253,8 +253,8 @@ export default function Step1Personal({ data, setData }: StepProps) {
                     {/* Basic Information Card */}
                     <div className="bg-card rounded-2xl p-8 border-2 border shadow-md">
                         <div className="flex items-center gap-3 mb-6">
-                            <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
-                                <User className="w-5 h-5 text-blue-600" />
+                            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                <User className="w-5 h-5 text-primary" />
                             </div>
                             <div>
                                 <h3 className="text-xl font-bold text-foreground">Basic Information</h3>
@@ -364,8 +364,8 @@ export default function Step1Personal({ data, setData }: StepProps) {
                     <div className="bg-card rounded-2xl p-8 border-2 border shadow-md">
                         <div className="flex items-center justify-between mb-6">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center">
-                                    <Award className="w-5 h-5 text-purple-600" />
+                                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                    <Award className="w-5 h-5 text-primary" />
                                 </div>
                                 <div>
                                     <h3 className="text-xl font-bold text-foreground">Skills & Technologies</h3>
@@ -384,8 +384,8 @@ export default function Step1Personal({ data, setData }: StepProps) {
                                     key={category}
                                     onClick={() => setSelectedCategory(category)}
                                     className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${selectedCategory === category
-                                        ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/30"
-                                        : "bg-muted text-foreground hover:bg-muted border border"
+                                        ? "bg-primary text-primary-foreground shadow-md"
+                                        : "bg-muted text-foreground hover:bg-muted/80 border border"
                                         }`}
                                 >
                                     {category}
@@ -403,8 +403,8 @@ export default function Step1Personal({ data, setData }: StepProps) {
                                             key={skill}
                                             onClick={() => toggleSkill(skill)}
                                             className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${isSelected
-                                                ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg shadow-green-500/30"
-                                                : "bg-card text-foreground border-2 border hover:border-purple-500 hover:shadow-md"
+                                                ? "bg-primary text-primary-foreground shadow-md"
+                                                : "bg-card text-foreground border-2 border hover:border-primary hover:shadow-md"
                                                 }`}
                                         >
                                             {isSelected && <Check className="w-4 h-4" />}
@@ -432,8 +432,8 @@ export default function Step1Personal({ data, setData }: StepProps) {
 
                         {/* Selected Skills Display */}
                         {data.about.skills.length > 0 && (
-                            <div className="p-6 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-2xl border-2 border-green-500/30">
-                                <Label className="text-sm font-bold text-green-700 dark:text-green-400 mb-3 block flex items-center gap-2">
+                            <div className="p-6 bg-primary/10 rounded-2xl border-2 border-primary">
+                                <Label className="text-sm font-bold text-primary mb-3 block flex items-center gap-2">
                                     <Check className="w-4 h-4" />
                                     Selected Skills ({data.about.skills.length})
                                 </Label>
@@ -455,8 +455,8 @@ export default function Step1Personal({ data, setData }: StepProps) {
                     <div className="bg-card rounded-2xl p-8 border-2 border shadow-md">
                         <div className="flex items-center justify-between mb-6">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center">
-                                    <Briefcase className="w-5 h-5 text-orange-600" />
+                                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                    <Briefcase className="w-5 h-5 text-primary" />
                                 </div>
                                 <div>
                                     <h3 className="text-xl font-bold text-foreground">Work Experience</h3>
@@ -478,7 +478,7 @@ export default function Step1Personal({ data, setData }: StepProps) {
                         ) : (
                             <div className="space-y-5">
                                 {data.about.experience.map((exp, index) => (
-                                    <div key={exp.id} className="border-2 border rounded-2xl p-6 space-y-5 bg-gradient-to-br from-muted/30 to-muted/50">
+                                    <div key={exp.id} className="border-2 border rounded-2xl p-6 space-y-5 bg-muted">
                                         <div className="flex justify-between items-start">
                                             <h4 className="font-bold text-lg text-foreground">Experience #{index + 1}</h4>
                                             <Button
@@ -540,6 +540,8 @@ export default function Step1Personal({ data, setData }: StepProps) {
         </div>
     );
 }
+
+
 
 
 
