@@ -28,14 +28,12 @@ export default function Projects() {
             if (!containerRef.current) return;
             const width = containerRef.current.offsetWidth;
 
-            if (width < 500) {
-                setColumns(1);
-            } else if (width < 900) {
-                setColumns(2);
+            if (width < 640) {
+                setColumns(1); // Mobile
             } else if (width < 1200) {
-                setColumns(3);
+                setColumns(2); // Small window
             } else {
-                setColumns(4);
+                setColumns(4); // Full screen
             }
         };
 

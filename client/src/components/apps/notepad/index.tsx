@@ -135,7 +135,7 @@ export default function Notepad() {
     return (
         <div className="flex flex-col h-full bg-background">
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3 border-b bg-muted/20">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-3 sm:px-4 py-3 border-b bg-muted/20 gap-3">
                 <div className="flex items-center gap-2">
                     <StickyNote className="w-5 h-5 text-primary" />
                     <h1 className="font-bold text-lg">Notepad</h1>
@@ -143,17 +143,17 @@ export default function Notepad() {
                         {notes.length} {notes.length === 1 ? 'note' : 'notes'}
                     </span>
                 </div>
-                <div className="flex items-center gap-2">
-                    <div className="relative">
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <div className="relative flex-1 sm:flex-initial">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                         <Input
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder="Search notes..."
-                            className="pl-9 h-9 w-64"
+                            className="pl-9 h-9 w-full sm:w-48"
                         />
                     </div>
-                    <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
+                    <div className="hidden sm:flex items-center gap-1 bg-muted rounded-lg p-1">
                         <button
                             onClick={() => setViewMode('grid')}
                             className={`p-1.5 rounded transition-colors ${viewMode === 'grid' ? 'bg-background shadow-sm' : 'hover:bg-background/50'
@@ -169,22 +169,22 @@ export default function Notepad() {
                             <List className="w-4 h-4" />
                         </button>
                     </div>
-                    <Button onClick={createNewNote} size="sm" className="gap-2">
+                    <Button onClick={createNewNote} size="sm" className="gap-2 shrink-0">
                         <Plus className="w-4 h-4" />
-                        New Note
+                        <span className="hidden sm:inline">New Note</span>
                     </Button>
                 </div>
             </div>
 
             {/* Notes Grid/List */}
-            <div className="flex-1 overflow-y-auto p-4">
+            <div className="flex-1 overflow-y-auto p-3 sm:p-4">
                 {sortedNotes.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
-                        <StickyNote className="w-16 h-16 mb-4 opacity-20" />
-                        <p className="text-lg font-semibold mb-2">
+                    <div className="flex flex-col items-center justify-center h-full text-muted-foreground px-4">
+                        <StickyNote className="w-12 h-12 sm:w-16 sm:h-16 mb-4 opacity-20" />
+                        <p className="text-base sm:text-lg font-semibold mb-2 text-center">
                             {searchQuery ? 'No notes found' : 'No notes yet'}
                         </p>
-                        <p className="text-sm mb-4">
+                        <p className="text-xs sm:text-sm mb-4 text-center">
                             {searchQuery ? 'Try a different search term' : 'Create your first note to get started'}
                         </p>
                         {!searchQuery && (
@@ -198,7 +198,7 @@ export default function Notepad() {
                     <div
                         className={
                             viewMode === 'grid'
-                                ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'
+                                ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4'
                                 : 'space-y-2 max-w-4xl mx-auto'
                         }
                     >

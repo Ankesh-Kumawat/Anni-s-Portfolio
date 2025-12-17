@@ -114,7 +114,7 @@ export default function Browser() {
                 onHome={handleHome}
             />
 
-            <div className="flex-1 bg-white relative overflow-hidden">
+            <div className="flex-1 bg-background relative overflow-hidden">
                 {showHome ? (
                     <BrowserHome
                         onNavigate={handleNavigate}
