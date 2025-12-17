@@ -119,44 +119,70 @@ export default function Gallery() {
                             Folders ({folders.length})
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {folders.map((folder) => (
-                                <button
-                                    key={folder.id}
-                                    onClick={() => openFolder(folder)}
-                                    className="group relative aspect-video rounded-xl overflow-hidden border-2 border-border hover:border-primary transition-all bg-muted cursor-pointer hover:shadow-xl"
-                                >
-                                    {/* Cover Image */}
-                                    {folder.coverImage ? (
-                                        <img
-                                            src={folder.coverImage}
-                                            alt={folder.name}
-                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                            loading="lazy"
-                                            onError={(e) => {
-                                                e.currentTarget.style.display = 'none';
-                                            }}
-                                        />
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
-                                            <Folder className="w-20 h-20 text-primary/30" />
-                                        </div>
-                                    )}
+                            {folders.map((folder) => {
+                                const isProjectsFolder = folder.id === 'projects';
 
-                                    {/* Overlay */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent flex flex-col justify-end p-4">
-                                        <div className="flex items-center gap-2 text-white mb-1">
-                                            <Folder className="w-5 h-5" />
-                                            <span className="font-bold text-base">{folder.name}</span>
-                                        </div>
-                                        <span className="text-sm text-white/80">
-                                            {folder.children?.length || 0} items
-                                        </span>
-                                    </div>
+                                return (
+                                    <button
+                                        key={folder.id}
+                                        onClick={() => openFolder(folder)}
+                                        className={`group relative aspect-video rounded-xl overflow-hidden border-2 transition-all cursor-pointer ${isProjectsFolder
+                                            ? 'border-primary/50 hover:border-primary bg-gradient-to-br from-primary/10 via-primary/5 to-background hover:shadow-2xl hover:shadow-primary/20'
+                                            : 'border-border hover:border-primary bg-muted hover:shadow-xl'
+                                            }`}
+                                    >
+                                        {/* Cover Image */}
+                                        {folder.coverImage ? (
+                                            <img
+                                                src={folder.coverImage}
+                                                alt={folder.name}
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                loading="lazy"
+                                                onError={(e) => {
+                                                    e.currentTarget.style.display = 'none';
+                                                }}
+                                            />
+                                        ) : (
+                                            <div className={`w-full h-full flex items-center justify-center ${isProjectsFolder
+                                                ? 'bg-gradient-to-br from-primary/20 via-primary/10 to-primary/5'
+                                                : 'bg-gradient-to-br from-primary/10 to-primary/5'
+                                                }`}>
+                                                <Folder className={`${isProjectsFolder ? 'w-24 h-24 text-primary/40' : 'w-20 h-20 text-primary/30'
+                                                    }`} />
+                                            </div>
+                                        )}
 
-                                    {/* Hover Effect */}
-                                    <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-                                </button>
-                            ))}
+                                        {/* Special Badge for Projects Folder */}
+                                        {isProjectsFolder && (
+                                            <div className="absolute top-3 right-3 bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                                                Featured
+                                            </div>
+                                        )}
+
+                                        {/* Overlay */}
+                                        <div className={`absolute inset-0 flex items-end p-5 ${isProjectsFolder
+                                            ? 'bg-gradient-to-t from-primary/90 via-primary/40 to-transparent'
+                                            : 'bg-gradient-to-t from-black/90 via-black/30 to-transparent'
+                                            }`}>
+                                            <div className="flex items-center gap-3 text-white">
+                                                <Folder className={`${isProjectsFolder ? 'w-6 h-6' : 'w-5 h-5'} flex-shrink-0`} />
+                                                <div className="flex items-baseline gap-2">
+                                                    <span className={`font-bold ${isProjectsFolder ? 'text-xl' : 'text-base'}`}>
+                                                        {folder.name}
+                                                    </span>
+                                                    <span className={`text-white/80 ${isProjectsFolder ? 'text-sm font-medium' : 'text-xs'}`}>
+                                                        ({folder.children?.length || 0})
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Hover Effect */}
+                                        <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none ${isProjectsFolder ? 'bg-primary/15' : 'bg-primary/10'
+                                            }`} />
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
                 )}
