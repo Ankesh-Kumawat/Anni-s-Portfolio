@@ -212,8 +212,106 @@ export function ProjectForm({
                 )}
             </div>
 
+            {/* Detailed Content (Optional) */}
+            <div className="space-y-4 border-t pt-6">
+                <Label className="text-base font-bold text-foreground">Detailed Content (Optional)</Label>
+                <p className="text-xs text-muted-foreground">These fields will be shown in the project detail page</p>
+
+                <div className="space-y-2">
+                    <Label className="text-sm font-semibold text-foreground">Overview</Label>
+                    <Textarea
+                        value={project.overview || ""}
+                        onChange={(e) => handlers.updateProject(index, "overview", e.target.value)}
+                        placeholder="High-level overview of the project..."
+                        rows={3}
+                        className="resize-none text-base bg-card"
+                    />
+                </div>
+
+                <div className="space-y-2">
+                    <Label className="text-sm font-semibold text-foreground">Problem</Label>
+                    <Textarea
+                        value={project.problem || ""}
+                        onChange={(e) => handlers.updateProject(index, "problem", e.target.value)}
+                        placeholder="What problem does this project solve?"
+                        rows={3}
+                        className="resize-none text-base bg-card"
+                    />
+                </div>
+
+                <div className="space-y-2">
+                    <Label className="text-sm font-semibold text-foreground">Solution</Label>
+                    <Textarea
+                        value={project.solution || ""}
+                        onChange={(e) => handlers.updateProject(index, "solution", e.target.value)}
+                        placeholder="How did you solve it?"
+                        rows={3}
+                        className="resize-none text-base bg-card"
+                    />
+                </div>
+
+                <div className="space-y-2">
+                    <Label className="text-sm font-semibold text-foreground">Outcome</Label>
+                    <Textarea
+                        value={project.outcome || ""}
+                        onChange={(e) => handlers.updateProject(index, "outcome", e.target.value)}
+                        placeholder="What was the result/impact?"
+                        rows={3}
+                        className="resize-none text-base bg-card"
+                    />
+                </div>
+            </div>
+
+            {/* Architecture (Optional) */}
+            <div className="space-y-4 border-t pt-6">
+                <Label className="text-base font-bold text-foreground">Architecture (Optional)</Label>
+
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                        <Label className="text-sm font-semibold text-foreground">Structure</Label>
+                        <Textarea
+                            value={project.architecture?.structure || ""}
+                            onChange={(e) => handlers.updateProject(index, "architecture", { ...project.architecture, structure: e.target.value })}
+                            placeholder="System structure..."
+                            rows={2}
+                            className="resize-none text-base bg-card"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label className="text-sm font-semibold text-foreground">Data Handling</Label>
+                        <Textarea
+                            value={project.architecture?.dataHandling || ""}
+                            onChange={(e) => handlers.updateProject(index, "architecture", { ...project.architecture, dataHandling: e.target.value })}
+                            placeholder="How data is managed..."
+                            rows={2}
+                            className="resize-none text-base bg-card"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label className="text-sm font-semibold text-foreground">Scalability</Label>
+                        <Textarea
+                            value={project.architecture?.scalability || ""}
+                            onChange={(e) => handlers.updateProject(index, "architecture", { ...project.architecture, scalability: e.target.value })}
+                            placeholder="Scalability approach..."
+                            rows={2}
+                            className="resize-none text-base bg-card"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label className="text-sm font-semibold text-foreground">Performance</Label>
+                        <Textarea
+                            value={project.architecture?.performance || ""}
+                            onChange={(e) => handlers.updateProject(index, "architecture", { ...project.architecture, performance: e.target.value })}
+                            placeholder="Performance optimizations..."
+                            rows={2}
+                            className="resize-none text-base bg-card"
+                        />
+                    </div>
+                </div>
+            </div>
+
             {/* Links */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4 border-t pt-6">
                 <div className="space-y-2">
                     <Label className="text-sm font-semibold text-foreground flex items-center gap-2">
                         <Github className="w-4 h-4" />
