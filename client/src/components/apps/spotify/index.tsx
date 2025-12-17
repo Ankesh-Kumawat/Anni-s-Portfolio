@@ -424,7 +424,7 @@ export default function DevTunes() {
                         <span className="text-sm font-medium">Library</span>
                         <span className="ml-auto text-xs text-muted-foreground">{songs.length} songs</span>
                     </div>
-                    <ScrollArea className="flex-1">
+                    <div className="flex-1 overflow-y-auto no-scrollbar">
                         <div className="p-2">
                             {songs.map((song) => (
                                 <button
@@ -442,13 +442,16 @@ export default function DevTunes() {
                                     />
                                     <div className="flex-1 text-left min-w-0">
                                         <p className="text-sm font-medium truncate">{song.title}</p>
-                                        <p className="text-xs text-muted-foreground truncate">{song.artist}</p>
+                                        <div className="flex items-center gap-1.5 mt-0.5">
+                                            <Music2 className="w-3 h-3 text-primary" />
+                                            <span className="text-[10px] font-semibold text-primary">DevTunes</span>
+                                        </div>
                                     </div>
                                     <span className="text-xs text-muted-foreground flex-shrink-0">{song.duration}</span>
                                 </button>
                             ))}
                         </div>
-                    </ScrollArea>
+                    </div>
                 </div>
 
                 {/* Now Playing Section */}
