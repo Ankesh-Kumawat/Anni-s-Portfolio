@@ -34,10 +34,10 @@ export function ControlCenterPopover({
                     <Volume2 className="w-4 h-4" />
                     <div className="flex items-center gap-1.5">
                         {batteryLevel !== null && (
-                            <span className="text-xs hidden sm:inline">{batteryLevel}%</span>
+                            <span className="text-xs tabular-nums">{batteryLevel}%</span>
                         )}
                         {isCharging ? (
-                            <BatteryCharging className="w-4 h-4" />
+                            <BatteryCharging className="w-4 h-4 text-green-500" />
                         ) : (
                             <Battery className="w-4 h-4" />
                         )}
@@ -45,9 +45,11 @@ export function ControlCenterPopover({
                 </button>
             </PopoverTrigger>
             <PopoverContent
-                className="w-80 p-4 mr-4 mt-2 bg-background/95 backdrop-blur-xl shadow-2xl rounded-2xl border"
-                align="end"
-                sideOffset={8}
+                className="w-screen md:w-80 p-4 mr-0 md:mr-4 mt-0 md:mt-2 bg-background/95 backdrop-blur-xl shadow-2xl rounded-b-2xl md:rounded-2xl border-t-0 md:border-t transition-all duration-300 ease-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:slide-in-from-top-4 data-[state=closed]:slide-out-to-top-4 md:data-[state=open]:slide-in-from-top-0 md:data-[state=closed]:slide-out-to-top-0"
+                align="center"
+                side="bottom"
+                sideOffset={0}
+                alignOffset={0}
             >
                 <div className="space-y-4">
                     <FocusModeToggle focusMode={focusMode} onToggle={onFocusModeToggle} />

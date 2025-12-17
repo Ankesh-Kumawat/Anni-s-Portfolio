@@ -6,7 +6,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { Grid, Search, Power, Settings as SettingsIcon, User } from "lucide-react";
+import { Grid, Search, Power, Settings as SettingsIcon } from "lucide-react";
 import {
   Command,
   CommandEmpty,
@@ -162,13 +162,16 @@ export function Taskbar({ apps, hasOpenWindows = false }: TaskbarProps) {
                       <SettingsIcon className="w-4 h-4" />
                       <span>Settings</span>
                     </CommandItem>
-                    <CommandItem className="flex items-center gap-2 cursor-pointer text-muted-foreground">
-                      <User className="w-4 h-4" />
-                      <span>Log Out...</span>
-                    </CommandItem>
-                    <CommandItem className="flex items-center gap-2 cursor-pointer text-destructive focus:text-destructive">
+                    <CommandItem
+                      onSelect={() => {
+                        setStartOpen(false);
+                        // Trigger restart with boot screen
+                        window.dispatchEvent(new Event('os-restart'));
+                      }}
+                      className="flex items-center gap-2 cursor-pointer text-orange-500 focus:text-orange-500"
+                    >
                       <Power className="w-4 h-4" />
-                      <span>Shut Down</span>
+                      <span>Restart</span>
                     </CommandItem>
                   </CommandGroup>
                 </CommandList>

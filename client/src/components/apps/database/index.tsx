@@ -179,7 +179,7 @@ export default function Database() {
                         </Badge>
                     </div>
 
-                    <div className="p-4 font-mono text-sm">
+                    <div className="p-4 font-mono text-sm overflow-x-auto no-scrollbar whitespace-nowrap">
                         {filteredTree.length > 0 ? (
                             filteredTree.map((node, index) =>
                                 renderNode(node, `root.${node.name}`, 0)
@@ -191,14 +191,6 @@ export default function Database() {
                             </div>
                         )}
                     </div>
-                </div>
-
-                {/* Info Footer */}
-                <div className="mt-6 p-4 bg-blue-500/5 border border-blue-500/20 rounded-lg">
-                    <p className="text-xs text-muted-foreground">
-                        💡 <strong>Note:</strong> This viewer shows live data from all JSON files (about.json, projects.json, contact.json).
-                        Click on nodes to expand/collapse and explore the data structure.
-                    </p>
                 </div>
             </div>
         </div>

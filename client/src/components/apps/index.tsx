@@ -1,6 +1,6 @@
 import React from "react";
 import { AppConfig } from "@/lib/os-context";
-import { User, Briefcase, Terminal as TerminalIcon, Settings as SettingsIcon, Mail, Code, Globe, Image, FileText, Music, Video, Database as DatabaseIcon, Edit3 } from "lucide-react";
+import { User, Briefcase, Terminal as TerminalIcon, Settings as SettingsIcon, Mail, Code, Globe, Image, FileText, Music, Video, Database as DatabaseIcon } from "lucide-react";
 
 import About from "./about";
 import Projects from "./projects";
@@ -113,26 +113,5 @@ export const APPS: AppConfig[] = [
     component: <Database />,
     width: 1000,
     height: 700
-  },
-  {
-    id: "editor" as any,
-    title: "Portfolio Editor",
-    icon: <Edit3 className="w-full h-full text-indigo-500" />,
-    component: <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
-      <div className="text-center space-y-4">
-        <Edit3 className="w-16 h-16 mx-auto text-indigo-500" />
-        <h2 className="text-2xl font-bold text-gray-900">Portfolio Editor</h2>
-        <p className="text-gray-600 max-w-md">This app opens in a new page for better experience.</p>
-        <a
-          href="/editor"
-          target="_blank"
-          className="inline-block px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-        >
-          Open Editor
-        </a>
-      </div>
-    </div>,
-    width: 600,
-    height: 400
   }
 ];

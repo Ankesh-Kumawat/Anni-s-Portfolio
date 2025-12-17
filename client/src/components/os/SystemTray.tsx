@@ -75,7 +75,10 @@ export function SystemTray() {
           <span className="hidden sm:inline">Help</span>
         </button>
 
-        <ZoomIndicator zoomLevel={zoomLevel} />
+        {/* Hide zoom on mobile, show on desktop */}
+        <div className="hidden md:block">
+          <ZoomIndicator zoomLevel={zoomLevel} />
+        </div>
       </div>
 
       <div className="flex items-center gap-2 md:gap-4">
