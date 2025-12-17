@@ -47,7 +47,7 @@ function ThemeCard({ theme, currentTheme, setTheme, name, color, bg }: ThemeCard
 
 export function DisplaySettings() {
     const { theme, setTheme } = useTheme();
-    const { brightness, setBrightness } = useBrightness();
+    const { brightness, setBrightness, nightShift, setNightShift } = useBrightness();
 
     return (
         <>
@@ -139,7 +139,7 @@ export function DisplaySettings() {
                             <Label className="text-base">Night Shift</Label>
                             <p className="text-sm text-muted-foreground">Warmer colors after sunset</p>
                         </div>
-                        <Switch defaultChecked />
+                        <Switch checked={nightShift} onCheckedChange={setNightShift} />
                     </div>
                 </div>
             </div>
