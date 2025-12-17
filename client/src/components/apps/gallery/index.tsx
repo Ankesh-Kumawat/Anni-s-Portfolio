@@ -111,53 +111,89 @@ export default function Gallery() {
 
             {/* Content */}
             <div className="flex-1 overflow-y-auto p-6 no-scrollbar">
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {/* Folders */}
-                    {folders.map((folder) => (
-                        <button
-                            key={folder.id}
-                            onClick={() => openFolder(folder)}
-                            className="group relative aspect-square rounded-lg overflow-hidden border-2 border-border hover:border-primary transition-all bg-muted cursor-pointer"
-                        >
-                            {/* Cover Image */}
-                            {folder.coverImage && (
-                                <img
-                                    src={folder.coverImage}
-                                    alt={folder.name}
-                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                    loading="lazy"
-                                />
-                            )}
+                {/* Folders Section */}
+                {folders.length > 0 && (
+                    <div className="mb-8">
+                        <h2 className="text-sm font-semibold text-muted-foreground mb-4 flex items-center gap-2">
+                            <Folder className="w-4 h-4" />
+                            Folders ({folders.length})
+                        </h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {folders.map((folder) => (
+                                <button
+                                    key={folder.id}
+                                    onClick={() => openFolder(folder)}
+                                    className="group relative aspect-video rounded-xl overflow-hidden border-2 border-border hover:border-primary transition-all bg-muted cursor-pointer hover:shadow-xl"
+                                >
+                                    {/* Cover Image */}
+                                    {folder.coverImage ? (
+                                        <img
+                                            src={folder.coverImage}
+                                            alt={folder.name}
+                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                            loading="lazy"
+                                            onError={(e) => {
+                                                e.currentTarget.style.display = 'none';
+                                            }}
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
+                                            <Folder className="w-20 h-20 text-primary/30" />
+                                        </div>
+                                    )}
 
-                            {/* Overlay */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-4">
-                                <div className="flex items-center gap-2 text-white mb-1">
-                                    <Folder className="w-4 h-4" />
-                                    <span className="font-semibold text-sm">{folder.name}</span>
-                                </div>
-                                <span className="text-xs text-white/70">
-                                    {folder.children?.length || 0} items
-                                </span>
-                            </div>
-                        </button>
-                    ))}
+                                    {/* Overlay */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent flex flex-col justify-end p-4">
+                                        <div className="flex items-center gap-2 text-white mb-1">
+                                            <Folder className="w-5 h-5" />
+                                            <span className="font-bold text-base">{folder.name}</span>
+                                        </div>
+                                        <span className="text-sm text-white/80">
+                                            {folder.children?.length || 0} items
+                                        </span>
+                                    </div>
 
-                    {/* Images */}
-                    {images.map((image) => (
-                        <div
-                            key={image.id}
-                            className="aspect-square rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity bg-muted border-2 border-border hover:border-primary"
-                            onClick={() => setSelectedImage(image.imageUrl!)}
-                        >
-                            <img
-                                src={image.imageUrl}
-                                alt={image.name}
-                                className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                                loading="lazy"
-                            />
+                                    {/* Hover Effect */}
+                                    <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                                </button>
+                            ))}
                         </div>
-                    ))}
-                </div>
+                    </div>
+                )}
+
+                {/* Images Section */}
+                {images.length > 0 && (
+                    <div>
+                        <h2 className="text-sm font-semibold text-muted-foreground mb-4 flex items-center gap-2">
+                            <ImageIcon className="w-4 h-4" />
+                            Images ({images.length})
+                        </h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {images.map((image) => (
+                                <div
+                                    key={image.id}
+                                    className="group relative aspect-video rounded-xl overflow-hidden cursor-pointer transition-all bg-muted border-2 border-border hover:border-primary hover:shadow-xl"
+                                    onClick={() => setSelectedImage(image.imageUrl!)}
+                                >
+                                    <img
+                                        src={image.imageUrl}
+                                        alt={image.name}
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                        loading="lazy"
+                                    />
+
+                                    {/* Image Name Overlay on Hover */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                                        <span className="text-white font-semibold text-sm">{image.name}</span>
+                                    </div>
+
+                                    {/* Hover Effect */}
+                                    <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
 
                 {/* Empty State */}
                 {folders.length === 0 && images.length === 0 && (

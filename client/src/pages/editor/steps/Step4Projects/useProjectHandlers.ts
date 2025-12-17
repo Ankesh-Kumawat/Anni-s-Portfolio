@@ -2,23 +2,36 @@ import type { EditorData } from "../../types";
 
 export function useProjectHandlers(data: EditorData, setData: React.Dispatch<React.SetStateAction<EditorData>>) {
     const syncGallery = (updatedProjects: any[]) => {
+        // Get cover image for projects folder (first project's cover)
+        const projectsFolderCover = updatedProjects.length > 0 && updatedProjects[0].images.length > 0
+            ? updatedProjects[0].images[0].replace(/\/(\d+)\.(png|jpg|jpeg)$/, '/cover.$2')
+            : "";
+
         return {
             folders: data.gallery.folders.length > 0 ? data.gallery.folders.map(folder => {
                 if (folder.id === "projects") {
                     return {
                         ...folder,
-                        children: updatedProjects.map(p => ({
-                            id: p.id,
-                            name: p.name || "Untitled Project",
-                            type: "folder" as const,
-                            coverImage: p.images[0] || "",
-                            children: p.images.map((path: string, idx: number) => ({
-                                id: `${p.id}-img-${idx}`,
-                                name: `Screenshot ${idx + 1}`,
-                                type: "image" as const,
-                                imageUrl: path
-                            }))
-                        }))
+                        coverImage: projectsFolderCover,
+                        children: updatedProjects.map(p => {
+                            // Use cover.png for project folder cover
+                            const projectCover = p.images.length > 0
+                                ? p.images[0].replace(/\/(\d+)\.(png|jpg|jpeg)$/, '/cover.$2')
+                                : "";
+
+                            return {
+                                id: p.id,
+                                name: p.name || "Untitled Project",
+                                type: "folder" as const,
+                                coverImage: projectCover,
+                                children: p.images.map((path: string, idx: number) => ({
+                                    id: `${p.id}-img-${idx}`,
+                                    name: `Screenshot ${idx + 1}`,
+                                    type: "image" as const,
+                                    imageUrl: path
+                                }))
+                            };
+                        })
                     };
                 }
                 return folder;
@@ -26,19 +39,25 @@ export function useProjectHandlers(data: EditorData, setData: React.Dispatch<Rea
                 id: "projects",
                 name: "Projects",
                 type: "folder" as const,
-                coverImage: "",
-                children: updatedProjects.map(p => ({
-                    id: p.id,
-                    name: p.name || "Untitled Project",
-                    type: "folder" as const,
-                    coverImage: p.images[0] || "",
-                    children: p.images.map((path: string, idx: number) => ({
-                        id: `${p.id}-img-${idx}`,
-                        name: `Screenshot ${idx + 1}`,
-                        type: "image" as const,
-                        imageUrl: path
-                    }))
-                }))
+                coverImage: projectsFolderCover,
+                children: updatedProjects.map(p => {
+                    const projectCover = p.images.length > 0
+                        ? p.images[0].replace(/\/(\d+)\.(png|jpg|jpeg)$/, '/cover.$2')
+                        : "";
+
+                    return {
+                        id: p.id,
+                        name: p.name || "Untitled Project",
+                        type: "folder" as const,
+                        coverImage: projectCover,
+                        children: p.images.map((path: string, idx: number) => ({
+                            id: `${p.id}-img-${idx}`,
+                            name: `Screenshot ${idx + 1}`,
+                            type: "image" as const,
+                            imageUrl: path
+                        }))
+                    };
+                })
             }],
             directImages: data.gallery.directImages || []
         };
