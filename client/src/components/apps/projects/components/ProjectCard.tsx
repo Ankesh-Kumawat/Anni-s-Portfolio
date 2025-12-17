@@ -7,14 +7,14 @@ interface ProjectCardProps {
     onClick: () => void;
 }
 
-const platformIcons = {
+const platformIcons: Record<string, any> = {
     Mobile: Smartphone,
     Web: Globe,
     Desktop: Monitor,
     "Cross-Platform": Layers,
 };
 
-const statusColors = {
+const statusColors: Record<string, string> = {
     Active: "bg-green-500/10 text-green-700 border-green-500/20",
     "In Development": "bg-blue-500/10 text-blue-700 border-blue-500/20",
     Rebuilding: "bg-orange-500/10 text-orange-700 border-orange-500/20",
@@ -22,7 +22,7 @@ const statusColors = {
 };
 
 export function ProjectCard({ project, onClick }: ProjectCardProps) {
-    const PlatformIcon = platformIcons[project.platform];
+    const PlatformIcon = platformIcons[project.platform] || Monitor;
 
     return (
         <button
@@ -40,7 +40,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
 
                 {/* Status Badge on Image */}
                 <div className="absolute top-3 right-3">
-                    <Badge className={`${statusColors[project.status]} border font-normal text-xs backdrop-blur-sm`}>
+                    <Badge className={`${statusColors[project.status] || statusColors["In Development"]} border font-normal text-xs backdrop-blur-sm`}>
                         {project.status}
                     </Badge>
                 </div>
@@ -63,7 +63,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
 
                 {/* Platform */}
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <PlatformIcon className="w-3.5 h-3.5" />
+                    {PlatformIcon && <PlatformIcon className="w-3.5 h-3.5" />}
                     <span>{project.platform}</span>
                 </div>
 

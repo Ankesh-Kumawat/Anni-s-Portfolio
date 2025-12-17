@@ -2,14 +2,36 @@ import { DatabaseTable } from "../types";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Database, Table } from "lucide-react";
-import { USER_DATA, PROJECTS_DATA } from "../data";
+import { useState, useEffect } from "react";
 
 interface TableDetailViewProps {
     table: DatabaseTable;
     onBack: () => void;
 }
 
+interface DatabaseData {
+    user: Record<string, any>;
+    projects: any[];
+}
+
 export function TableDetailView({ table, onBack }: TableDetailViewProps) {
+    const [data, setData] = useState<DatabaseData | null>(null);
+
+    useEffect(() => {
+        fetch(`/data/database.json?t=${Date.now()}`, { cache: 'no-store' })
+            .then(res => res.json())
+            .then(setData)
+            .catch(console.error);
+    }, []);
+
+    if (!data) return null;
+
+    const USER_DATA = Object.entries(data.user).map(([field, value]) => ({
+        field,
+        value: String(value)
+    }));
+
+    const PROJECTS_DATA = data.projects;
     return (
         <div className="flex flex-col h-full bg-background">
             {/* Header */}
@@ -63,23 +85,27 @@ export function TableDetailView({ table, onBack }: TableDetailViewProps) {
                                     ))}
                                 </div>
                             </div>
-                        ) : (
-                            Object.entries(PROJECTS_DATA).map(([id, data]) => (
-                                <div key={id} className="border rounded-lg overflow-hidden">
+                        ) : PROJECTS_DATA.length > 0 ? (
+                            PROJECTS_DATA.map((project: any, idx: number) => (
+                                <div key={idx} className="border rounded-lg overflow-hidden">
                                     <div className="grid grid-cols-2 gap-px bg-border">
-                                        {data.map((row, index) => (
+                                        {Object.entries(project).map(([field, value], index) => (
                                             <div key={index} className="contents">
                                                 <div className="bg-muted/50 px-4 py-3 font-mono text-sm font-semibold text-foreground">
-                                                    {row.field}
+                                                    {field}
                                                 </div>
                                                 <div className="bg-background px-4 py-3 text-sm text-foreground">
-                                                    {row.value}
+                                                    {String(value)}
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
                             ))
+                        ) : (
+                            <div className="text-sm text-muted-foreground p-4 border rounded-lg">
+                                No project data available
+                            </div>
                         )}
                     </div>
                 </div>

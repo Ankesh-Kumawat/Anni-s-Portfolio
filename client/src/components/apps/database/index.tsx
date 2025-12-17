@@ -1,28 +1,146 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import { Database as DatabaseIcon, Search } from "lucide-react";
+import { Database as DatabaseIcon, Search, ChevronRight, ChevronDown, FileJson } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { DATABASE_TABLES } from "./data";
-import { DatabaseTable } from "./types";
-import { TableDetailView } from "./components/TableDetailView";
+import { JSX } from "react/jsx-runtime";
+
+interface DataNode {
+    name: string;
+    type: "file" | "object" | "array" | "value";
+    value?: any;
+    children?: DataNode[];
+    expanded?: boolean;
+}
 
 export default function Database() {
+    const [data, setData] = useState<Record<string, any>>({});
     const [searchQuery, setSearchQuery] = useState("");
-    const [selectedTable, setSelectedTable] = useState<DatabaseTable | null>(null);
+    const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set(["root"]));
 
-    const filteredTables = DATABASE_TABLES.filter(table =>
-        table.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        table.description.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    // Load all JSON files
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                const [about, projects, contact] = await Promise.all([
+                    fetch(`/data/about.json?t=${Date.now()}`).then(r => r.json()).catch(() => null),
+                    fetch(`/data/projects.json?t=${Date.now()}`).then(r => r.json()).catch(() => null),
+                    fetch(`/data/contact.json?t=${Date.now()}`).then(r => r.json()).catch(() => null),
+                ]);
 
-    if (selectedTable) {
+                setData({
+                    about: about || {},
+                    projects: projects || {},
+                    contact: contact || {},
+                });
+            } catch (error) {
+                console.error('Failed to load data:', error);
+            }
+        };
+
+        loadData();
+    }, []);
+
+    const toggleNode = (path: string) => {
+        setExpandedNodes(prev => {
+            const next = new Set(prev);
+            if (next.has(path)) {
+                next.delete(path);
+            } else {
+                next.add(path);
+            }
+            return next;
+        });
+    };
+
+    const buildTree = (obj: any, path: string = "root"): DataNode[] => {
+        if (obj === null || obj === undefined) {
+            return [{ name: "null", type: "value", value: null }];
+        }
+
+        if (Array.isArray(obj)) {
+            return obj.map((item, index) => ({
+                name: `[${index}]`,
+                type: typeof item === "object" ? "object" : "value",
+                value: typeof item === "object" ? undefined : item,
+                children: typeof item === "object" ? buildTree(item, `${path}.${index}`) : undefined,
+            }));
+        }
+
+        if (typeof obj === "object") {
+            return Object.entries(obj).map(([key, value]) => ({
+                name: key,
+                type: Array.isArray(value) ? "array" : typeof value === "object" && value !== null ? "object" : "value",
+                value: typeof value === "object" ? undefined : value,
+                children: typeof value === "object" && value !== null ? buildTree(value, `${path}.${key}`) : undefined,
+            }));
+        }
+
+        return [{ name: String(obj), type: "value", value: obj }];
+    };
+
+    const renderValue = (value: any) => {
+        if (value === null) return <span className="text-gray-400">null</span>;
+        if (value === undefined) return <span className="text-gray-400">undefined</span>;
+        if (typeof value === "string") return <span className="text-green-600">"{value}"</span>;
+        if (typeof value === "number") return <span className="text-blue-600">{value}</span>;
+        if (typeof value === "boolean") return <span className="text-purple-600">{String(value)}</span>;
+        return <span className="text-gray-600">{String(value)}</span>;
+    };
+
+    const renderNode = (node: DataNode, path: string, level: number = 0): JSX.Element => {
+        const isExpanded = expandedNodes.has(path);
+        const hasChildren = node.children && node.children.length > 0;
+
         return (
-            <TableDetailView
-                table={selectedTable}
-                onBack={() => setSelectedTable(null)}
-            />
+            <div key={path}>
+                <div
+                    className="flex items-center gap-2 py-1 px-2 hover:bg-muted/50 rounded cursor-pointer group"
+                    style={{ paddingLeft: `${level * 20 + 8}px` }}
+                    onClick={() => hasChildren && toggleNode(path)}
+                >
+                    {hasChildren ? (
+                        isExpanded ? (
+                            <ChevronDown className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                        ) : (
+                            <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                        )
+                    ) : (
+                        <span className="w-4" />
+                    )}
+
+                    <span className="font-mono text-sm font-semibold text-blue-600">{node.name}</span>
+
+                    {node.type === "array" && (
+                        <Badge variant="outline" className="text-xs">
+                            Array[{node.children?.length || 0}]
+                        </Badge>
+                    )}
+
+                    {node.type === "value" && (
+                        <>
+                            <span className="text-muted-foreground">:</span>
+                            <span className="font-mono text-sm">{renderValue(node.value)}</span>
+                        </>
+                    )}
+                </div>
+
+                {hasChildren && isExpanded && (
+                    <div>
+                        {node.children!.map((child, index) =>
+                            renderNode(child, `${path}.${child.name}`, level + 1)
+                        )}
+                    </div>
+                )}
+            </div>
         );
-    }
+    };
+
+    const dataTree = buildTree(data);
+    const filteredTree = searchQuery
+        ? dataTree.filter(node =>
+            node.name.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+        : dataTree;
 
     return (
         <div className="flex flex-col h-full bg-background">
@@ -30,10 +148,10 @@ export default function Database() {
             <div className="border-b bg-muted/20 px-6 py-4">
                 <div className="flex items-center gap-3 mb-2">
                     <DatabaseIcon className="w-6 h-6 text-primary" />
-                    <h1 className="text-2xl font-bold">Database Manager</h1>
+                    <h1 className="text-2xl font-bold">Database Viewer</h1>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                    Conceptual representation of backend system design and data architecture
+                    Live view of all portfolio data in JSON tree structure
                 </p>
             </div>
 
@@ -44,77 +162,44 @@ export default function Database() {
                     <Input
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Search tables..."
+                        placeholder="Search data..."
                         className="pl-9"
                     />
                 </div>
             </div>
 
-            {/* Table List */}
-            <div className="flex-1 overflow-y-auto no-scrollbar">
-                {filteredTables.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
-                        <DatabaseIcon className="w-16 h-16 mb-4 opacity-20" />
-                        <p className="text-lg font-semibold mb-2">No tables found</p>
-                        <p className="text-sm">Try a different search term</p>
+            {/* Data Tree */}
+            <div className="flex-1 overflow-y-auto no-scrollbar p-6">
+                <div className="border rounded-lg bg-card overflow-hidden">
+                    <div className="bg-muted/50 px-4 py-3 border-b flex items-center gap-2">
+                        <FileJson className="w-4 h-4 text-primary" />
+                        <span className="font-mono text-sm font-semibold">Portfolio Data</span>
+                        <Badge variant="outline" className="ml-auto">
+                            {Object.keys(data).length} files
+                        </Badge>
                     </div>
-                ) : (
-                    <div className="p-6">
-                        <div className="border rounded-lg overflow-hidden">
-                            {/* Table Header */}
-                            <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-muted/50 border-b text-xs font-semibold text-muted-foreground">
-                                <div className="col-span-3">Table Name</div>
-                                <div className="col-span-2">Status</div>
-                                <div className="col-span-2">Rows</div>
-                                <div className="col-span-2">Size</div>
-                                <div className="col-span-3 text-right">Last Updated</div>
+
+                    <div className="p-4 font-mono text-sm">
+                        {filteredTree.length > 0 ? (
+                            filteredTree.map((node, index) =>
+                                renderNode(node, `root.${node.name}`, 0)
+                            )
+                        ) : (
+                            <div className="text-center py-8 text-muted-foreground">
+                                <DatabaseIcon className="w-12 h-12 mx-auto mb-3 opacity-20" />
+                                <p>No data found</p>
                             </div>
-
-                            {/* Table Rows */}
-                            {filteredTables.map((table) => (
-                                <div
-                                    key={table.id}
-                                    onClick={() => setSelectedTable(table)}
-                                    className="grid grid-cols-12 gap-4 px-4 py-4 border-b last:border-b-0 hover:bg-muted/50 cursor-pointer transition-colors group"
-                                >
-                                    <div className="col-span-3 font-mono text-sm font-semibold text-blue-500 group-hover:text-blue-600 flex items-center gap-2">
-                                        <DatabaseIcon className="w-4 h-4" />
-                                        {table.name}
-                                    </div>
-                                    <div className="col-span-2 flex items-center">
-                                        <Badge
-                                            variant={
-                                                table.status === 'Active' ? 'default' :
-                                                    table.status === 'Live' ? 'default' :
-                                                        table.status === 'Maintenance' ? 'destructive' : 'secondary'
-                                            }
-                                        >
-                                            {table.status}
-                                        </Badge>
-                                    </div>
-                                    <div className="col-span-2 text-sm text-foreground flex items-center">
-                                        {table.rows.toLocaleString()}
-                                    </div>
-                                    <div className="col-span-2 text-sm text-foreground flex items-center">
-                                        {table.size}
-                                    </div>
-                                    <div className="col-span-3 text-sm text-muted-foreground text-right flex items-center justify-end">
-                                        {table.updated}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* Info Footer */}
-                        <div className="mt-6 p-4 bg-blue-500/5 border border-blue-500/20 rounded-lg">
-                            <p className="text-xs text-muted-foreground">
-                                💡 <strong>Note:</strong> This is a conceptual database manager showcasing system design thinking.
-                                Click any table to view its structure, purpose, and what it represents in real-world applications.
-                                No actual data manipulation occurs.
-                            </p>
-                        </div>
+                        )}
                     </div>
-                )}
+                </div>
+
+                {/* Info Footer */}
+                <div className="mt-6 p-4 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                    <p className="text-xs text-muted-foreground">
+                        💡 <strong>Note:</strong> This viewer shows live data from all JSON files (about.json, projects.json, contact.json).
+                        Click on nodes to expand/collapse and explore the data structure.
+                    </p>
+                </div>
             </div>
         </div>
     );

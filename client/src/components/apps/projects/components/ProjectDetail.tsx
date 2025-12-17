@@ -9,14 +9,14 @@ interface ProjectDetailProps {
     onBack: () => void;
 }
 
-const platformIcons = {
+const platformIcons: Record<string, any> = {
     Mobile: Smartphone,
     Web: Globe,
     Desktop: Monitor,
     "Cross-Platform": Layers,
 };
 
-const statusColors = {
+const statusColors: Record<string, string> = {
     Active: "bg-green-500/10 text-green-700 border-green-500/20",
     "In Development": "bg-blue-500/10 text-blue-700 border-blue-500/20",
     Rebuilding: "bg-orange-500/10 text-orange-700 border-orange-500/20",
@@ -25,7 +25,7 @@ const statusColors = {
 
 export function ProjectDetail({ project, onBack }: ProjectDetailProps) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const PlatformIcon = platformIcons[project.platform];
+    const PlatformIcon = platformIcons[project.platform] || Monitor;
 
     // Get screenshots (exclude first image which is cover)
     const screenshots = project.images.slice(1);
@@ -71,11 +71,11 @@ export function ProjectDetail({ project, onBack }: ProjectDetailProps) {
                     </div>
 
                     <div className="flex items-center gap-3 flex-wrap">
-                        <Badge className={`${statusColors[project.status]} border`}>
+                        <Badge className={`${statusColors[project.status] || statusColors["In Development"]} border`}>
                             {project.status}
                         </Badge>
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <PlatformIcon className="w-4 h-4" />
+                            {PlatformIcon && <PlatformIcon className="w-4 h-4" />}
                             <span>{project.platform}</span>
                         </div>
                     </div>
@@ -89,11 +89,21 @@ export function ProjectDetail({ project, onBack }: ProjectDetailProps) {
                     </div>
                 </div>
 
+                {/* Description */}
+                {project.description && (
+                    <section className="space-y-3">
+                        <h2 className="text-xl font-semibold">About</h2>
+                        <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{project.description}</p>
+                    </section>
+                )}
+
                 {/* Overview */}
-                <section className="space-y-3">
-                    <h2 className="text-xl font-semibold">Overview</h2>
-                    <p className="text-muted-foreground leading-relaxed">{project.overview}</p>
-                </section>
+                {project.overview && (
+                    <section className="space-y-3">
+                        <h2 className="text-xl font-semibold">Overview</h2>
+                        <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{project.overview}</p>
+                    </section>
+                )}
 
                 {/* Image Carousel - Only show if there are screenshots (more than just cover) */}
                 {screenshots.length > 0 && (
@@ -106,10 +116,10 @@ export function ProjectDetail({ project, onBack }: ProjectDetailProps) {
                                     <div
                                         key={index}
                                         className={`absolute inset-0 transition-all duration-700 ease-in-out ${index === currentImageIndex
-                                                ? "opacity-100 translate-x-0"
-                                                : index < currentImageIndex
-                                                    ? "opacity-0 -translate-x-full"
-                                                    : "opacity-0 translate-x-full"
+                                            ? "opacity-100 translate-x-0"
+                                            : index < currentImageIndex
+                                                ? "opacity-0 -translate-x-full"
+                                                : "opacity-0 translate-x-full"
                                             }`}
                                     >
                                         <img
@@ -142,8 +152,8 @@ export function ProjectDetail({ project, onBack }: ProjectDetailProps) {
                                                 key={index}
                                                 onClick={() => setCurrentImageIndex(index)}
                                                 className={`w-2 h-2 rounded-full transition-all ${index === currentImageIndex
-                                                        ? "bg-primary w-6"
-                                                        : "bg-muted-foreground/40 hover:bg-muted-foreground/60"
+                                                    ? "bg-primary w-6"
+                                                    : "bg-muted-foreground/40 hover:bg-muted-foreground/60"
                                                     }`}
                                             />
                                         ))}
@@ -162,82 +172,104 @@ export function ProjectDetail({ project, onBack }: ProjectDetailProps) {
                 )}
 
                 {/* Problem → Solution */}
-                <section className="space-y-4">
-                    <h2 className="text-xl font-semibold">Problem → Solution</h2>
-                    <div className="space-y-4">
-                        <div className="p-4 rounded-lg bg-red-500/5 border border-red-500/20">
-                            <h3 className="font-medium text-red-700 mb-2">Problem</h3>
-                            <p className="text-sm text-muted-foreground">{project.problem}</p>
+                {(project.problem || project.solution || project.outcome) && (
+                    <section className="space-y-4">
+                        <h2 className="text-xl font-semibold">Problem → Solution</h2>
+                        <div className="space-y-4">
+                            {project.problem && (
+                                <div className="p-4 rounded-lg bg-red-500/5 border border-red-500/20">
+                                    <h3 className="font-medium text-red-700 mb-2">Problem</h3>
+                                    <p className="text-sm text-muted-foreground">{project.problem}</p>
+                                </div>
+                            )}
+                            {project.solution && (
+                                <div className="p-4 rounded-lg bg-blue-500/5 border border-blue-500/20">
+                                    <h3 className="font-medium text-blue-700 mb-2">Solution</h3>
+                                    <p className="text-sm text-muted-foreground">{project.solution}</p>
+                                </div>
+                            )}
+                            {project.outcome && (
+                                <div className="p-4 rounded-lg bg-green-500/5 border border-green-500/20">
+                                    <h3 className="font-medium text-green-700 mb-2">Outcome</h3>
+                                    <p className="text-sm text-muted-foreground">{project.outcome}</p>
+                                </div>
+                            )}
                         </div>
-                        <div className="p-4 rounded-lg bg-blue-500/5 border border-blue-500/20">
-                            <h3 className="font-medium text-blue-700 mb-2">Solution</h3>
-                            <p className="text-sm text-muted-foreground">{project.solution}</p>
-                        </div>
-                        <div className="p-4 rounded-lg bg-green-500/5 border border-green-500/20">
-                            <h3 className="font-medium text-green-700 mb-2">Outcome</h3>
-                            <p className="text-sm text-muted-foreground">{project.outcome}</p>
-                        </div>
-                    </div>
-                </section>
+                    </section>
+                )}
 
                 {/* Key Features */}
-                <section className="space-y-3">
-                    <h2 className="text-xl font-semibold">Key Features</h2>
-                    <div className="grid gap-3">
-                        {project.features.map((feature, index) => (
-                            <div key={index} className="p-4 rounded-lg border bg-card">
-                                <h3 className="font-medium mb-1">{feature.title}</h3>
-                                <p className="text-sm text-muted-foreground">{feature.description}</p>
-                            </div>
-                        ))}
-                    </div>
-                </section>
+                {project.features && project.features.length > 0 && (
+                    <section className="space-y-3">
+                        <h2 className="text-xl font-semibold">Key Features</h2>
+                        <div className="grid gap-3">
+                            {project.features.map((feature, index) => (
+                                <div key={index} className="p-4 rounded-lg border bg-card">
+                                    <h3 className="font-medium mb-1">{feature.title}</h3>
+                                    <p className="text-sm text-muted-foreground">{feature.description}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
 
                 {/* Architecture & Scale */}
-                <section className="space-y-3">
-                    <h2 className="text-xl font-semibold">Architecture & Scale</h2>
-                    <div className="space-y-3">
-                        <div>
-                            <h3 className="font-medium text-sm text-muted-foreground mb-1">Structure</h3>
-                            <p className="text-sm">{project.architecture.structure}</p>
+                {(project.architecture.structure || project.architecture.dataHandling || project.architecture.scalability || project.architecture.performance) && (
+                    <section className="space-y-3">
+                        <h2 className="text-xl font-semibold">Architecture & Scale</h2>
+                        <div className="space-y-3">
+                            {project.architecture.structure && (
+                                <div>
+                                    <h3 className="font-medium text-sm text-muted-foreground mb-1">Structure</h3>
+                                    <p className="text-sm">{project.architecture.structure}</p>
+                                </div>
+                            )}
+                            {project.architecture.dataHandling && (
+                                <div>
+                                    <h3 className="font-medium text-sm text-muted-foreground mb-1">Data Handling</h3>
+                                    <p className="text-sm">{project.architecture.dataHandling}</p>
+                                </div>
+                            )}
+                            {project.architecture.scalability && (
+                                <div>
+                                    <h3 className="font-medium text-sm text-muted-foreground mb-1">Scalability</h3>
+                                    <p className="text-sm">{project.architecture.scalability}</p>
+                                </div>
+                            )}
+                            {project.architecture.performance && (
+                                <div>
+                                    <h3 className="font-medium text-sm text-muted-foreground mb-1">Performance</h3>
+                                    <p className="text-sm">{project.architecture.performance}</p>
+                                </div>
+                            )}
                         </div>
-                        <div>
-                            <h3 className="font-medium text-sm text-muted-foreground mb-1">Data Handling</h3>
-                            <p className="text-sm">{project.architecture.dataHandling}</p>
-                        </div>
-                        <div>
-                            <h3 className="font-medium text-sm text-muted-foreground mb-1">Scalability</h3>
-                            <p className="text-sm">{project.architecture.scalability}</p>
-                        </div>
-                        <div>
-                            <h3 className="font-medium text-sm text-muted-foreground mb-1">Performance</h3>
-                            <p className="text-sm">{project.architecture.performance}</p>
-                        </div>
-                    </div>
-                </section>
+                    </section>
+                )}
 
                 {/* Challenges & Learnings */}
-                <section className="space-y-3">
-                    <h2 className="text-xl font-semibold">Challenges & Learnings</h2>
-                    <div className="space-y-4">
-                        {project.challenges.map((item, index) => (
-                            <div key={index} className="p-4 rounded-lg border bg-card space-y-2">
-                                <div>
-                                    <span className="text-xs font-medium text-muted-foreground">Challenge</span>
-                                    <p className="text-sm mt-1">{item.challenge}</p>
+                {project.challenges && project.challenges.length > 0 && (
+                    <section className="space-y-3">
+                        <h2 className="text-xl font-semibold">Challenges & Learnings</h2>
+                        <div className="space-y-4">
+                            {project.challenges.map((item, index) => (
+                                <div key={index} className="p-4 rounded-lg border bg-card space-y-2">
+                                    <div>
+                                        <span className="text-xs font-medium text-muted-foreground">Challenge</span>
+                                        <p className="text-sm mt-1">{item.challenge}</p>
+                                    </div>
+                                    <div>
+                                        <span className="text-xs font-medium text-muted-foreground">Solution</span>
+                                        <p className="text-sm mt-1">{item.solution}</p>
+                                    </div>
+                                    <div>
+                                        <span className="text-xs font-medium text-muted-foreground">Learning</span>
+                                        <p className="text-sm mt-1 text-primary">{item.learning}</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <span className="text-xs font-medium text-muted-foreground">Solution</span>
-                                    <p className="text-sm mt-1">{item.solution}</p>
-                                </div>
-                                <div>
-                                    <span className="text-xs font-medium text-muted-foreground">Learning</span>
-                                    <p className="text-sm mt-1 text-primary">{item.learning}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </section>
+                            ))}
+                        </div>
+                    </section>
+                )}
 
                 {/* Links */}
                 {(project.github || project.liveDemo || project.relatedProject) && (
