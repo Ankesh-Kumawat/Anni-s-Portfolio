@@ -99,7 +99,7 @@ export default function Step2Contact({ data, setData }: StepProps) {
                                 className="h-12 text-base"
                             />
                             <div className="flex items-start gap-2 mt-2">
-                                <Info className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                                <Info className="w-4 h-4 text-muted-foreground/60 mt-0.5 flex-shrink-0" />
                                 <p className="text-xs text-muted-foreground">This will be used for contact forms and displayed on your portfolio</p>
                             </div>
                         </div>
@@ -140,7 +140,7 @@ export default function Step2Contact({ data, setData }: StepProps) {
                                 className="h-12 text-base"
                             />
                             <div className="flex items-start gap-2 mt-2">
-                                <Info className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                                <Info className="w-4 h-4 text-muted-foreground/60 mt-0.5 flex-shrink-0" />
                                 <p className="text-xs text-muted-foreground">Your current city and country</p>
                             </div>
                         </div>
@@ -156,7 +156,7 @@ export default function Step2Contact({ data, setData }: StepProps) {
                                 <h3 className="text-xl font-bold text-foreground">Welcome Message</h3>
                                 <p className="text-sm text-muted-foreground">
                                     Optional - Greet your visitors
-                                    <span className="text-xs text-gray-400 ml-1">(Optional)</span>
+                                    <span className="text-xs text-muted-foreground/60 ml-1">(Optional)</span>
                                 </p>
                             </div>
                         </div>
@@ -181,10 +181,10 @@ export default function Step2Contact({ data, setData }: StepProps) {
                             />
                             <div className="flex justify-between items-center">
                                 <div className="flex items-start gap-2">
-                                    <Info className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                                    <Info className="w-4 h-4 text-muted-foreground/60 mt-0.5 flex-shrink-0" />
                                     <p className="text-xs text-muted-foreground">A friendly message for visitors on your contact page</p>
                                 </div>
-                                <p className="text-xs text-gray-400">{data.contact.message.length} characters</p>
+                                <p className="text-xs text-muted-foreground/60">{data.contact.message.length} characters</p>
                             </div>
                         </div>
                     </div>
@@ -225,7 +225,7 @@ export default function Step2Contact({ data, setData }: StepProps) {
                                 className="h-12 text-base"
                             />
                             <div className="flex items-start gap-2 mt-2">
-                                <Info className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                                <Info className="w-4 h-4 text-muted-foreground/60 mt-0.5 flex-shrink-0" />
                                 <p className="text-xs text-muted-foreground">Displayed in the footer of your portfolio</p>
                             </div>
                         </div>
@@ -256,10 +256,10 @@ export default function Step2Contact({ data, setData }: StepProps) {
                                             }`}
                                     >
                                         <div className="flex items-center gap-3">
-                                            <Icon className={`w-4 h-4 ${isComplete ? "text-green-600" : "text-gray-400"}`} />
-                                            <span className={`text-sm font-medium ${isComplete ? "text-green-900" : "text-muted-foreground"}`}>
+                                            <Icon className={`w-4 h-4 ${isComplete ? "text-green-600" : "text-muted-foreground/60"}`} />
+                                            <span className={`text-sm font-medium ${isComplete ? "text-green-700 dark:text-green-400" : "text-muted-foreground"}`}>
                                                 {item.label}
-                                                {!item.required && <span className="text-xs text-gray-400 ml-1">(Optional)</span>}
+                                                {!item.required && <span className="text-xs text-muted-foreground/60 ml-1">(Optional)</span>}
                                             </span>
                                         </div>
                                         {isComplete ? (
@@ -288,7 +288,7 @@ export default function Step2Contact({ data, setData }: StepProps) {
                                     <div className="flex-1">
                                         <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Email</span>
                                         <p className="text-sm text-foreground mt-1 font-medium break-all">
-                                            {data.contact.email || <span className="text-gray-400 italic">Not set</span>}
+                                            {data.contact.email || <span className="text-muted-foreground/60 italic">Not set</span>}
                                         </p>
                                     </div>
                                 </div>
@@ -299,7 +299,7 @@ export default function Step2Contact({ data, setData }: StepProps) {
                                     <div className="flex-1">
                                         <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Location</span>
                                         <p className="text-sm text-foreground mt-1 font-medium">
-                                            {data.contact.location || <span className="text-gray-400 italic">Not set</span>}
+                                            {data.contact.location || <span className="text-muted-foreground/60 italic">Not set</span>}
                                         </p>
                                     </div>
                                 </div>
@@ -310,7 +310,7 @@ export default function Step2Contact({ data, setData }: StepProps) {
                                     <div className="flex-1">
                                         <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Message</span>
                                         <p className="text-sm text-foreground mt-1">
-                                            {data.contact.message || <span className="text-gray-400 italic">Not set</span>}
+                                            {data.contact.message || <span className="text-muted-foreground/60 italic">Not set</span>}
                                         </p>
                                     </div>
                                 </div>
@@ -321,7 +321,7 @@ export default function Step2Contact({ data, setData }: StepProps) {
                                     <div className="flex-1">
                                         <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Copyright</span>
                                         <p className="text-sm text-foreground mt-1">
-                                            {data.contact.copyright || <span className="text-gray-400 italic">Not set</span>}
+                                            {data.contact.copyright || <span className="text-muted-foreground/60 italic">Not set</span>}
                                         </p>
                                     </div>
                                 </div>
@@ -333,6 +333,10 @@ export default function Step2Contact({ data, setData }: StepProps) {
         </div>
     );
 }
+
+
+
+
 
 
 

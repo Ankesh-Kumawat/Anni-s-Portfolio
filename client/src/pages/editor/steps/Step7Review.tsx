@@ -56,7 +56,7 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                         <CheckCircle2 className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                        <p className="text-base font-bold text-green-900">Portfolio Complete! 🎉</p>
+                        <p className="text-base font-bold text-green-700 dark:text-green-400">Portfolio Complete! 🎉</p>
                         <p className="text-sm text-green-700 mt-1">
                             All required sections are filled. Click "Download ZIP" in the header to get your portfolio data package.
                         </p>
@@ -199,7 +199,7 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                                         {data.social.links.length} Added
                                     </Badge>
                                 ) : (
-                                    <Badge className="bg-gray-400 text-white">
+                                    <Badge className="bg-muted text-white">
                                         Optional
                                     </Badge>
                                 )}
@@ -232,7 +232,7 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                                         {data.projects.projects.length} Projects
                                     </Badge>
                                 ) : (
-                                    <Badge className="bg-gray-400 text-white">
+                                    <Badge className="bg-muted text-white">
                                         Optional
                                     </Badge>
                                 )}
@@ -271,7 +271,7 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                                         {data.notepad.defaultNotes.length} Notes
                                     </Badge>
                                 ) : (
-                                    <Badge className="bg-gray-400 text-white">
+                                    <Badge className="bg-muted text-white">
                                         Optional
                                     </Badge>
                                 )}
@@ -293,7 +293,7 @@ export default function Step7Review({ data, onDownload }: StepProps) {
 
                     {/* Step 6: Advanced */}
                     <div className="bg-card rounded-2xl border-2 border shadow-md overflow-hidden">
-                        <div className="bg-gradient-to-r from-slate-700 to-slate-600 p-5">
+                        <div className="bg-gradient-to-r from-slate-700 dark:from-slate-800 to-slate-600 dark:to-slate-700 p-5">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 rounded-xl bg-card/10 backdrop-blur-sm flex items-center justify-center">
@@ -301,7 +301,7 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                                     </div>
                                     <div>
                                         <h3 className="text-lg font-bold text-white">Advanced Settings</h3>
-                                        <p className="text-xs text-gray-300">Step 6 - Auto-Generated</p>
+                                        <p className="text-xs text-muted-foreground/80">Step 6 - Auto-Generated</p>
                                     </div>
                                 </div>
                                 <Badge className="bg-green-500 text-white border-green-400">
@@ -312,9 +312,9 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                         </div>
                         <div className="p-5 space-y-3">
                             <div className="flex items-center gap-3">
-                                <Terminal className="w-4 h-4 text-slate-600" />
+                                <Terminal className="w-4 h-4 text-muted-foreground" />
                                 <span className="text-sm text-muted-foreground">Terminal</span>
-                                <Badge className="ml-auto bg-slate-100 text-slate-700">Ready</Badge>
+                                <Badge className="ml-auto bg-muted text-foreground">Ready</Badge>
                             </div>
                             <div className="flex items-center gap-3">
                                 <Database className="w-4 h-4 text-blue-600" />
@@ -357,7 +357,7 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                             Download ZIP Package
                         </Button>
 
-                        <div className="bg-card/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                        <div className="bg-card/10 backdrop-blur-sm rounded-xl p-4 border border-background/20">
                             <p className="text-xs text-white/80 mb-2">Package includes:</p>
                             <ul className="space-y-1 text-xs text-white">
                                 <li>✓ All JSON data files</li>
@@ -380,7 +380,7 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                                 <span className="text-lg font-bold text-blue-600">7/7</span>
                             </div>
                             <div className="flex items-center justify-between p-3 bg-green-50 rounded-xl">
-                                <span className="text-sm font-medium text-green-900">Required Fields</span>
+                                <span className="text-sm font-medium text-green-700 dark:text-green-400">Required Fields</span>
                                 <span className="text-lg font-bold text-green-600">
                                     {(data.about.personal.name && data.contact.email) ? "✓" : "✗"}
                                 </span>
@@ -419,6 +419,10 @@ export default function Step7Review({ data, onDownload }: StepProps) {
         </div>
     );
 }
+
+
+
+
 
 
 

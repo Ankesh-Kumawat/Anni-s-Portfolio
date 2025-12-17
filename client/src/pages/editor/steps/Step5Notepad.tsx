@@ -133,7 +133,7 @@ export default function Step5Notepad({ data, setData }: StepProps) {
                     {data.notepad.defaultNotes.length === 0 ? (
                         <div className="bg-card rounded-2xl p-12 border-2 border-dashed border text-center">
                             <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
-                                <FileText className="w-8 h-8 text-gray-400" />
+                                <FileText className="w-8 h-8 text-muted-foreground/60" />
                             </div>
                             <h4 className="text-lg font-bold text-foreground mb-2">No notes yet</h4>
                             <p className="text-muted-foreground mb-6">Click "Add Note" to create your first note</p>
@@ -270,7 +270,7 @@ export default function Step5Notepad({ data, setData }: StepProps) {
                                                     )}
                                                     <div className="flex justify-between items-center">
                                                         <p className="text-xs text-muted-foreground">{note.content.length} characters</p>
-                                                        <p className="text-xs text-gray-400">Markdown: # heading, **bold**, *italic*, - list</p>
+                                                        <p className="text-xs text-muted-foreground/60">Markdown: # heading, **bold**, *italic*, - list</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -302,7 +302,7 @@ export default function Step5Notepad({ data, setData }: StepProps) {
                                 </span>
                             </div>
                             <div className="flex items-center justify-between p-4 bg-green-50 rounded-xl border border-green-200">
-                                <span className="text-sm font-medium text-green-900">Complete</span>
+                                <span className="text-sm font-medium text-green-700 dark:text-green-400">Complete</span>
                                 <span className="text-2xl font-bold text-green-600">
                                     {data.notepad.defaultNotes.filter(n => n.title && n.content).length}
                                 </span>
@@ -359,6 +359,10 @@ export default function Step5Notepad({ data, setData }: StepProps) {
         </div>
     );
 }
+
+
+
+
 
 
 

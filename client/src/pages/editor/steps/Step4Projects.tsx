@@ -341,7 +341,7 @@ export default function Step4Projects({ data, setData }: StepProps) {
                     {data.projects.projects.length === 0 ? (
                         <div className="bg-card rounded-2xl p-12 border-2 border-dashed border text-center">
                             <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
-                                <Folder className="w-8 h-8 text-gray-400" />
+                                <Folder className="w-8 h-8 text-muted-foreground/60" />
                             </div>
                             <h4 className="text-lg font-bold text-foreground mb-2">No projects yet</h4>
                             <p className="text-muted-foreground mb-6">Click "Add Project" to showcase your work</p>
@@ -386,7 +386,7 @@ export default function Step4Projects({ data, setData }: StepProps) {
                                                             {project.tagline || "No tagline added"}
                                                         </p>
                                                         <div className="flex items-center gap-2 mt-2">
-                                                            <ImageIcon className="w-4 h-4 text-gray-400" />
+                                                            <ImageIcon className="w-4 h-4 text-muted-foreground/60" />
                                                             <span className="text-xs text-muted-foreground">
                                                                 {project.images.length}/6 images
                                                             </span>
@@ -568,7 +568,7 @@ export default function Step4Projects({ data, setData }: StepProps) {
                                                     {/* Selected Tech Stack */}
                                                     {project.techStack.length > 0 && (
                                                         <div className="p-5 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border-2 border-green-200">
-                                                            <Label className="text-sm font-bold text-green-900 mb-3 block flex items-center gap-2">
+                                                            <Label className="text-sm font-bold text-green-700 dark:text-green-400 mb-3 block flex items-center gap-2">
                                                                 <Check className="w-4 h-4" />
                                                                 Selected Technologies ({project.techStack.length})
                                                             </Label>
@@ -630,7 +630,7 @@ export default function Step4Projects({ data, setData }: StepProps) {
 
                                                     <label className="cursor-pointer block">
                                                         <div className="border-2 border-dashed border rounded-xl p-6 bg-card hover:border-blue-400 hover:bg-primary/10 transition-all text-center">
-                                                            <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                                                            <Upload className="w-8 h-8 text-muted-foreground/60 mx-auto mb-2" />
                                                             <p className="text-sm font-medium text-foreground">Click to upload images</p>
                                                             <p className="text-xs text-muted-foreground mt-1">PNG, JPG up to 10MB each • Upload as many as you want</p>
                                                         </div>
@@ -705,7 +705,7 @@ export default function Step4Projects({ data, setData }: StepProps) {
                                 <span className="text-2xl font-bold text-blue-600">{data.projects.projects.length}</span>
                             </div>
                             <div className="flex items-center justify-between p-4 bg-green-50 rounded-xl border border-green-200">
-                                <span className="text-sm font-medium text-green-900">Complete</span>
+                                <span className="text-sm font-medium text-green-700 dark:text-green-400">Complete</span>
                                 <span className="text-2xl font-bold text-green-600">
                                     {data.projects.projects.filter(p => p.name && p.tagline && p.description).length}
                                 </span>
@@ -746,6 +746,10 @@ export default function Step4Projects({ data, setData }: StepProps) {
         </div>
     );
 }
+
+
+
+
 
 
 

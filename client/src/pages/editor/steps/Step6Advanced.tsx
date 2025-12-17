@@ -48,7 +48,7 @@ export default function Step6Advanced({ data }: StepProps) {
                     <Check className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                    <p className="text-base font-bold text-green-900">All Settings Auto-Generated</p>
+                    <p className="text-base font-bold text-green-700 dark:text-green-400">All Settings Auto-Generated</p>
                     <p className="text-sm text-green-700 mt-1">
                         These configurations are automatically created from your personal info. No manual editing needed!
                     </p>
@@ -61,14 +61,14 @@ export default function Step6Advanced({ data }: StepProps) {
                 <div className="space-y-6">
                     {/* Terminal Settings */}
                     <div className="bg-card rounded-2xl border-2 border shadow-md overflow-hidden">
-                        <div className="bg-gradient-to-r from-slate-900 to-slate-700 p-6">
+                        <div className="bg-gradient-to-r from-slate-900 dark:from-slate-950 to-slate-700 dark:to-slate-900 p-6">
                             <div className="flex items-center gap-3">
                                 <div className="w-12 h-12 rounded-xl bg-card/10 backdrop-blur-sm flex items-center justify-center">
                                     <Terminal className="w-6 h-6 text-white" />
                                 </div>
                                 <div>
                                     <h3 className="text-xl font-bold text-white">Terminal Settings</h3>
-                                    <p className="text-sm text-gray-300">Configuration for Terminal app</p>
+                                    <p className="text-sm text-muted-foreground/80">Configuration for Terminal app</p>
                                 </div>
                             </div>
                         </div>
@@ -107,7 +107,7 @@ export default function Step6Advanced({ data }: StepProps) {
                                 <div className="flex flex-wrap gap-2 p-4 bg-gradient-to-br from-muted/30 to-muted/50 rounded-xl border-2 border min-h-[80px]">
                                     {data.terminal.skills.technical.length > 0 ? (
                                         data.terminal.skills.technical.map((skill, index) => (
-                                            <Badge key={index} className="bg-slate-700 text-white border-slate-600 px-3 py-1">
+                                            <Badge key={index} className="bg-slate-700 dark:bg-slate-800 text-white border-slate-600 dark:border-slate-700 px-3 py-1">
                                                 {skill}
                                             </Badge>
                                         ))
@@ -228,7 +228,7 @@ export default function Step6Advanced({ data }: StepProps) {
                                 </div>
 
                                 {data.database.projects.length > 0 ? (
-                                    <div className="bg-gradient-to-br from-blue-50 to-slate-50 rounded-xl border-2 border-primary/30 overflow-hidden">
+                                    <div className="bg-gradient-to-br from-primary/10 to-muted/50 rounded-xl border-2 border-primary/30 overflow-hidden">
                                         <div className="overflow-x-auto max-h-[400px] scrollbar-hide">
                                             <table className="w-full text-sm">
                                                 <thead className="bg-blue-600 text-white sticky top-0">
@@ -266,7 +266,7 @@ export default function Step6Advanced({ data }: StepProps) {
                                     </div>
                                 ) : (
                                     <div className="bg-gradient-to-br from-muted/30 to-muted/50 rounded-xl border-2 border-dashed border p-8 text-center">
-                                        <Database className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                                        <Database className="w-12 h-12 text-muted-foreground/60 mx-auto mb-3" />
                                         <p className="text-sm text-muted-foreground font-medium">No projects added yet</p>
                                         <p className="text-xs text-muted-foreground mt-1">Add projects in Step 4 to see them here</p>
                                     </div>
@@ -323,7 +323,7 @@ export default function Step6Advanced({ data }: StepProps) {
                                         <img
                                             src={data.settings.account.avatar}
                                             alt="Avatar"
-                                            className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg"
+                                            className="w-20 h-20 rounded-full object-cover border-4 border-background shadow-lg"
                                         />
                                         <div>
                                             <p className="font-semibold text-foreground">{data.settings.account.name}</p>
@@ -345,9 +345,9 @@ export default function Step6Advanced({ data }: StepProps) {
                             <h4 className="font-bold text-foreground">Auto-Generated Data</h4>
                         </div>
                         <div className="space-y-4">
-                            <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-200">
-                                <span className="text-sm font-medium text-slate-900">Terminal</span>
-                                <Badge className="bg-slate-700 text-white">
+                            <div className="flex items-center justify-between p-4 bg-muted rounded-xl border border">
+                                <span className="text-sm font-medium text-foreground">Terminal</span>
+                                <Badge className="bg-slate-700 dark:bg-slate-800 text-white">
                                     <Check className="w-3 h-3 mr-1" />
                                     Ready
                                 </Badge>
@@ -434,6 +434,10 @@ export default function Step6Advanced({ data }: StepProps) {
         </div>
     );
 }
+
+
+
+
 
 
 

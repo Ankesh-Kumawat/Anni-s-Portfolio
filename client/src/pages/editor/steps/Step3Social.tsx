@@ -178,7 +178,7 @@ export default function Step3Social({ data, setData }: StepProps) {
                                         <div className={`w-14 h-14 rounded-xl ${platform.color} flex items-center justify-center mx-auto mb-2 shadow-md`}>
                                             <Icon className="w-8 h-8 text-white" />
                                         </div>
-                                        <p className={`text-[10px] font-bold leading-tight ${isAdded ? "text-green-900" : "text-foreground"}`}>
+                                        <p className={`text-[10px] font-bold leading-tight ${isAdded ? "text-green-700 dark:text-green-400" : "text-foreground"}`}>
                                             {platform.label}
                                         </p>
                                     </button>
@@ -288,7 +288,7 @@ export default function Step3Social({ data, setData }: StepProps) {
                                 <span className="text-2xl font-bold text-blue-600">{data.social.links.length}</span>
                             </div>
                             <div className="flex items-center justify-between p-4 bg-green-50 rounded-xl border border-green-200">
-                                <span className="text-sm font-medium text-green-900">With URL</span>
+                                <span className="text-sm font-medium text-green-700 dark:text-green-400">With URL</span>
                                 <span className="text-2xl font-bold text-green-600">
                                     {data.social.links.filter(link => link.url).length}
                                 </span>
@@ -324,7 +324,7 @@ export default function Step3Social({ data, setData }: StepProps) {
                                                         {link.name || platformInfo.label}
                                                     </p>
                                                     <p className="text-xs text-muted-foreground truncate">
-                                                        {link.url || <span className="text-gray-400 italic">No URL added</span>}
+                                                        {link.url || <span className="text-muted-foreground/60 italic">No URL added</span>}
                                                     </p>
                                                 </div>
                                             </div>
@@ -362,6 +362,10 @@ export default function Step3Social({ data, setData }: StepProps) {
         </div>
     );
 }
+
+
+
+
 
 
 

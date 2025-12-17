@@ -179,15 +179,15 @@ export default function Step1Personal({ data, setData }: StepProps) {
                                         <img
                                             src={avatarPreview}
                                             alt="Avatar"
-                                            className="w-48 h-48 rounded-3xl object-cover border-4 border-white shadow-2xl"
+                                            className="w-48 h-48 rounded-3xl object-cover border-4 border-background shadow-2xl"
                                         />
                                         <div className="absolute inset-0 bg-black/40 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                             <Upload className="w-8 h-8 text-white" />
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="w-48 h-48 rounded-3xl bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center border-4 border-white shadow-2xl">
-                                        <User className="w-20 h-20 text-gray-400" />
+                                    <div className="w-48 h-48 rounded-3xl bg-gradient-to-br from-muted to-muted/80 flex items-center justify-center border-4 border-background shadow-2xl">
+                                        <User className="w-20 h-20 text-muted-foreground/60" />
                                     </div>
                                 )}
                             </div>
@@ -230,10 +230,10 @@ export default function Step1Personal({ data, setData }: StepProps) {
                                             }`}
                                     >
                                         <div className="flex items-center gap-3">
-                                            <Icon className={`w-4 h-4 ${isComplete ? "text-green-600" : "text-gray-400"}`} />
-                                            <span className={`text-sm font-medium ${isComplete ? "text-green-900" : "text-muted-foreground"}`}>
+                                            <Icon className={`w-4 h-4 ${isComplete ? "text-green-600" : "text-muted-foreground/60"}`} />
+                                            <span className={`text-sm font-medium ${isComplete ? "text-green-700 dark:text-green-400" : "text-muted-foreground"}`}>
                                                 {item.label}
-                                                {!item.required && <span className="text-xs text-gray-400 ml-1">(Optional)</span>}
+                                                {!item.required && <span className="text-xs text-muted-foreground/60 ml-1">(Optional)</span>}
                                             </span>
                                         </div>
                                         {isComplete ? (
@@ -354,7 +354,7 @@ export default function Step1Personal({ data, setData }: StepProps) {
                                 />
                                 <div className="flex justify-between items-center">
                                     <p className="text-xs text-muted-foreground">{data.about.personal.bio.length} characters</p>
-                                    <p className="text-xs text-gray-400">Recommended: 150-300 characters</p>
+                                    <p className="text-xs text-muted-foreground/60">Recommended: 150-300 characters</p>
                                 </div>
                             </div>
                         </div>
@@ -433,7 +433,7 @@ export default function Step1Personal({ data, setData }: StepProps) {
                         {/* Selected Skills Display */}
                         {data.about.skills.length > 0 && (
                             <div className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border-2 border-green-200">
-                                <Label className="text-sm font-bold text-green-900 mb-3 block flex items-center gap-2">
+                                <Label className="text-sm font-bold text-green-700 dark:text-green-400 mb-3 block flex items-center gap-2">
                                     <Check className="w-4 h-4" />
                                     Selected Skills ({data.about.skills.length})
                                 </Label>
@@ -471,7 +471,7 @@ export default function Step1Personal({ data, setData }: StepProps) {
 
                         {data.about.experience.length === 0 ? (
                             <div className="text-center py-12 border-2 border-dashed border rounded-2xl bg-muted">
-                                <Briefcase className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                                <Briefcase className="w-12 h-12 text-muted-foreground/60 mx-auto mb-3" />
                                 <p className="text-muted-foreground font-medium">No experience added yet</p>
                                 <p className="text-sm text-muted-foreground mt-1">Click "Add Experience" to get started</p>
                             </div>
@@ -540,6 +540,10 @@ export default function Step1Personal({ data, setData }: StepProps) {
         </div>
     );
 }
+
+
+
+
 
 
 
