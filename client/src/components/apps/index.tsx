@@ -36,7 +36,7 @@ export const APPS: AppConfig[] = [
   {
     id: "terminal",
     title: "Terminal",
-    icon: <TerminalIcon className="w-full h-full text-zinc-800 dark:text-zinc-200" />,
+    icon: <TerminalIcon className="w-full h-full text-emerald-500" />,
     component: <Terminal />,
     width: 900,
     height: 650
@@ -44,7 +44,7 @@ export const APPS: AppConfig[] = [
   {
     id: "settings",
     title: "Settings",
-    icon: <SettingsIcon className="w-full h-full text-gray-500" />,
+    icon: <SettingsIcon className="w-full h-full text-slate-600" />,
     component: <Settings />,
     width: 900,
     height: 650
