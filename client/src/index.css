@@ -137,6 +137,16 @@
     scrollbar-width: none;
   }
 
+  /* Hide scrollbar for editor */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
   /* Fade in animation for window preview */
   @keyframes fadeIn {
     from {
