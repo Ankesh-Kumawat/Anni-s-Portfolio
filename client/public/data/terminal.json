@@ -1,36 +1,28 @@
 {
-    "username": "visitor@portfolio-os",
-    "userRole": "Guest user • Read-only access",
-    "about": "Design Engineer based in SF. Passionate about UI/UX and Creative Coding. Building beautiful, functional interfaces that users love.",
-    "contact": {
-        "email": "hello@example.com",
-        "twitter": "@example",
-        "github": "github.com/example",
-        "linkedin": "linkedin.com/in/example"
-    },
-    "skills": {
-        "languages": [
-            "TypeScript",
-            "Python",
-            "Rust",
-            "Go"
-        ],
-        "frameworks": [
-            "React",
-            "Next.js",
-            "Tailwind",
-            "Node.js"
-        ],
-        "tools": [
-            "Figma",
-            "Docker",
-            "Git",
-            "VS Code"
-        ],
-        "databases": [
-            "PostgreSQL",
-            "MongoDB",
-            "Redis"
-        ]
-    }
+  "username": "ankesh_kumawat_(anni)",
+  "userRole": "Flutter Developer | Full-Stack Learner | Indie Builder",
+  "about": "I’m a Flutter and full-stack developer focused on building scalable, AI-powered applications. I love turning ideas into real products, designing clean user experiences, and constantly pushing my skills through real-world projects.",
+  "contact": {
+    "email": "ankeshkumawat155@gmail.com",
+    "location": "Sikar, Rajasthan, India"
+  },
+  "skills": {
+    "technical": [
+      "Flutter",
+      "Android",
+      "Firebase",
+      "Supabase",
+      "Firebase Authentication",
+      "Email / Password Auth",
+      "Google Auth",
+      "Role-based Access Control",
+      "Firestore",
+      "Firebase Realtime Database",
+      "PostgreSQL (Supabase)",
+      "AI-Assisted Development",
+      "Prompt Engineerin",
+      "Gemini / LLM API Integration"
+    ],
+    "soft": []
+  }
 }

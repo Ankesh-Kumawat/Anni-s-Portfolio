@@ -1,14 +1,14 @@
 {
   "user": {
-    "user_id": "U-0001",
-    "name": "Ankesh Kumawat",
-    "nickname": "Anni",
-    "role": "System Owner",
-    "profession": "Flutter Developer",
-    "primary_stack": "Flutter (Android, Web)",
-    "focus_area": "Flutter-first development, scalable UI systems",
+    "user_id": "user_1765958568280",
+    "name": "Ankesh Kumawat (Anni)",
+    "nickname": "Ankesh",
+    "email": "ankeshkumawat155@gmail.com",
+    "role": "Flutter Developer | Full-Stack Learner | Indie Builder",
+    "department": "Engineering",
     "status": "Active",
-    "created_at": "2023-01-01",
-    "last_login": "Just now"
-  }
+    "joined_date": "2025-12-17",
+    "last_active": "2025-12-17"
+  },
+  "projects": []
 }
