@@ -62,8 +62,8 @@ export function ImageGallery({ project, index, data, handlers }: ImageGalleryPro
                     </div>
 
                     <DragDropContext onDragEnd={(result) => handlers.handleDragEnd(index, result)}>
-                        <Droppable droppableId={`project-images-${index}`}>
-                            {(provided) => (
+                        <Droppable droppableId={`project-images-${index}`} direction="horizontal">
+                            {(provided, droppableSnapshot) => (
                                 <div
                                     {...provided.droppableProps}
                                     ref={provided.innerRef}
@@ -87,17 +87,21 @@ export function ImageGallery({ project, index, data, handlers }: ImageGalleryPro
                                                         style={{
                                                             ...provided.draggableProps.style,
                                                             transform: snapshot.isDragging
-                                                                ? `${provided.draggableProps.style?.transform} scale(1.05) rotate(2deg)`
+                                                                ? `${provided.draggableProps.style?.transform} scale(1.08) rotate(3deg)`
                                                                 : provided.draggableProps.style?.transform,
                                                             transition: snapshot.isDragging
-                                                                ? 'transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)'
-                                                                : 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease',
+                                                                ? 'none'
+                                                                : 'transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, border-color 0.2s ease',
                                                         }}
-                                                        className={`relative group rounded-xl overflow-hidden border-4 cursor-grab active:cursor-grabbing ${snapshot.isDragging
-                                                                ? "border-primary shadow-2xl opacity-90 z-50"
-                                                                : isInTop6
-                                                                    ? "border-primary shadow-md hover:shadow-lg"
-                                                                    : "border-muted shadow-sm hover:shadow-md"
+                                                        className={`relative group rounded-xl overflow-hidden border-4 cursor-grab active:cursor-grabbing transition-all ${snapshot.isDragging
+                                                                ? "border-primary shadow-2xl opacity-95 z-50 ring-4 ring-primary/30"
+                                                                : droppableSnapshot.isDraggingOver
+                                                                    ? isInTop6
+                                                                        ? "border-primary shadow-lg"
+                                                                        : "border-muted shadow-md"
+                                                                    : isInTop6
+                                                                        ? "border-primary shadow-md hover:shadow-lg hover:scale-[1.02]"
+                                                                        : "border-muted shadow-sm hover:shadow-md hover:scale-[1.02]"
                                                             }`}
                                                     >
                                                         {/* Drag Indicator */}
@@ -135,8 +139,8 @@ export function ImageGallery({ project, index, data, handlers }: ImageGalleryPro
 
                                                         {/* Position Badge */}
                                                         <div className={`absolute bottom-2 left-2 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 pointer-events-none ${isInTop6
-                                                                ? "bg-primary text-primary-foreground"
-                                                                : "bg-black/70 text-white"
+                                                            ? "bg-primary text-primary-foreground"
+                                                            : "bg-black/70 text-white"
                                                             }`}>
                                                             #{imgIndex + 1}
                                                             {isInTop6 && <Check className="w-3 h-3" />}
