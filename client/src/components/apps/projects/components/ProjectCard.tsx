@@ -32,7 +32,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
             {/* Cover Image - 16:9 ratio */}
             <div className="relative w-full aspect-video bg-gradient-to-br from-primary/10 via-primary/5 to-background overflow-hidden">
                 <img
-                    src={project.images[0]}
+                    src={project.coverImage || project.images[0]}
                     alt={project.name}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />

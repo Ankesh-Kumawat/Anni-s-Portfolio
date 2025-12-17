@@ -70,12 +70,22 @@ export async function generateZip(data: EditorData) {
     dataFolder.file("contact.json", JSON.stringify(data.contact, null, 2));
     dataFolder.file("social.json", JSON.stringify(data.social, null, 2));
 
-    // Projects JSON - Only top 6 images per project
+    // Projects JSON - Only top 6 images per project + cover image
     const projectsForJson = {
-        projects: data.projects.projects.map(project => ({
-            ...project,
-            images: project.images.slice(0, 6) // Only top 6 images
-        }))
+        projects: data.projects.projects.map(project => {
+            const top6Images = project.images.slice(0, 6);
+
+            // Add cover image path if first image exists
+            const coverImage = top6Images.length > 0
+                ? top6Images[0].replace(/\/(\d+)\.(png|jpg|jpeg)$/, '/cover.$2')
+                : '';
+
+            return {
+                ...project,
+                images: top6Images,
+                coverImage // Add cover image path
+            };
+        })
     };
     dataFolder.file("projects.json", JSON.stringify(projectsForJson, null, 2));
 

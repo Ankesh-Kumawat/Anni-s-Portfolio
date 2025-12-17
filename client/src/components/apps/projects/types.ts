@@ -38,6 +38,7 @@ export interface Project {
 
     // Media
     images: string[];
+    coverImage?: string; // Cover image path
 
     // Links
     github?: string;

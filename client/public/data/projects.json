@@ -28,18 +28,16 @@
       },
       "challenges": [],
       "images": [
-            "/assets/projects/devstudio/cover.png",
-            "/assets/projects/devstudio/1.png",
-            "/assets/projects/devstudio/2.png",
-            "/assets/projects/devstudio/3.png",
-            "/assets/projects/devstudio/4.png",
-            "/assets/projects/devstudio/5.png",
-            "/assets/projects/devstudio/6.png",
-            "/assets/projects/devstudio/7.png",
-            "/assets/projects/devstudio/8.png"
-          ],
+        "/assets/projects/devstudio/1.png",
+        "/assets/projects/devstudio/2.png",
+        "/assets/projects/devstudio/3.png",
+        "/assets/projects/devstudio/4.png",
+        "/assets/projects/devstudio/5.png",
+        "/assets/projects/devstudio/6.png"
+      ],
       "github": "",
-      "liveDemo": ""
+      "liveDemo": "",
+      "coverImage": "/assets/projects/devstudio/cover.png"
     }
   ]
 }
