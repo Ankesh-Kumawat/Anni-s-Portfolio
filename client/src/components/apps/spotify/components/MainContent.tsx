@@ -16,6 +16,12 @@ export function MainContent({ songs, currentSong, isPlaying, onPlaySong, onToggl
         coverUrl: songs[0]?.coverUrl || "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=600"
     } : null;
 
+    const truncateTitle = (title: string, maxWords: number = 5) => {
+        const words = title.split(' ');
+        if (words.length <= maxWords) return title;
+        return words.slice(0, maxWords).join(' ') + '...';
+    };
+
     return (
         <div className="flex-1 bg-[#121212] rounded-lg m-2 md:ml-0 overflow-hidden flex flex-col relative">
             {/* Playlist Header */}
@@ -89,15 +95,15 @@ export function MainContent({ songs, currentSong, isPlaying, onPlaySong, onToggl
                                                 <Play className="w-4 h-4 hidden group-hover:block text-white fill-white" />
                                             )}
                                         </div>
-                                        <div className="flex items-center gap-3 flex-1">
-                                            <img src={song.coverUrl} className="w-10 h-10 rounded object-cover" alt={song.title} />
-                                            <div className="flex flex-col min-w-0">
-                                                <p className={`font-medium text-base md:text-sm truncate ${isCurrentSong ? 'text-green-500' : 'text-white'}`}>{song.title}</p>
+                                        <div className="flex items-center gap-3 flex-1 min-w-0 overflow-hidden">
+                                            <img src={song.coverUrl} className="w-10 h-10 rounded object-cover shrink-0" alt={song.title} />
+                                            <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
+                                                <p className={`font-medium text-base md:text-sm line-clamp-1 ${isCurrentSong ? 'text-green-500' : 'text-white'}`}>{truncateTitle(song.title)}</p>
                                                 <p className="text-xs group-hover:text-white truncate">{song.artist}</p>
                                             </div>
                                         </div>
                                         <span className="group-hover:text-white hidden md:block truncate">{song.album}</span>
-                                        <span className="text-right ml-auto md:ml-0">{song.duration}</span>
+                                        <span className="text-right ml-auto md:ml-0 shrink-0">{song.duration}</span>
                                     </div>
                                 );
                             })}

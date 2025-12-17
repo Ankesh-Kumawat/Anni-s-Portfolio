@@ -288,6 +288,124 @@ export default function DevTunes() {
         );
     }
 
+    // Mobile List View
+    if (isMobile) {
+        return (
+            <div className="h-full flex flex-col bg-background">
+                <audio ref={audioRef} src={currentSong?.audioUrl} preload="metadata" />
+
+                {/* Header */}
+                <div className="flex items-center gap-3 px-6 py-4 border-b">
+                    <Music2 className="w-5 h-5 text-primary" />
+                    <h1 className="text-base font-semibold">DevTunes</h1>
+                </div>
+
+                {/* Song List */}
+                <ScrollArea className="flex-1">
+                    <div className="p-4 space-y-3">
+                        {songs.map((song) => (
+                            <button
+                                key={song.id}
+                                onClick={() => playSong(song)}
+                                className={cn(
+                                    "w-full flex items-center gap-3 p-3 rounded-xl transition-all",
+                                    currentSong?.id === song.id
+                                        ? "bg-primary/10 border-2 border-primary"
+                                        : "bg-muted/50 hover:bg-muted"
+                                )}
+                            >
+                                <img
+                                    src={song.coverUrl}
+                                    alt={song.title}
+                                    className="w-12 h-12 rounded-lg object-cover flex-shrink-0 shadow-md"
+                                />
+                                <div className="flex-1 text-left min-w-0 pr-2">
+                                    <p className="text-sm font-semibold truncate">
+                                        {song.title}
+                                    </p>
+                                    <p className="text-xs text-muted-foreground truncate">
+                                        {song.artist}
+                                    </p>
+                                </div>
+                                {currentSong?.id === song.id && isPlaying && (
+                                    <div className="flex gap-0.5 items-end h-4 flex-shrink-0">
+                                        <div className="w-0.5 bg-primary rounded-full animate-pulse h-2" style={{ animationDelay: '0ms' }} />
+                                        <div className="w-0.5 bg-primary rounded-full animate-pulse h-3" style={{ animationDelay: '150ms' }} />
+                                        <div className="w-0.5 bg-primary rounded-full animate-pulse h-4" style={{ animationDelay: '300ms' }} />
+                                    </div>
+                                )}
+                            </button>
+                        ))}
+                    </div>
+                </ScrollArea>
+
+                {/* Bottom Player Bar */}
+                {currentSong && (
+                    <div className="border-t bg-background/95 backdrop-blur-xl">
+                        {/* Progress Bar */}
+                        <div className="px-6 pt-3">
+                            <Slider
+                                value={[currentTime]}
+                                max={duration || 100}
+                                step={0.1}
+                                onValueChange={seek}
+                                className="mb-1"
+                            />
+                            <div className="flex justify-between text-[10px] text-muted-foreground mb-3">
+                                <span>{formatTime(currentTime)}</span>
+                                <span>{formatTime(duration)}</span>
+                            </div>
+                        </div>
+
+                        {/* Controls */}
+                        <div className="flex items-center justify-between px-6 pb-5">
+                            <div className="flex items-center gap-3 flex-1 min-w-0 pr-4">
+                                <img
+                                    src={currentSong.coverUrl}
+                                    alt={currentSong.title}
+                                    className="w-11 h-11 rounded-lg object-cover shadow-md flex-shrink-0"
+                                />
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-semibold truncate">
+                                        {currentSong.title}
+                                    </p>
+                                    <p className="text-xs text-muted-foreground truncate">
+                                        {currentSong.artist}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-3 flex-shrink-0">
+                                <button
+                                    onClick={previousSong}
+                                    className="p-2 hover:bg-accent rounded-lg transition-colors"
+                                >
+                                    <SkipBack className="w-5 h-5" />
+                                </button>
+                                <button
+                                    onClick={togglePlay}
+                                    className="p-3 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-colors shadow-lg"
+                                >
+                                    {isPlaying ? (
+                                        <Pause className="w-5 h-5" />
+                                    ) : (
+                                        <Play className="w-5 h-5 ml-0.5" />
+                                    )}
+                                </button>
+                                <button
+                                    onClick={nextSong}
+                                    className="p-2 hover:bg-accent rounded-lg transition-colors"
+                                >
+                                    <SkipForward className="w-5 h-5" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+        );
+    }
+
     // Desktop Layout
     return (
         <div className="h-full flex flex-col bg-background">
@@ -301,7 +419,7 @@ export default function DevTunes() {
 
             <div className="flex-1 flex overflow-hidden">
                 {/* Playlist Section */}
-                <div className="w-full md:w-80 border-r flex flex-col">
+                <div className="w-80 border-r flex flex-col">
                     <div className="flex items-center gap-2 px-4 py-3 border-b bg-muted/30">
                         <ListMusic className="w-4 h-4 text-muted-foreground" />
                         <span className="text-sm font-medium">Library</span>
