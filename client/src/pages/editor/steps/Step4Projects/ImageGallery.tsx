@@ -62,7 +62,7 @@ export function ImageGallery({ project, index, data, handlers }: ImageGalleryPro
                     </div>
 
                     <DragDropContext onDragEnd={(result) => handlers.handleDragEnd(index, result)}>
-                        <Droppable droppableId={`project-images-${index}`} direction="horizontal">
+                        <Droppable droppableId={`project-images-${index}`}>
                             {(provided, droppableSnapshot) => (
                                 <div
                                     {...provided.droppableProps}
@@ -94,14 +94,14 @@ export function ImageGallery({ project, index, data, handlers }: ImageGalleryPro
                                                                 : 'transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, border-color 0.2s ease',
                                                         }}
                                                         className={`relative group rounded-xl overflow-hidden border-4 cursor-grab active:cursor-grabbing transition-all ${snapshot.isDragging
-                                                                ? "border-primary shadow-2xl opacity-95 z-50 ring-4 ring-primary/30"
-                                                                : droppableSnapshot.isDraggingOver
-                                                                    ? isInTop6
-                                                                        ? "border-primary shadow-lg"
-                                                                        : "border-muted shadow-md"
-                                                                    : isInTop6
-                                                                        ? "border-primary shadow-md hover:shadow-lg hover:scale-[1.02]"
-                                                                        : "border-muted shadow-sm hover:shadow-md hover:scale-[1.02]"
+                                                            ? "border-primary shadow-2xl opacity-95 z-50 ring-4 ring-primary/30"
+                                                            : droppableSnapshot.isDraggingOver
+                                                                ? isInTop6
+                                                                    ? "border-primary shadow-lg"
+                                                                    : "border-muted shadow-md"
+                                                                : isInTop6
+                                                                    ? "border-primary shadow-md hover:shadow-lg hover:scale-[1.02]"
+                                                                    : "border-muted shadow-sm hover:shadow-md hover:scale-[1.02]"
                                                             }`}
                                                     >
                                                         {/* Drag Indicator */}
