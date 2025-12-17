@@ -51,7 +51,7 @@ export default function Step7Review({ data, onDownload }: StepProps) {
 
             {/* Status Notice */}
             {isComplete ? (
-                <div className="mb-8 p-6 bg-gradient-to-r from-green-50 via-emerald-50 to-green-50 border-2 border-green-200 rounded-2xl flex items-start gap-4 shadow-sm">
+                <div className="mb-8 p-6 bg-gradient-to-r from-green-50 via-emerald-50 to-green-50 border-2 border-green-500/30 rounded-2xl flex items-start gap-4 shadow-sm">
                     <div className="w-10 h-10 rounded-xl bg-green-500 flex items-center justify-center flex-shrink-0">
                         <CheckCircle2 className="w-5 h-5 text-white" />
                     </div>
@@ -90,7 +90,7 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                                     </div>
                                     <div>
                                         <h3 className="text-lg font-bold text-white">Personal Info</h3>
-                                        <p className="text-xs text-blue-100">Step 1</p>
+                                        <p className="text-xs text-primary-foreground/80">Step 1</p>
                                     </div>
                                 </div>
                                 {data.about.personal.name && data.about.personal.avatar && data.about.personal.bio ? (
@@ -340,7 +340,7 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                             </div>
                             <div>
                                 <h4 className="font-bold text-lg">Ready to Download</h4>
-                                <p className="text-xs text-blue-100">Get your portfolio package</p>
+                                <p className="text-xs text-primary-foreground/80">Get your portfolio package</p>
                             </div>
                         </div>
                         <p className="text-sm text-white/90 mb-4">
@@ -419,6 +419,8 @@ export default function Step7Review({ data, onDownload }: StepProps) {
         </div>
     );
 }
+
+
 
 
 

@@ -30,7 +30,7 @@ export default function Step6Advanced({ data }: StepProps) {
                         <h2 className="text-4xl font-bold text-foreground mb-2">Advanced Settings</h2>
                         <p className="text-muted-foreground text-lg">Auto-generated configurations for Terminal, Database & Settings apps</p>
                     </div>
-                    <div className="flex items-center gap-3 bg-gradient-to-r from-primary/10 to-purple-500/10 px-6 py-4 rounded-2xl border border-primary/30">
+                    <div className="flex items-center gap-3 bg-card px-6 py-4 rounded-2xl border-2 border-primary/30">
                         <div className="text-right">
                             <div className="text-xs text-muted-foreground uppercase tracking-wide font-medium">Completion</div>
                             <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -43,7 +43,7 @@ export default function Step6Advanced({ data }: StepProps) {
             </div>
 
             {/* Auto-fill Notice */}
-            <div className="mb-8 p-6 bg-gradient-to-r from-green-50 via-emerald-50 to-green-50 border-2 border-green-200 rounded-2xl flex items-start gap-4 shadow-sm">
+            <div className="mb-8 p-6 bg-gradient-to-r from-green-50 via-emerald-50 to-green-50 border-2 border-green-500/30 rounded-2xl flex items-start gap-4 shadow-sm">
                 <div className="w-10 h-10 rounded-xl bg-green-500 flex items-center justify-center flex-shrink-0">
                     <Check className="w-5 h-5 text-white" />
                 </div>
@@ -128,7 +128,7 @@ export default function Step6Advanced({ data }: StepProps) {
                                 </div>
                                 <div>
                                     <h3 className="text-xl font-bold text-white">Database Settings</h3>
-                                    <p className="text-sm text-blue-100">User profile & projects data for Database app</p>
+                                    <p className="text-sm text-primary-foreground/80">User profile & projects data for Database app</p>
                                 </div>
                             </div>
                         </div>
@@ -137,7 +137,7 @@ export default function Step6Advanced({ data }: StepProps) {
                             {/* User Table */}
                             <div className="space-y-3">
                                 <h4 className="text-base font-bold text-foreground flex items-center gap-2">
-                                    <span className="w-2 h-2 rounded-full bg-primary/100"></span>
+                                    <span className="w-2 h-2 rounded-full bg-primary"></span>
                                     User Table
                                 </h4>
                                 <div className="grid grid-cols-2 gap-4">
@@ -219,7 +219,7 @@ export default function Step6Advanced({ data }: StepProps) {
                             <div className="space-y-3 pt-4 border-t-2 border">
                                 <div className="flex items-center justify-between">
                                     <h4 className="text-base font-bold text-foreground flex items-center gap-2">
-                                        <span className="w-2 h-2 rounded-full bg-primary/100"></span>
+                                        <span className="w-2 h-2 rounded-full bg-primary"></span>
                                         Projects Table
                                     </h4>
                                     <Badge className="bg-blue-100 text-primary border-primary/30">
@@ -247,7 +247,7 @@ export default function Step6Advanced({ data }: StepProps) {
                                                             <td className="px-4 py-3 font-semibold text-foreground">{project.name}</td>
                                                             <td className="px-4 py-3">
                                                                 <Badge className={
-                                                                    project.status === "Completed" ? "bg-green-100 text-green-700 border-green-200" :
+                                                                    project.status === "Completed" ? "bg-green-100 text-green-700 border-green-500/30" :
                                                                         project.status === "In Progress" ? "bg-blue-100 text-primary border-primary/30" :
                                                                             "bg-muted text-foreground border"
                                                                 }>
@@ -352,7 +352,7 @@ export default function Step6Advanced({ data }: StepProps) {
                                     Ready
                                 </Badge>
                             </div>
-                            <div className="flex items-center justify-between p-4 bg-primary/10 rounded-xl border border-primary/30">
+                            <div className="flex items-center justify-between p-4 bg-primary/10 rounded-xl border-2 border-primary/30">
                                 <span className="text-sm font-medium text-primary">Database</span>
                                 <Badge className="bg-blue-600 text-white">
                                     <Check className="w-3 h-3 mr-1" />
@@ -404,7 +404,7 @@ export default function Step6Advanced({ data }: StepProps) {
                     </div>
 
                     {/* Help Card */}
-                    <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border-2 border-green-200">
+                    <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-2xl p-6 border-2 border-green-500/30">
                         <h4 className="font-bold text-foreground mb-3">✨ Smart Features</h4>
                         <ul className="space-y-2 text-sm text-foreground">
                             <li className="flex items-start gap-2">
@@ -434,6 +434,9 @@ export default function Step6Advanced({ data }: StepProps) {
         </div>
     );
 }
+
+
+
 
 
 

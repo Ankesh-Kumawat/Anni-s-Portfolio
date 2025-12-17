@@ -94,13 +94,13 @@ export default function Step5Notepad({ data, setData }: StepProps) {
             </div>
 
             {/* Info Notice */}
-            <div className="mb-8 p-6 bg-gradient-to-r from-primary/10 via-purple-500/10 to-primary/10 border-2 border-primary/30 rounded-2xl flex items-start gap-4 shadow-sm">
-                <div className="w-10 h-10 rounded-xl bg-primary/100 flex items-center justify-center flex-shrink-0">
+            <div className="mb-8 p-6 bg-card border-2 border-primary/30 rounded-2xl flex items-start gap-4 shadow-sm">
+                <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
                     <FileText className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                    <p className="text-base font-bold text-primary">Optional Section - Pre-loaded Notes</p>
-                    <p className="text-sm text-primary mt-1">
+                    <p className="text-base font-bold text-foreground">Optional Section - Pre-loaded Notes</p>
+                    <p className="text-sm text-muted-foreground mt-1">
                         Add notes that will appear by default in your portfolio's notepad app. Supports Markdown formatting.
                     </p>
                 </div>
@@ -172,7 +172,7 @@ export default function Step5Notepad({ data, setData }: StepProps) {
                                                                 {note.title || `Note #${originalIndex + 1}`}
                                                             </h4>
                                                             {isComplete && (
-                                                                <Badge className="bg-green-100 text-green-700 border-green-200">
+                                                                <Badge className="bg-green-100 text-green-700 border-green-500/30">
                                                                     <Check className="w-3 h-3 mr-1" />
                                                                     Complete
                                                                 </Badge>
@@ -301,7 +301,7 @@ export default function Step5Notepad({ data, setData }: StepProps) {
                                     {data.notepad.defaultNotes.filter(n => n.isPinned).length}
                                 </span>
                             </div>
-                            <div className="flex items-center justify-between p-4 bg-green-50 rounded-xl border border-green-200">
+                            <div className="flex items-center justify-between p-4 bg-green-50 rounded-xl border border-green-500/30">
                                 <span className="text-sm font-medium text-green-700 dark:text-green-400">Complete</span>
                                 <span className="text-2xl font-bold text-green-600">
                                     {data.notepad.defaultNotes.filter(n => n.title && n.content).length}
@@ -359,6 +359,9 @@ export default function Step5Notepad({ data, setData }: StepProps) {
         </div>
     );
 }
+
+
+
 
 
 

@@ -119,7 +119,7 @@ export default function Step3Social({ data, setData }: StepProps) {
                     <div className="flex items-center gap-3 bg-gradient-to-r from-primary/10 to-purple-500/10 px-6 py-4 rounded-2xl border border-primary/30">
                         <div className="text-right">
                             <div className="text-xs text-muted-foreground uppercase tracking-wide font-medium">Completion</div>
-                            <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                            <div className="text-2xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
                                 {completionPercentage()}%
                             </div>
                         </div>
@@ -129,13 +129,13 @@ export default function Step3Social({ data, setData }: StepProps) {
             </div>
 
             {/* Info Notice */}
-            <div className="mb-8 p-6 bg-gradient-to-r from-primary/10 via-purple-500/10 to-primary/10 border-2 border-primary/30 rounded-2xl flex items-start gap-4 shadow-sm">
-                <div className="w-10 h-10 rounded-xl bg-primary/100 flex items-center justify-center flex-shrink-0">
-                    <Link2 className="w-5 h-5 text-white" />
+            <div className="mb-8 p-6 bg-card border-2 border-primary/30 rounded-2xl flex items-start gap-4 shadow-sm">
+                <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
+                    <Link2 className="w-5 h-5 text-primary-foreground" />
                 </div>
                 <div>
-                    <p className="text-base font-bold text-primary">Optional Section - Click to Add</p>
-                    <p className="text-sm text-primary mt-1">
+                    <p className="text-base font-bold text-foreground">Optional Section - Click to Add</p>
+                    <p className="text-sm text-muted-foreground mt-1">
                         Click on any platform below to add it. You can add as many or as few as you like. All fields are optional.
                     </p>
                 </div>
@@ -216,7 +216,7 @@ export default function Step3Social({ data, setData }: StepProps) {
                                                     <div>
                                                         <h4 className="font-bold text-foreground">{platformInfo.label}</h4>
                                                         {isComplete && (
-                                                            <Badge className="bg-green-100 text-green-700 border-green-200 mt-1">
+                                                            <Badge className="bg-green-100 text-green-700 border-green-500/30 mt-1">
                                                                 <Check className="w-3 h-3 mr-1" />
                                                                 Complete
                                                             </Badge>
@@ -287,7 +287,7 @@ export default function Step3Social({ data, setData }: StepProps) {
                                 <span className="text-sm font-medium text-primary">Selected</span>
                                 <span className="text-2xl font-bold text-blue-600">{data.social.links.length}</span>
                             </div>
-                            <div className="flex items-center justify-between p-4 bg-green-50 rounded-xl border border-green-200">
+                            <div className="flex items-center justify-between p-4 bg-green-50 rounded-xl border border-green-500/30">
                                 <span className="text-sm font-medium text-green-700 dark:text-green-400">With URL</span>
                                 <span className="text-2xl font-bold text-green-600">
                                     {data.social.links.filter(link => link.url).length}
@@ -362,6 +362,8 @@ export default function Step3Social({ data, setData }: StepProps) {
         </div>
     );
 }
+
+
 
 
 

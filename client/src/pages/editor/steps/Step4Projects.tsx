@@ -292,7 +292,7 @@ export default function Step4Projects({ data, setData }: StepProps) {
                     <div className="flex items-center gap-3 bg-gradient-to-r from-primary/10 to-purple-500/10 px-6 py-4 rounded-2xl border border-primary/30">
                         <div className="text-right">
                             <div className="text-xs text-muted-foreground uppercase tracking-wide font-medium">Completion</div>
-                            <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                            <div className="text-2xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
                                 {completionPercentage()}%
                             </div>
                         </div>
@@ -302,13 +302,13 @@ export default function Step4Projects({ data, setData }: StepProps) {
             </div>
 
             {/* Info Notice */}
-            <div className="mb-8 p-6 bg-gradient-to-r from-primary/10 via-purple-500/10 to-primary/10 border-2 border-primary/30 rounded-2xl flex items-start gap-4 shadow-sm">
-                <div className="w-10 h-10 rounded-xl bg-primary/100 flex items-center justify-center flex-shrink-0">
+            <div className="mb-8 p-6 bg-card border-2 border-primary/30 rounded-2xl flex items-start gap-4 shadow-sm">
+                <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
                     <Folder className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                    <p className="text-base font-bold text-primary">Optional Section - Showcase Your Work</p>
-                    <p className="text-sm text-primary mt-1">
+                    <p className="text-base font-bold text-foreground">Optional Section - Showcase Your Work</p>
+                    <p className="text-sm text-muted-foreground mt-1">
                         Add unlimited images per project. Upload screenshots, mockups, and demos to showcase your work.
                     </p>
                 </div>
@@ -322,8 +322,8 @@ export default function Step4Projects({ data, setData }: StepProps) {
                     <div className="bg-card rounded-2xl p-6 border-2 border shadow-md">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
-                                    <Folder className="w-5 h-5 text-blue-600" />
+                                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                    <Folder className="w-5 h-5 text-primary" />
                                 </div>
                                 <div>
                                     <h3 className="text-xl font-bold text-foreground">Your Projects</h3>
@@ -374,7 +374,7 @@ export default function Step4Projects({ data, setData }: StepProps) {
                                                                 {project.name || `Project #${index + 1}`}
                                                             </h4>
                                                             {isComplete && (
-                                                                <Badge className="bg-green-100 text-green-700 border-green-200">
+                                                                <Badge className="bg-green-100 text-green-700 border-green-500/30">
                                                                     <Check className="w-3 h-3 mr-1" />
                                                                     Complete
                                                                 </Badge>
@@ -567,7 +567,7 @@ export default function Step4Projects({ data, setData }: StepProps) {
 
                                                     {/* Selected Tech Stack */}
                                                     {project.techStack.length > 0 && (
-                                                        <div className="p-5 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border-2 border-green-200">
+                                                        <div className="p-5 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-2xl border-2 border-green-500/30">
                                                             <Label className="text-sm font-bold text-green-700 dark:text-green-400 mb-3 block flex items-center gap-2">
                                                                 <Check className="w-4 h-4" />
                                                                 Selected Technologies ({project.techStack.length})
@@ -696,15 +696,15 @@ export default function Step4Projects({ data, setData }: StepProps) {
                     {/* Stats Card */}
                     <div className="bg-card rounded-2xl p-6 border-2 border shadow-md">
                         <div className="flex items-center gap-2 mb-5">
-                            <Sparkles className="w-5 h-5 text-blue-600" />
+                            <Sparkles className="w-5 h-5 text-primary" />
                             <h4 className="font-bold text-foreground">Statistics</h4>
                         </div>
                         <div className="space-y-4">
                             <div className="flex items-center justify-between p-4 bg-primary/10 rounded-xl border border-primary/30">
                                 <span className="text-sm font-medium text-primary">Total Projects</span>
-                                <span className="text-2xl font-bold text-blue-600">{data.projects.projects.length}</span>
+                                <span className="text-2xl font-bold text-primary">{data.projects.projects.length}</span>
                             </div>
-                            <div className="flex items-center justify-between p-4 bg-green-50 rounded-xl border border-green-200">
+                            <div className="flex items-center justify-between p-4 bg-green-50 rounded-xl border border-green-500/30">
                                 <span className="text-sm font-medium text-green-700 dark:text-green-400">Complete</span>
                                 <span className="text-2xl font-bold text-green-600">
                                     {data.projects.projects.filter(p => p.name && p.tagline && p.description).length}
@@ -724,19 +724,19 @@ export default function Step4Projects({ data, setData }: StepProps) {
                         <h4 className="font-bold text-foreground mb-3">💡 Quick Tips</h4>
                         <ul className="space-y-2 text-sm text-foreground">
                             <li className="flex items-start gap-2">
-                                <span className="text-blue-600 mt-0.5">•</span>
+                                <span className="text-primary mt-0.5">•</span>
                                 <span>Add unlimited images per project</span>
                             </li>
                             <li className="flex items-start gap-2">
-                                <span className="text-blue-600 mt-0.5">•</span>
+                                <span className="text-primary mt-0.5">•</span>
                                 <span>Upload multiple images at once</span>
                             </li>
                             <li className="flex items-start gap-2">
-                                <span className="text-blue-600 mt-0.5">•</span>
+                                <span className="text-primary mt-0.5">•</span>
                                 <span>Click project header to expand/collapse</span>
                             </li>
                             <li className="flex items-start gap-2">
-                                <span className="text-blue-600 mt-0.5">•</span>
+                                <span className="text-primary mt-0.5">•</span>
                                 <span>Images auto-sync to Gallery section</span>
                             </li>
                         </ul>
@@ -746,6 +746,10 @@ export default function Step4Projects({ data, setData }: StepProps) {
         </div>
     );
 }
+
+
+
+
 
 
 

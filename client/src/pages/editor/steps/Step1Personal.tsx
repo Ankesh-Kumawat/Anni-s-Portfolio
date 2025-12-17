@@ -226,7 +226,7 @@ export default function Step1Personal({ data, setData }: StepProps) {
                                 return (
                                     <div
                                         key={idx}
-                                        className={`flex items-center justify-between p-3 rounded-xl transition-all ${isComplete ? "bg-green-50 border border-green-200" : "bg-muted border border"
+                                        className={`flex items-center justify-between p-3 rounded-xl transition-all ${isComplete ? "bg-green-50 border border-green-500/30" : "bg-muted border border"
                                             }`}
                                     >
                                         <div className="flex items-center gap-3">
@@ -432,7 +432,7 @@ export default function Step1Personal({ data, setData }: StepProps) {
 
                         {/* Selected Skills Display */}
                         {data.about.skills.length > 0 && (
-                            <div className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border-2 border-green-200">
+                            <div className="p-6 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-2xl border-2 border-green-500/30">
                                 <Label className="text-sm font-bold text-green-700 dark:text-green-400 mb-3 block flex items-center gap-2">
                                     <Check className="w-4 h-4" />
                                     Selected Skills ({data.about.skills.length})
@@ -540,6 +540,8 @@ export default function Step1Personal({ data, setData }: StepProps) {
         </div>
     );
 }
+
+
 
 
 
