@@ -68,7 +68,7 @@ export function ContactSidebar() {
     if (!contactData || !aboutData) return null;
 
     return (
-        <div className="w-full md:w-96 lg:w-[420px] bg-gradient-to-br from-muted/30 to-background p-6 md:p-8 lg:p-10 flex flex-col justify-between shrink-0 overflow-y-auto no-scrollbar border-b md:border-b-0 md:border-r">
+        <div className="w-full md:w-96 lg:w-[420px] bg-gradient-to-br from-muted/30 to-background p-6 md:p-8 lg:p-10 flex flex-col justify-between shrink-0 md:overflow-y-auto no-scrollbar border-b md:border-b-0 md:border-r">
             <div className="space-y-6 md:space-y-8">
                 {/* Profile Section */}
                 <div className="flex items-center gap-4 pb-6 border-b">
