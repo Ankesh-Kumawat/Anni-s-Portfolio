@@ -21,7 +21,7 @@ export function Desktop() {
 
   return (
     <div
-      className="fixed inset-0 overflow-hidden bg-zinc-50 dark:bg-zinc-950 select-none touch-none flex flex-col"
+      className="fixed inset-0 overflow-hidden bg-background select-none touch-none flex flex-col"
     >
       {/* Subtle Dot Grid Background Pattern */}
       <div className="absolute inset-0 opacity-[0.4]"
