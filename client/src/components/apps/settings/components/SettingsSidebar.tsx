@@ -9,7 +9,7 @@ interface SettingsSidebarProps {
 
 export function SettingsSidebar({ activeTab, onTabChange }: SettingsSidebarProps) {
     return (
-        <div className="w-full md:w-64 bg-background border-b md:border-b-0 md:border-r p-2 md:p-4 flex md:flex-col gap-1 overflow-x-auto md:overflow-hidden no-scrollbar shrink-0">
+        <div className="w-full lg:w-64 bg-background border-b lg:border-b-0 lg:border-r p-2 sm:p-3 lg:p-4 flex lg:flex-col gap-1 overflow-x-auto lg:overflow-hidden no-scrollbar shrink-0">
             {TABS.map((tab) => (
                 <Button
                     key={tab.id}

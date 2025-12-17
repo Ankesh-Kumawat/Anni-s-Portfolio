@@ -28,7 +28,7 @@ export default function Projects() {
             if (!containerRef.current) return;
             const width = containerRef.current.offsetWidth;
 
-            if (width < 600) {
+            if (width < 500) {
                 setColumns(1);
             } else if (width < 900) {
                 setColumns(2);
@@ -75,9 +75,9 @@ export default function Projects() {
             </div>
 
             {/* Projects Grid */}
-            <div ref={containerRef} className="p-6 h-full overflow-y-auto no-scrollbar">
+            <div ref={containerRef} className="p-4 sm:p-6 h-full overflow-y-auto no-scrollbar">
                 <div
-                    className="grid gap-4 w-full transition-all duration-300"
+                    className="grid gap-3 sm:gap-4 w-full transition-all duration-300"
                     style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
                 >
                     {data.projects.map((project) => (

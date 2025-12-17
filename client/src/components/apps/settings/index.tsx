@@ -4,24 +4,22 @@ import { DisplaySettings } from "./components/DisplaySettings";
 import { TaskbarSettings } from "./components/TaskbarSettings";
 import { SoundSettings } from "./components/SoundSettings";
 import { AccountSettings } from "./components/AccountSettings";
-import { PlaceholderSettings } from "./components/PlaceholderSettings";
+import { NetworkSettings } from "./components/NetworkSettings";
 
 export default function Settings() {
     const [activeTab, setActiveTab] = useState("display");
 
     return (
-        <div className="h-full flex flex-col md:flex-row bg-muted/10 no-scrollbar overflow-hidden">
+        <div className="h-full flex flex-col lg:flex-row bg-muted/10 no-scrollbar overflow-hidden">
             <SettingsSidebar activeTab={activeTab} onTabChange={setActiveTab} />
 
-            <div className="flex-1 p-6 md:p-8 overflow-y-auto no-scrollbar bg-background md:bg-transparent">
-                <div className="max-w-2xl space-y-8 mx-auto">
+            <div className="flex-1 p-4 sm:p-6 lg:p-8 xl:p-12 overflow-y-auto no-scrollbar bg-background lg:bg-transparent flex justify-center">
+                <div className="w-full max-w-5xl space-y-6 lg:space-y-8">
                     {activeTab === "display" && <DisplaySettings />}
                     {activeTab === "taskbar" && <TaskbarSettings />}
                     {activeTab === "sound" && <SoundSettings />}
                     {activeTab === "account" && <AccountSettings />}
-                    {["network", "notifications", "privacy", "about"].includes(activeTab) && (
-                        <PlaceholderSettings />
-                    )}
+                    {activeTab === "network" && <NetworkSettings />}
                 </div>
             </div>
         </div>

@@ -29,7 +29,7 @@ export function AboutContent() {
     if (!data) return null;
 
     return (
-        <div className="flex-1 p-4 md:p-8 lg:p-12 xl:p-16 overflow-y-auto no-scrollbar bg-gradient-to-b from-background to-muted/20">
+        <div className="flex-1 p-4 md:p-8 lg:p-12 xl:p-16 md:overflow-y-auto no-scrollbar bg-gradient-to-b from-background to-muted/20">
             <div className="max-w-5xl space-y-8 md:space-y-10 lg:space-y-12 mx-auto">
                 {/* About Me Section */}
                 <div className="space-y-4 md:space-y-6">
