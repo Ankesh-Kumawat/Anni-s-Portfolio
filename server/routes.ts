@@ -2,20 +2,6 @@ import type { Express } from "express";
 import { type Server } from "http";
 import nodemailer from "nodemailer";
 
-// Email configuration
-// You need to set these environment variables:
-// EMAIL_USER - your email address (e.g., your.email@gmail.com)
-// EMAIL_PASS - your app password (for Gmail, generate from Google Account settings)
-// EMAIL_TO - email where you want to receive messages (can be same as EMAIL_USER)
-
-const transporter = nodemailer.createTransport({
-  service: 'gmail', // or 'outlook', 'yahoo', etc.
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
-
 export async function registerRoutes(
   httpServer: Server,
   app: Express
@@ -57,6 +43,15 @@ export async function registerRoutes(
           message: "Message received! (Email service not configured yet)"
         });
       }
+
+      // Create transporter
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
+      });
 
       // Send email
       const mailOptions = {
