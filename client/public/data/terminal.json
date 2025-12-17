@@ -1,0 +1,36 @@
+{
+    "username": "visitor@portfolio-os",
+    "userRole": "Guest user • Read-only access",
+    "about": "Design Engineer based in SF. Passionate about UI/UX and Creative Coding. Building beautiful, functional interfaces that users love.",
+    "contact": {
+        "email": "hello@example.com",
+        "twitter": "@example",
+        "github": "github.com/example",
+        "linkedin": "linkedin.com/in/example"
+    },
+    "skills": {
+        "languages": [
+            "TypeScript",
+            "Python",
+            "Rust",
+            "Go"
+        ],
+        "frameworks": [
+            "React",
+            "Next.js",
+            "Tailwind",
+            "Node.js"
+        ],
+        "tools": [
+            "Figma",
+            "Docker",
+            "Git",
+            "VS Code"
+        ],
+        "databases": [
+            "PostgreSQL",
+            "MongoDB",
+            "Redis"
+        ]
+    }
+}

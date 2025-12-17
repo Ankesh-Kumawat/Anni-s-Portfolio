@@ -1,8 +1,26 @@
+import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Lock, Shield } from "lucide-react";
 
+interface AccountData {
+    name: string;
+    role: string;
+    avatar: string;
+}
+
 export function AccountSettings() {
+    const [data, setData] = useState<AccountData | null>(null);
+
+    useEffect(() => {
+        fetch('/data/settings.json?t=' + Date.now(), { cache: 'no-store' })
+            .then(res => res.json())
+            .then(result => setData(result.account))
+            .catch(console.error);
+    }, []);
+
+    if (!data) return null;
+
     return (
         <>
             <div>
@@ -11,12 +29,12 @@ export function AccountSettings() {
             </div>
             <div className="p-6 rounded-xl border bg-card flex items-center gap-6">
                 <Avatar className="w-20 h-20">
-                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarImage src={data.avatar} />
                     <AvatarFallback>JD</AvatarFallback>
                 </Avatar>
                 <div className="space-y-1">
-                    <h3 className="text-xl font-semibold">John Doe</h3>
-                    <p className="text-sm text-muted-foreground">Administrator</p>
+                    <h3 className="text-xl font-semibold">{data.name}</h3>
+                    <p className="text-sm text-muted-foreground">{data.role}</p>
                     <Button variant="outline" size="sm" className="mt-2">Edit Profile</Button>
                 </div>
             </div>

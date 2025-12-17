@@ -1,0 +1,251 @@
+{
+    "projects": [
+        {
+            "id": "cineverse",
+            "name": "CineVerse",
+            "tagline": "Anime & K-drama streaming platform with AI assistant",
+            "description": "Mobile streaming app with offline playback and community features",
+            "status": "Active",
+            "platform": "Mobile",
+            "techStack": [
+                "Flutter (Android)",
+                "Firebase",
+                "Google Drive API",
+                "Gemini AI"
+            ],
+            "overview": "CineVerse is a mobile streaming platform designed for anime and K-drama enthusiasts. It combines content streaming with AI-powered recommendations, offline playback, and community engagement features.",
+            "problem": "Users struggle with fragmented streaming services, lack of offline viewing, and difficulty discovering content that matches their preferences.",
+            "solution": "Built a unified platform with Google Drive integration for content delivery, AI assistant for personalized recommendations, and robust offline playback system.",
+            "outcome": "Created a feature-rich streaming experience with seamless offline support and intelligent content discovery.",
+            "features": [
+                {
+                    "title": "Offline Playback",
+                    "description": "Download and watch content without internet connection"
+                },
+                {
+                    "title": "AI Assistant",
+                    "description": "Gemini-powered chatbot for recommendations and queries"
+                },
+                {
+                    "title": "Community Features",
+                    "description": "User profiles, watchlists, and social interactions"
+                },
+                {
+                    "title": "Google Drive Integration",
+                    "description": "Efficient content delivery and storage management"
+                }
+            ],
+            "architecture": {
+                "structure": "Flutter app with Firebase backend, modular architecture separating UI, business logic, and data layers",
+                "dataHandling": "Firebase Firestore for metadata, Google Drive API for content streaming, local SQLite for offline data",
+                "scalability": "Cloud-based content delivery, efficient caching strategies, lazy loading for large content libraries",
+                "performance": "Optimized video streaming with adaptive quality, background downloads, memory-efficient image loading"
+            },
+            "challenges": [
+                {
+                    "challenge": "Managing large video files and offline storage",
+                    "solution": "Implemented chunked downloads with resume capability and storage optimization",
+                    "learning": "Learned efficient file management and background task handling in Flutter"
+                },
+                {
+                    "challenge": "Integrating AI assistant without impacting app performance",
+                    "solution": "Used async API calls with loading states and response caching",
+                    "learning": "Understood API integration patterns and state management for AI features"
+                }
+            ],
+            "images": [
+                "/assets/projects/cineverse/project_fallback.jpg",
+                "/assets/projects/cineverse/project_fallback.jpg",
+                "/assets/projects/cineverse/project_fallback.jpg",
+                "/assets/projects/cineverse/project_fallback.jpg",
+                "/assets/projects/cineverse/project_fallback.jpg",
+                "/assets/projects/cineverse/project_fallback.jpg"
+            ],
+            "github": "https://github.com/ankeshkumawat/cineverse"
+        },
+        {
+            "id": "devstudio",
+            "name": "DevStudio",
+            "tagline": "Developer learning platform with AI workflows",
+            "description": "Platform for developers to learn with AI-assisted tools",
+            "status": "In Development",
+            "platform": "Cross-Platform",
+            "techStack": [
+                "Flutter (Android/Windows)",
+                "Firebase Auth",
+                "Supabase"
+            ],
+            "overview": "DevStudio is a comprehensive learning platform designed for developers. It combines educational content with AI-powered workflows and community-driven resources.",
+            "problem": "Developers need a centralized platform that combines learning resources with practical AI tools and community support.",
+            "solution": "Building an integrated platform with curated learning paths, AI-assisted coding tools, and collaborative features.",
+            "outcome": "Currently in active development with core features being implemented.",
+            "features": [
+                {
+                    "title": "Learning Paths",
+                    "description": "Structured courses and tutorials for various technologies"
+                },
+                {
+                    "title": "AI Workflows",
+                    "description": "AI-powered tools to assist in coding and problem-solving"
+                },
+                {
+                    "title": "Community Resources",
+                    "description": "Shared projects, code snippets, and discussions"
+                },
+                {
+                    "title": "Progress Tracking",
+                    "description": "Monitor learning journey and achievements"
+                }
+            ],
+            "architecture": {
+                "structure": "Flutter web application with modular feature-based architecture",
+                "dataHandling": "Firebase for user data and content, real-time sync for collaborative features",
+                "scalability": "Microservices approach for AI tools, CDN for static content delivery",
+                "performance": "Code splitting, lazy loading, optimized asset delivery"
+            },
+            "challenges": [
+                {
+                    "challenge": "Balancing feature richness with performance on web",
+                    "solution": "Implementing progressive loading and feature flags",
+                    "learning": "Understanding web-specific optimization techniques in Flutter"
+                }
+            ],
+            "images": [
+                "/assets/projects/devstudio/cover.png",
+                "/assets/projects/devstudio/1.png",
+                "/assets/projects/devstudio/2.png",
+                "/assets/projects/devstudio/3.png",
+                "/assets/projects/devstudio/4.png",
+                "/assets/projects/devstudio/5.png",
+                "/assets/projects/devstudio/6.png",
+                "/assets/projects/devstudio/7.png",
+                "/assets/projects/devstudio/8.png"
+            ]
+        },
+        {
+            "id": "portfolio-os",
+            "name": "Portfolio OS",
+            "tagline": "OS-style interactive portfolio with desktop environment",
+            "description": "Web application simulating a desktop operating system",
+            "status": "Active",
+            "platform": "Web",
+            "techStack": [
+                "React",
+                "Vite",
+                "Tailwind CSS",
+                "TypeScript"
+            ],
+            "overview": "Portfolio OS is an interactive web portfolio designed as a desktop operating system. It showcases projects, skills, and experience through a familiar desktop interface.",
+            "problem": "Traditional portfolios lack interactivity and fail to demonstrate frontend development skills effectively.",
+            "solution": "Created a fully functional OS simulation with draggable windows, working apps, and system-level interactions.",
+            "outcome": "Built a unique portfolio that demonstrates React expertise and creative problem-solving.",
+            "features": [
+                {
+                    "title": "Window Management",
+                    "description": "Draggable, resizable windows with minimize/maximize"
+                },
+                {
+                    "title": "Multiple Apps",
+                    "description": "Terminal, Browser, VS Code, Database Manager, and more"
+                },
+                {
+                    "title": "System Tray",
+                    "description": "Control center with real browser APIs (battery, brightness)"
+                },
+                {
+                    "title": "Desktop Icons",
+                    "description": "Clickable app launchers with OS-native styling"
+                }
+            ],
+            "architecture": {
+                "structure": "React with context-based state management, component-driven architecture",
+                "dataHandling": "Local state for window management, localStorage for user preferences",
+                "scalability": "Modular app system allowing easy addition of new applications",
+                "performance": "Optimized re-renders, lazy loading for app components, CSS-based animations"
+            },
+            "challenges": [
+                {
+                    "challenge": "Managing complex window state and z-index ordering",
+                    "solution": "Implemented centralized window manager with focus tracking",
+                    "learning": "Mastered React context and complex state management patterns"
+                },
+                {
+                    "challenge": "Creating smooth drag-and-drop without performance issues",
+                    "solution": "Used react-draggable with optimized event handlers",
+                    "learning": "Understood performance optimization for interactive UIs"
+                }
+            ],
+            "images": [
+                "/assets/projects/portfolio-os/project_fallback.jpg",
+                "/assets/projects/portfolio-os/project_fallback.jpg",
+                "/assets/projects/portfolio-os/project_fallback.jpg",
+                "/assets/projects/portfolio-os/project_fallback.jpg",
+                "/assets/projects/portfolio-os/project_fallback.jpg",
+                "/assets/projects/portfolio-os/project_fallback.jpg"
+            ],
+            "github": "https://github.com/DevStudio2k25/Anni-Portfolio",
+            "liveDemo": "https://anni-portfolio-eight.vercel.app/"
+        },
+        {
+            "id": "mentorhub",
+            "name": "MentorHub",
+            "tagline": "School/college management with multi-role architecture",
+            "description": "Comprehensive management system for educational institutions",
+            "status": "Rebuilding",
+            "platform": "Web",
+            "techStack": [
+                "Web",
+                "Firebase Auth",
+                "Firebase Database"
+            ],
+            "overview": "MentorHub is a complete school and college management system with role-based access for students, teachers, and administrators. Currently being rebuilt with Flutter for better performance and user experience.",
+            "problem": "Educational institutions need a unified system for attendance, grades, communication, and administrative tasks.",
+            "solution": "Building a multi-role platform with dedicated interfaces for each user type and real-time data synchronization.",
+            "outcome": "Legacy web version exists; rebuilding with modern architecture and mobile-first approach.",
+            "features": [
+                {
+                    "title": "Multi-Role Access",
+                    "description": "Separate interfaces for students, teachers, and admins"
+                },
+                {
+                    "title": "Attendance Management",
+                    "description": "Real-time attendance tracking and reporting"
+                },
+                {
+                    "title": "Grade Management",
+                    "description": "Assignment submission, grading, and progress tracking"
+                },
+                {
+                    "title": "Communication Hub",
+                    "description": "Announcements, messaging, and notifications"
+                }
+            ],
+            "architecture": {
+                "structure": "Flutter app with clean architecture, separating presentation, domain, and data layers",
+                "dataHandling": "Firebase for real-time data, MongoDB for complex queries, local caching for offline support",
+                "scalability": "Role-based data access, efficient query patterns, pagination for large datasets",
+                "performance": "Optimized list rendering, background sync, efficient state management"
+            },
+            "challenges": [
+                {
+                    "challenge": "Managing complex role-based permissions and data access",
+                    "solution": "Implementing robust authentication and authorization layer",
+                    "learning": "Understanding security patterns and role-based access control"
+                },
+                {
+                    "challenge": "Migrating from legacy web system to modern architecture",
+                    "solution": "Incremental migration with parallel systems during transition",
+                    "learning": "Learned system migration strategies and backward compatibility"
+                }
+            ],
+            "images": [
+                "/assets/projects/mentorhub/project_fallback.jpg",
+                "/assets/projects/mentorhub/project_fallback.jpg",
+                "/assets/projects/mentorhub/project_fallback.jpg",
+                "/assets/projects/mentorhub/project_fallback.jpg",
+                "/assets/projects/mentorhub/project_fallback.jpg",
+                "/assets/projects/mentorhub/project_fallback.jpg"
+            ]
+        }
+    ]
+}

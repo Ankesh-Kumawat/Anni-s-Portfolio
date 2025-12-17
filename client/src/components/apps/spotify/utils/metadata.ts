@@ -156,7 +156,7 @@ const musicFiles = [
 
 // Load a single song with metadata
 async function loadSongMetadata(filename: string, index: number): Promise<Song> {
-    const audioUrl = `/music/${filename}`;
+    const audioUrl = `/assets/music/${filename}`;
 
     // Extract metadata from filename first (fallback)
     const filenameMetadata = extractMetadataFromFilename(filename);

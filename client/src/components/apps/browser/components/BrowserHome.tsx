@@ -1,3 +1,4 @@
+import React from "react";
 import { Globe, ExternalLink, User, Briefcase, Mail, Terminal as TerminalIcon, Code, FileText, Image, Database as DatabaseIcon, Settings as SettingsIcon, Music, Video, Palette, Github, Linkedin, Instagram, Twitter, Youtube, BookOpen, PenTool } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
@@ -6,16 +7,27 @@ interface BrowserHomeProps {
     onOpenApp?: (appId: string) => void;
 }
 
-const SOCIAL_LINKS: Array<{ name: string; url: string; icon: LucideIcon; color: string }> = [
-    { name: "My Portfolio", url: "https://anni-portfolio-eight.vercel.app/", icon: Palette, color: "text-purple-500" },
-    { name: "GitHub", url: "https://github.com/ankeshkumawat", icon: Github, color: "text-gray-800" },
-    { name: "LinkedIn", url: "https://linkedin.com/in/ankesh-kumawat", icon: Linkedin, color: "text-blue-600" },
-    { name: "Instagram", url: "https://instagram.com", icon: Instagram, color: "text-pink-500" },
-    { name: "Twitter", url: "https://twitter.com", icon: Twitter, color: "text-sky-500" },
-    { name: "YouTube", url: "https://www.youtube.com/@DevStudio-2k25", icon: Youtube, color: "text-red-600" },
-    { name: "Dev.to", url: "https://dev.to", icon: BookOpen, color: "text-gray-700" },
-    { name: "Medium", url: "https://medium.com", icon: PenTool, color: "text-gray-900" },
-];
+const iconMap: Record<string, LucideIcon> = {
+    portfolio: Palette,
+    github: Github,
+    linkedin: Linkedin,
+    instagram: Instagram,
+    twitter: Twitter,
+    youtube: Youtube,
+    devto: BookOpen,
+    medium: PenTool,
+};
+
+const colorMap: Record<string, string> = {
+    portfolio: "text-purple-500",
+    github: "text-gray-800",
+    linkedin: "text-blue-600",
+    instagram: "text-pink-500",
+    twitter: "text-sky-500",
+    youtube: "text-red-600",
+    devto: "text-gray-700",
+    medium: "text-gray-900",
+};
 
 const OS_APPS: Array<{ id: string; name: string; icon: LucideIcon; color: string }> = [
     { id: "about", name: "About Me", icon: User, color: "text-blue-500" },
@@ -32,6 +44,15 @@ const OS_APPS: Array<{ id: string; name: string; icon: LucideIcon; color: string
 ];
 
 export function BrowserHome({ onNavigate, onOpenApp }: BrowserHomeProps) {
+    const [socialLinks, setSocialLinks] = React.useState<Array<{ name: string; url: string; platform: string }>>([]);
+
+    React.useEffect(() => {
+        fetch(`/data/social.json?t=${Date.now()}`, { cache: 'no-store' })
+            .then(res => res.json())
+            .then(data => setSocialLinks(data.links))
+            .catch(console.error);
+    }, []);
+
     return (
         <div className="h-full overflow-y-auto no-scrollbar bg-gradient-to-br from-blue-50 via-white to-purple-50">
             <div className="max-w-6xl mx-auto px-6 py-12">
@@ -86,8 +107,9 @@ export function BrowserHome({ onNavigate, onOpenApp }: BrowserHomeProps) {
                         Social Media & Links
                     </h2>
                     <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-3">
-                        {SOCIAL_LINKS.map((link) => {
-                            const IconComponent = link.icon;
+                        {socialLinks.map((link) => {
+                            const IconComponent = iconMap[link.platform] || Globe;
+                            const color = colorMap[link.platform] || "text-gray-500";
                             return (
                                 <button
                                     key={link.url}
@@ -95,7 +117,7 @@ export function BrowserHome({ onNavigate, onOpenApp }: BrowserHomeProps) {
                                     className="group flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-accent/50 transition-colors cursor-pointer active:scale-95 duration-100"
                                 >
                                     <div className="w-14 h-14 p-3 bg-background border shadow-sm rounded-xl group-hover:shadow-md transition-all duration-200 flex items-center justify-center">
-                                        <IconComponent className={`w-full h-full ${link.color}`} />
+                                        <IconComponent className={`w-full h-full ${color}`} />
                                     </div>
                                     <span className="text-xs font-medium text-foreground/80 group-hover:text-foreground text-center line-clamp-2 select-none leading-tight">
                                         {link.name}

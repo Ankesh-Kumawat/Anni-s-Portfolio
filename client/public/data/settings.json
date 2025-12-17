@@ -1,0 +1,7 @@
+{
+  "account": {
+    "name": "John Doe",
+    "role": "Administrator",
+    "avatar": "https://github.com/shadcn.png"
+  }
+}

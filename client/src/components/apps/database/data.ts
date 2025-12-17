@@ -1,17 +1,17 @@
 import { DatabaseTable } from "./types";
 
-export const USER_DATA = [
-    { field: "user_id", value: "U-0001" },
-    { field: "name", value: "Ankesh Kumawat" },
-    { field: "nickname", value: "Anni" },
-    { field: "role", value: "System Owner" },
-    { field: "profession", value: "Flutter Developer" },
-    { field: "primary_stack", value: "Flutter (Android, Web)" },
-    { field: "focus_area", value: "Flutter-first development, scalable UI systems" },
-    { field: "status", value: "Active" },
-    { field: "created_at", value: "2023-01-01" },
-    { field: "last_login", value: "Just now" },
-];
+export let USER_DATA: Array<{ field: string; value: string }> = [];
+
+// Load user data from JSON
+fetch('/data/database.json?t=' + Date.now(), { cache: 'no-store' })
+    .then(res => res.json())
+    .then(data => {
+        USER_DATA = Object.entries(data.user).map(([field, value]) => ({
+            field,
+            value: String(value)
+        }));
+    })
+    .catch(console.error);
 
 export const PROJECTS_DATA = {
     "P-001": [

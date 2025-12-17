@@ -6,64 +6,7 @@ import { Plus, Search, Grid3x3, List, StickyNote } from "lucide-react";
 import { NoteCard } from "./components/NoteCard";
 import { NoteEditor } from "./components/NoteEditor";
 
-const DEFAULT_NOTES: Note[] = [
-    {
-        id: "about-me",
-        title: "About Me",
-        content: `# Hello, I'm Anni 👋
-
-I'm a passionate developer who loves building creative and functional web applications. I specialize in creating OS-like interfaces and modern web experiences that feel native and intuitive.
-
-## Who Am I?
-A full-stack developer with a keen eye for design and user experience. I believe in building products that are not just functional, but delightful to use.
-
-## What I Do
-- 🎨 Design & develop OS-style interfaces
-- 💻 Build full-stack web applications
-- 📱 Create Flutter mobile apps
-- 🤖 Experiment with AI-assisted tools
-- ✨ Focus on creative UI/UX solutions
-
-## Tech Stack
-**Frontend:** React, TypeScript, Tailwind CSS, Next.js
-**Backend:** Node.js, Express, PostgreSQL, MongoDB
-**Mobile:** Flutter, Dart
-**Tools:** Docker, Git, VS Code, Figma
-
-## My Philosophy
-Simple > Flashy
-Working > Perfect
-Honest > Fake
-User Experience > Everything
-
-## What I've Created
-- OS-style Portfolio (this website!)
-- Flutter E-commerce App
-- AI Chat Assistant
-- Task Management System
-- Weather Dashboard
-- Music Player App
-- Real-time Chat Application
-- Portfolio Generator Tool
-
-## Current Focus
-Building interfaces that feel like real operating systems - complete with windows, taskbars, file systems, and native interactions. Making the web feel more tangible and interactive.
-
-## Get in Touch
-📧 Email: hello@example.com
-🐙 GitHub: github.com/example
-🐦 Twitter: @example
-💼 LinkedIn: linkedin.com/in/example
-
----
-
-Feel free to explore all the apps and features in this portfolio. Each app is fully functional and demonstrates different aspects of my work!`,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        isPinned: true,
-        tags: []
-    }
-];
+let DEFAULT_NOTES: Note[] = [];
 
 export default function Notepad() {
     const [notes, setNotes] = useState<Note[]>([]);
@@ -72,19 +15,43 @@ export default function Notepad() {
     const [searchQuery, setSearchQuery] = useState("");
     const [isEditing, setIsEditing] = useState(false);
 
-    // Load notes from localStorage
+    // Load default notes from JSON
     useEffect(() => {
-        const saved = localStorage.getItem('notepad-notes');
-        if (saved) {
-            const parsed = JSON.parse(saved);
-            setNotes(parsed.map((n: any) => ({
-                ...n,
-                createdAt: new Date(n.createdAt),
-                updatedAt: new Date(n.updatedAt)
-            })));
-        } else {
-            setNotes(DEFAULT_NOTES);
-        }
+        fetch(`/data/notepad.json?t=${Date.now()}`, { cache: 'no-store' })
+            .then(res => {
+                if (!res.ok) throw new Error('Failed to fetch notepad data');
+                return res.json();
+            })
+            .then(data => {
+                console.log('Notepad data loaded:', data);
+                DEFAULT_NOTES = data.defaultNotes.map((n: any) => ({
+                    ...n,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                }));
+
+                // Load notes from localStorage
+                const saved = localStorage.getItem('notepad-notes');
+                if (saved) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        setNotes(parsed.map((n: any) => ({
+                            ...n,
+                            createdAt: new Date(n.createdAt),
+                            updatedAt: new Date(n.updatedAt)
+                        })));
+                    } catch (e) {
+                        console.error('Error parsing saved notes:', e);
+                        setNotes(DEFAULT_NOTES);
+                    }
+                } else {
+                    console.log('No saved notes, using defaults');
+                    setNotes(DEFAULT_NOTES);
+                }
+            })
+            .catch(err => {
+                console.error('Error loading notepad data:', err);
+            });
     }, []);
 
     // Save notes to localStorage

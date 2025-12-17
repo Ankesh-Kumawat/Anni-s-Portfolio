@@ -1,6 +1,17 @@
 import { Project } from "./types";
 
-export const PROJECTS: Project[] = [
+export let PROJECTS: Project[] = [];
+
+// Load projects from JSON
+fetch('/data/projects.json?t=' + Date.now(), { cache: 'no-store' })
+    .then(res => res.json())
+    .then(data => {
+        PROJECTS = data.projects;
+    })
+    .catch(console.error);
+
+// Fallback data
+const FALLBACK_PROJECTS: Project[] = [
     {
         id: "cineverse",
         name: "CineVerse",

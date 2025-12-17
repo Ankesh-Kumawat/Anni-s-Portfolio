@@ -90,12 +90,17 @@ export function handleCommand(cmd: string, launchApp: (AppId: AppId) => void): s
             );
 
         case "whoami":
-            return (
-                <div className="space-y-2">
-                    <div className="text-cyan-400 font-bold">visitor@portfolio-os</div>
-                    <div className="text-zinc-500 text-xs">Guest user • Read-only access</div>
-                </div>
-            );
+            return fetch('/data/terminal.json?t=' + Date.now(), { cache: 'no-store' })
+                .then(res => res.json())
+                .then(data => (
+                    <div className="space-y-2">
+                        <div className="text-cyan-400 font-bold">{data.username}</div>
+                        <div className="text-zinc-500 text-xs">{data.userRole}</div>
+                    </div>
+                ))
+                .catch(() => (
+                    <div className="text-red-400">Error loading user data</div>
+                ));
 
         case "date":
             const now = new Date();
@@ -113,41 +118,42 @@ export function handleCommand(cmd: string, launchApp: (AppId: AppId) => void): s
 
         case "cat":
             if (args === "about.txt" || args === "about") {
-                return (
-                    <div className="space-y-2 p-4 rounded-lg bg-zinc-900/50 border border-zinc-800">
-                        <div className="text-cyan-400 font-bold">📄 about.txt</div>
-                        <div className="text-zinc-300">
-                            Design Engineer based in SF. Passionate about UI/UX and Creative Coding.
-                            Building beautiful, functional interfaces that users love.
+                return fetch('/data/terminal.json?t=' + Date.now(), { cache: 'no-store' })
+                    .then(res => res.json())
+                    .then(data => (
+                        <div className="space-y-2 p-4 rounded-lg bg-zinc-900/50 border border-zinc-800">
+                            <div className="text-cyan-400 font-bold">📄 about.txt</div>
+                            <div className="text-zinc-300">{data.about}</div>
                         </div>
-                    </div>
-                );
+                    ))
+                    .catch(() => <div className="text-red-400">Error loading file</div>);
             } else if (args === "contact.md" || args === "contact") {
-                return (
-                    <div className="space-y-2 p-4 rounded-lg bg-zinc-900/50 border border-zinc-800">
-                        <div className="text-cyan-400 font-bold">📧 contact.md</div>
-                        <div className="space-y-1 text-zinc-300">
-                            <div>Email: hello@example.com</div>
-                            <div>Twitter: @example</div>
-                            <div>GitHub: github.com/example</div>
-                            <div>LinkedIn: linkedin.com/in/example</div>
+                return fetch('/data/terminal.json?t=' + Date.now(), { cache: 'no-store' })
+                    .then(res => res.json())
+                    .then(data => (
+                        <div className="space-y-2 p-4 rounded-lg bg-zinc-900/50 border border-zinc-800">
+                            <div className="text-cyan-400 font-bold">📧 contact.md</div>
+                            <div className="space-y-1 text-zinc-300">
+                                <div>Email: {data.contact.email}</div>
+                                <div>Twitter: {data.contact.twitter}</div>
+                                <div>GitHub: {data.contact.github}</div>
+                                <div>LinkedIn: {data.contact.linkedin}</div>
+                            </div>
                         </div>
-                    </div>
-                );
+                    ))
+                    .catch(() => <div className="text-red-400">Error loading file</div>);
             } else if (args === "skills.json" || args === "skills") {
-                return (
-                    <div className="space-y-2 p-4 rounded-lg bg-zinc-900/50 border border-zinc-800">
-                        <div className="text-cyan-400 font-bold">⚙️ skills.json</div>
-                        <pre className="text-green-400 text-xs overflow-x-auto">
-                            {JSON.stringify({
-                                languages: ["TypeScript", "Python", "Rust", "Go"],
-                                frameworks: ["React", "Next.js", "Tailwind", "Node.js"],
-                                tools: ["Figma", "Docker", "Git", "VS Code"],
-                                databases: ["PostgreSQL", "MongoDB", "Redis"]
-                            }, null, 2)}
-                        </pre>
-                    </div>
-                );
+                return fetch('/data/terminal.json?t=' + Date.now(), { cache: 'no-store' })
+                    .then(res => res.json())
+                    .then(data => (
+                        <div className="space-y-2 p-4 rounded-lg bg-zinc-900/50 border border-zinc-800">
+                            <div className="text-cyan-400 font-bold">⚙️ skills.json</div>
+                            <pre className="text-green-400 text-xs overflow-x-auto">
+                                {JSON.stringify(data.skills, null, 2)}
+                            </pre>
+                        </div>
+                    ))
+                    .catch(() => <div className="text-red-400">Error loading file</div>);
             } else if (!args) {
                 return (
                     <div className="flex items-center gap-2 text-orange-400">
@@ -178,7 +184,8 @@ export function handleCommand(cmd: string, launchApp: (AppId: AppId) => void): s
                 "contact": "contact",
                 "spotify": "spotify",
                 "youtube": "youtube",
-                "database": "database",
+                "db": "db",
+                "database": "db",
             };
 
             if (appsMap[args]) {

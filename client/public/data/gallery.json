@@ -1,0 +1,107 @@
+{
+    "folders": [
+        {
+            "id": "projects",
+            "name": "Projects",
+            "coverImage": "/assets/projects/devstudio/cover.png",
+            "children": [
+                {
+                    "id": "cineverse",
+                    "name": "CineVerse",
+                    "type": "folder",
+                    "coverImage": "/assets/projects/cineverse/project_fallback.jpg",
+                    "images": [
+                        "/assets/projects/cineverse/project_fallback.jpg",
+                        "/assets/projects/cineverse/project_fallback.jpg",
+                        "/assets/projects/cineverse/project_fallback.jpg",
+                        "/assets/projects/cineverse/project_fallback.jpg",
+                        "/assets/projects/cineverse/project_fallback.jpg",
+                        "/assets/projects/cineverse/project_fallback.jpg"
+                    ]
+                },
+                {
+                    "id": "devstudio",
+                    "name": "DevStudio",
+                    "type": "folder",
+                    "coverImage": "/assets/projects/devstudio/cover.png",
+                    "images": [
+                        "/assets/projects/devstudio/cover.png",
+                        "/assets/projects/devstudio/1.png",
+                        "/assets/projects/devstudio/2.png",
+                        "/assets/projects/devstudio/3.png",
+                        "/assets/projects/devstudio/4.png",
+                        "/assets/projects/devstudio/5.png",
+                        "/assets/projects/devstudio/6.png",
+                        "/assets/projects/devstudio/7.png",
+                        "/assets/projects/devstudio/8.png"
+                    ]
+                },
+                {
+                    "id": "portfolio-os",
+                    "name": "Portfolio OS",
+                    "type": "folder",
+                    "coverImage": "/assets/projects/portfolio-os/project_fallback.jpg",
+                    "images": [
+                        "/assets/projects/portfolio-os/project_fallback.jpg",
+                        "/assets/projects/portfolio-os/project_fallback.jpg",
+                        "/assets/projects/portfolio-os/project_fallback.jpg",
+                        "/assets/projects/portfolio-os/project_fallback.jpg",
+                        "/assets/projects/portfolio-os/project_fallback.jpg",
+                        "/assets/projects/portfolio-os/project_fallback.jpg"
+                    ]
+                },
+                {
+                    "id": "mentorhub",
+                    "name": "MentorHub",
+                    "type": "folder",
+                    "coverImage": "/assets/projects/mentorhub/project_fallback.jpg",
+                    "images": [
+                        "/assets/projects/mentorhub/project_fallback.jpg",
+                        "/assets/projects/mentorhub/project_fallback.jpg",
+                        "/assets/projects/mentorhub/project_fallback.jpg",
+                        "/assets/projects/mentorhub/project_fallback.jpg",
+                        "/assets/projects/mentorhub/project_fallback.jpg",
+                        "/assets/projects/mentorhub/project_fallback.jpg"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "me",
+            "name": "Me",
+            "coverImage": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&q=80&w=800",
+            "children": [
+                {
+                    "id": "me-1",
+                    "name": "Photo 1",
+                    "type": "image",
+                    "imageUrl": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&q=80&w=800"
+                },
+                {
+                    "id": "me-2",
+                    "name": "Photo 2",
+                    "type": "image",
+                    "imageUrl": "https://images.unsplash.com/photo-1532274402911-5a369e4c4bb5?auto=format&fit=crop&q=80&w=800"
+                },
+                {
+                    "id": "me-3",
+                    "name": "Photo 3",
+                    "type": "image",
+                    "imageUrl": "https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?auto=format&fit=crop&q=80&w=800"
+                }
+            ]
+        }
+    ],
+    "directImages": [
+        {
+            "id": "wallpaper-1",
+            "name": "Wallpaper 1",
+            "imageUrl": "https://images.unsplash.com/photo-1518098268026-4e1891306642?auto=format&fit=crop&q=80&w=800"
+        },
+        {
+            "id": "wallpaper-2",
+            "name": "Wallpaper 2",
+            "imageUrl": "https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&fit=crop&q=80&w=800"
+        }
+    ]
+}

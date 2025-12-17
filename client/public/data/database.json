@@ -1,0 +1,14 @@
+{
+  "user": {
+    "user_id": "U-0001",
+    "name": "Ankesh Kumawat",
+    "nickname": "Anni",
+    "role": "System Owner",
+    "profession": "Flutter Developer",
+    "primary_stack": "Flutter (Android, Web)",
+    "focus_area": "Flutter-first development, scalable UI systems",
+    "status": "Active",
+    "created_at": "2023-01-01",
+    "last_login": "Just now"
+  }
+}

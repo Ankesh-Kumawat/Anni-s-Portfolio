@@ -1,12 +1,31 @@
+import { useState, useEffect } from "react";
 import { Mail, MapPin } from "lucide-react";
 
+interface ContactData {
+    email: string;
+    location: string;
+    message: string;
+    copyright: string;
+}
+
 export function ContactSidebar() {
+    const [data, setData] = useState<ContactData | null>(null);
+
+    useEffect(() => {
+        fetch(`/data/contact.json?t=${Date.now()}`, { cache: 'no-store' })
+            .then(res => res.json())
+            .then(setData)
+            .catch(console.error);
+    }, []);
+
+    if (!data) return null;
+
     return (
         <div className="w-full md:w-1/3 bg-primary text-primary-foreground p-6 md:p-8 flex flex-col justify-between shrink-0">
             <div>
                 <h2 className="text-2xl font-bold mb-4 md:mb-6">Get in Touch</h2>
                 <p className="mb-6 md:mb-8 opacity-90 leading-relaxed text-sm md:text-base">
-                    I'm always open to discussing new projects, creative ideas or opportunities to be part of your visions.
+                    {data.message}
                 </p>
 
                 <div className="space-y-4 md:space-y-6">
@@ -16,7 +35,7 @@ export function ContactSidebar() {
                         </div>
                         <div className="min-w-0">
                             <p className="text-xs opacity-70 uppercase tracking-wider">Email Me</p>
-                            <p className="font-medium truncate">ankeshkumawat155@gmail.com</p>
+                            <p className="font-medium truncate">{data.email}</p>
                         </div>
                     </div>
 
@@ -26,14 +45,14 @@ export function ContactSidebar() {
                         </div>
                         <div className="min-w-0">
                             <p className="text-xs opacity-70 uppercase tracking-wider">Address</p>
-                            <p className="font-medium">Rajasthan, India</p>
+                            <p className="font-medium">{data.location}</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div className="pt-8 opacity-60 text-sm hidden md:block">
-                © 2025 Portfolio OS
+                {data.copyright}
             </div>
         </div>
     );

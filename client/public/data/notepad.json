@@ -1,0 +1,22 @@
+{
+    "defaultNotes": [
+        {
+            "id": "about-me",
+            "title": "About Me",
+            "content": "# Hello, I'm Anni 👋\n\nI'm a passionate developer who loves building creative and functional web applications. I specialize in creating OS-like interfaces and modern web experiences that feel native and intuitive.\n\n## Who Am I?\nA full-stack developer with a keen eye for design and user experience. I believe in building products that are not just functional, but delightful to use.\n\n## What I Do\n- 🎨 Design & develop OS-style interfaces\n- 💻 Build full-stack web applications\n- 📱 Create Flutter mobile apps\n- 🤖 Experiment with AI-assisted tools\n- ✨ Focus on creative UI/UX solutions\n\n## Tech Stack\n**Frontend:** React, TypeScript, Tailwind CSS, Next.js\n**Backend:** Node.js, Express, PostgreSQL, MongoDB\n**Mobile:** Flutter, Dart\n**Tools:** Docker, Git, VS Code, Figma\n\n## My Philosophy\nSimple > Flashy\nWorking > Perfect\nHonest > Fake\nUser Experience > Everything\n\n## What I've Created\n- OS-style Portfolio (this website!)\n- Flutter E-commerce App\n- AI Chat Assistant\n- Task Management System\n- Weather Dashboard\n- Music Player App\n- Real-time Chat Application\n- Portfolio Generator Tool\n\n## Current Focus\nBuilding interfaces that feel like real operating systems - complete with windows, taskbars, file systems, and native interactions. Making the web feel more tangible and interactive.\n\n## Get in Touch\n📧 Email: hello@example.com\n🐙 GitHub: github.com/example\n🐦 Twitter: @example\n💼 LinkedIn: linkedin.com/in/example\n\n---\n\nFeel free to explore all the apps and features in this portfolio. Each app is fully functional and demonstrates different aspects of my work!",
+            "isPinned": true
+        },
+        {
+            "id": "quick-ideas",
+            "title": "Quick Ideas 💡",
+            "content": "# Quick Ideas\n\n## Project Ideas\n- [ ] Build a real-time collaboration tool\n- [ ] Create an AI-powered code reviewer\n- [ ] Design system component library\n- [ ] Portfolio generator with templates\n\n## Learning Goals\n- Master WebGL and Three.js\n- Deep dive into Rust\n- Learn system design patterns\n- Explore edge computing\n\n## Random Thoughts\n- The best code is no code\n- User experience > Everything else\n- Ship fast, iterate faster\n- Build in public",
+            "isPinned": false
+        },
+        {
+            "id": "dev-resources",
+            "title": "Dev Resources 📚",
+            "content": "# Developer Resources\n\n## Useful Links\n- [MDN Web Docs](https://developer.mozilla.org)\n- [React Documentation](https://react.dev)\n- [TypeScript Handbook](https://www.typescriptlang.org/docs/)\n- [Tailwind CSS](https://tailwindcss.com)\n\n## Tools I Use Daily\n- VS Code with Vim extension\n- Figma for design\n- GitHub for version control\n- Vercel for deployment\n- Linear for project management\n\n## Favorite YouTube Channels\n- Fireship\n- Theo - t3.gg\n- Web Dev Simplified\n- The Primeagen\n\n## Blogs to Follow\n- Josh Comeau\n- Kent C. Dodds\n- Dan Abramov\n- Lee Robinson",
+            "isPinned": false
+        }
+    ]
+}
