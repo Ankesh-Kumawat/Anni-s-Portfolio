@@ -2,6 +2,43 @@ import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import type { EditorData } from "../types";
 
+// Helper function to create favicon from avatar
+async function createFavicon(avatarDataUrl: string): Promise<Blob> {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+            // Create canvas for favicon (32x32)
+            const canvas = document.createElement('canvas');
+            canvas.width = 32;
+            canvas.height = 32;
+            const ctx = canvas.getContext('2d');
+
+            if (!ctx) {
+                reject(new Error('Failed to get canvas context'));
+                return;
+            }
+
+            // Draw image centered and cropped to square
+            const size = Math.min(img.width, img.height);
+            const x = (img.width - size) / 2;
+            const y = (img.height - size) / 2;
+
+            ctx.drawImage(img, x, y, size, size, 0, 0, 32, 32);
+
+            // Convert to blob
+            canvas.toBlob((blob) => {
+                if (blob) {
+                    resolve(blob);
+                } else {
+                    reject(new Error('Failed to create favicon blob'));
+                }
+            }, 'image/png');
+        };
+        img.onerror = () => reject(new Error('Failed to load avatar image'));
+        img.src = avatarDataUrl;
+    });
+}
+
 export async function generateZip(data: EditorData) {
     const zip = new JSZip();
 
@@ -28,6 +65,16 @@ export async function generateZip(data: EditorData) {
     if (data.assets.images.length > 0) {
         for (const image of data.assets.images) {
             assetsFolder.file(image.path, image.file);
+        }
+    }
+
+    // Generate and add favicon from avatar
+    if (data.about.personal.avatar) {
+        try {
+            const faviconBlob = await createFavicon(data.about.personal.avatar);
+            assetsFolder.file("favicon.png", faviconBlob);
+        } catch (error) {
+            console.error("Failed to generate favicon:", error);
         }
     }
 
