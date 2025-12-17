@@ -1,14 +1,26 @@
 import { useState, useEffect, useRef } from "react";
 import { ProjectCard } from "./components/ProjectCard";
 import { ProjectDetail } from "./components/ProjectDetail";
-import { PROJECTS } from "./data";
 import { Project } from "./types";
 import { Briefcase } from "lucide-react";
 
+interface ProjectsData {
+    projects: Project[];
+}
+
 export default function Projects() {
+    const [data, setData] = useState<ProjectsData | null>(null);
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
     const [columns, setColumns] = useState(2);
     const containerRef = useRef<HTMLDivElement>(null);
+
+    // Load projects from JSON
+    useEffect(() => {
+        fetch(`/data/projects.json?t=${Date.now()}`, { cache: 'no-store' })
+            .then(res => res.json())
+            .then(setData)
+            .catch(console.error);
+    }, []);
 
     // Dynamically adjust columns based on container width
     useEffect(() => {
@@ -35,6 +47,8 @@ export default function Projects() {
 
         return () => resizeObserver.disconnect();
     }, []);
+
+    if (!data) return null;
 
     if (selectedProject) {
         return (
@@ -66,7 +80,7 @@ export default function Projects() {
                     className="grid gap-4 w-full transition-all duration-300"
                     style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
                 >
-                    {PROJECTS.map((project) => (
+                    {data.projects.map((project) => (
                         <ProjectCard
                             key={project.id}
                             project={project}
