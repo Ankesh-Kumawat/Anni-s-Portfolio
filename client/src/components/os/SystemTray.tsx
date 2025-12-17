@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { HelpCircle } from "lucide-react";
 import { useOS } from "@/lib/os-context";
 import { useVolume } from "@/lib/volume-context";
+import { useBrightness } from "@/lib/brightness-context";
 import { ControlCenterPopover } from "./system-tray/ControlCenterPopover";
 import { ZoomIndicator } from "./system-tray/ZoomIndicator";
 
@@ -10,7 +11,7 @@ export function SystemTray() {
   const { launchApp } = useOS();
   const [time, setTime] = useState(new Date());
   const { volume, setVolume } = useVolume();
-  const [brightness, setBrightness] = useState([100]);
+  const { brightness, setBrightness } = useBrightness();
   const [focusMode, setFocusMode] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(100);
   const [batteryLevel, setBatteryLevel] = useState<number | null>(null);
@@ -60,15 +61,7 @@ export function SystemTray() {
     getBatteryInfo();
   }, []);
 
-  // Apply app-level brightness using CSS filter
-  useEffect(() => {
-    const brightnessValue = brightness[0] / 100;
-    document.documentElement.style.filter = `brightness(${brightnessValue})`;
 
-    return () => {
-      document.documentElement.style.filter = '';
-    };
-  }, [brightness]);
 
   return (
     <div className="h-10 px-4 md:px-6 flex items-center justify-between text-sm font-medium text-muted-foreground bg-background border-b select-none shadow-sm z-50 relative">

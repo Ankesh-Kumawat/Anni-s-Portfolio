@@ -7,6 +7,7 @@ import { OSProvider } from "@/lib/os-context";
 import { TaskbarProvider } from "@/lib/taskbar-context";
 import { VolumeProvider } from "@/lib/volume-context";
 import { SpotifyProvider } from "@/lib/spotify-context";
+import { BrightnessProvider } from "@/lib/brightness-context";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Desktop } from "@/components/os/Desktop";
 import NotFound from "@/pages/not-found";
@@ -16,22 +17,24 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="light" storageKey="portfolio-os-theme">
-        <TooltipProvider>
-          <VolumeProvider>
-            <SpotifyProvider>
-              <TaskbarProvider>
-                <OSProvider>
-                  <Toaster />
-                  <Switch>
-                    <Route path="/" component={Desktop} />
-                    <Route path="/editor" component={Editor} />
-                    <Route component={NotFound} />
-                  </Switch>
-                </OSProvider>
-              </TaskbarProvider>
-            </SpotifyProvider>
-          </VolumeProvider>
-        </TooltipProvider>
+        <BrightnessProvider>
+          <TooltipProvider>
+            <VolumeProvider>
+              <SpotifyProvider>
+                <TaskbarProvider>
+                  <OSProvider>
+                    <Toaster />
+                    <Switch>
+                      <Route path="/" component={Desktop} />
+                      <Route path="/editor" component={Editor} />
+                      <Route component={NotFound} />
+                    </Switch>
+                  </OSProvider>
+                </TaskbarProvider>
+              </SpotifyProvider>
+            </VolumeProvider>
+          </TooltipProvider>
+        </BrightnessProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

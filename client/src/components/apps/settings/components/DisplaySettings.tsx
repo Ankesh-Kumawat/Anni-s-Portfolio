@@ -1,9 +1,9 @@
-import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Sun, Moon, Laptop, Check } from "lucide-react";
 import { useTheme } from "@/components/theme-provider";
+import { useBrightness } from "@/lib/brightness-context";
 import { cn } from "@/lib/utils";
 
 interface ThemeCardProps {
@@ -47,7 +47,7 @@ function ThemeCard({ theme, currentTheme, setTheme, name, color, bg }: ThemeCard
 
 export function DisplaySettings() {
     const { theme, setTheme } = useTheme();
-    const [brightness, setBrightness] = useState([100]);
+    const { brightness, setBrightness } = useBrightness();
 
     return (
         <>
