@@ -2,15 +2,16 @@ import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import type { EditorData } from "../types";
 
-// Helper function to create favicon from avatar
+// Helper function to create favicon from avatar with rounded corners
 async function createFavicon(avatarDataUrl: string): Promise<Blob> {
     return new Promise((resolve, reject) => {
         const img = new Image();
         img.onload = () => {
-            // Create canvas for favicon (32x32)
+            // Create canvas for favicon (512x512 for better quality, will be saved as PNG)
             const canvas = document.createElement('canvas');
-            canvas.width = 32;
-            canvas.height = 32;
+            const size = 512;
+            canvas.width = size;
+            canvas.height = size;
             const ctx = canvas.getContext('2d');
 
             if (!ctx) {
@@ -18,12 +19,30 @@ async function createFavicon(avatarDataUrl: string): Promise<Blob> {
                 return;
             }
 
-            // Draw image centered and cropped to square
-            const size = Math.min(img.width, img.height);
-            const x = (img.width - size) / 2;
-            const y = (img.height - size) / 2;
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
 
-            ctx.drawImage(img, x, y, size, size, 0, 0, 32, 32);
+            // Create rounded rectangle path
+            const radius = size * 0.2; // 20% radius for rounded corners
+            ctx.beginPath();
+            ctx.moveTo(radius, 0);
+            ctx.lineTo(size - radius, 0);
+            ctx.quadraticCurveTo(size, 0, size, radius);
+            ctx.lineTo(size, size - radius);
+            ctx.quadraticCurveTo(size, size, size - radius, size);
+            ctx.lineTo(radius, size);
+            ctx.quadraticCurveTo(0, size, 0, size - radius);
+            ctx.lineTo(0, radius);
+            ctx.quadraticCurveTo(0, 0, radius, 0);
+            ctx.closePath();
+            ctx.clip();
+
+            // Draw image centered and cropped to square
+            const imgSize = Math.min(img.width, img.height);
+            const x = (img.width - imgSize) / 2;
+            const y = (img.height - imgSize) / 2;
+
+            ctx.drawImage(img, x, y, imgSize, imgSize, 0, 0, size, size);
 
             // Convert to blob
             canvas.toBlob((blob) => {

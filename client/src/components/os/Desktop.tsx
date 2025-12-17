@@ -74,7 +74,7 @@ export function Desktop() {
 
             {/* Windows Area - Desktop only */}
             {!isMobile && (
-              <div className="absolute inset-0 pointer-events-none [&>*]:pointer-events-auto z-10">
+              <div className="absolute inset-0 pointer-events-none [&>*]:pointer-events-auto z-20">
                 {openWindows.map((windowState) => {
                   const app = APPS.find((a) => a.id === windowState.id);
                   if (!app) return null;

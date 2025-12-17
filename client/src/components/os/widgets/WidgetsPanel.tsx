@@ -21,7 +21,7 @@ export function WidgetsPanel({ spotifyData }: WidgetsPanelProps) {
     const { launchApp } = useOS();
 
     return (
-        <div className="hidden md:block absolute top-20 right-6 w-[360px] space-y-3 pointer-events-none [&>*]:pointer-events-auto z-20">
+        <div className="hidden md:block absolute top-20 right-6 w-[360px] space-y-3 pointer-events-none [&>*]:pointer-events-auto z-0">
             {/* Split-Flap Clock - Desktop only */}
             <SplitFlapClock />
 

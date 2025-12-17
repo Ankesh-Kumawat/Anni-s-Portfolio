@@ -134,7 +134,7 @@ export function Window({
           isRestoring && "animate-window-restore"
         )}
         style={{
-          zIndex,
+          zIndex: isMaximized ? 9999 : zIndex,
           ...(isMaximized || isMobile ? {
             top: 0,
             left: 0,
