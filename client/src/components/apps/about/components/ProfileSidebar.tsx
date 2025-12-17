@@ -103,39 +103,39 @@ export function ProfileSidebar() {
     if (!aboutData) return null;
 
     return (
-        <div className="w-full md:w-80 bg-gradient-to-b from-muted/30 to-background p-6 md:p-8 border-b md:border-b-0 md:border-r flex flex-col items-center text-center gap-6 shrink-0 overflow-y-auto no-scrollbar">
+        <div className="w-full md:w-80 lg:w-[480px] xl:w-[560px] bg-gradient-to-b from-muted/30 to-background p-6 md:p-8 lg:p-14 xl:p-20 border-b md:border-b-0 md:border-r flex flex-col items-center text-center gap-6 md:gap-8 lg:gap-12 shrink-0 overflow-y-auto no-scrollbar">
             {/* Avatar with gradient ring */}
-            <div className="relative">
+            <div className="relative mt-4">
                 <div className="absolute inset-0 bg-gradient-to-r from-primary to-purple-500 rounded-full blur-md opacity-50"></div>
-                <Avatar className="relative w-32 h-32 md:w-40 md:h-40 border-4 border-background shadow-2xl">
+                <Avatar className="relative w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 border-4 border-background shadow-2xl">
                     <AvatarImage src={aboutData.personal.avatar} className="object-cover" />
-                    <AvatarFallback className="text-2xl font-bold">
+                    <AvatarFallback className="text-2xl md:text-3xl font-bold">
                         {aboutData.personal.name.split(' ').map(n => n[0]).join('')}
                     </AvatarFallback>
                 </Avatar>
             </div>
 
             {/* Name and Title */}
-            <div className="space-y-3 w-full">
-                <h1 className="text-xl md:text-2xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text">
+            <div className="space-y-3 md:space-y-4 w-full">
+                <h1 className="text-xl md:text-2xl lg:text-3xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text">
                     {aboutData.personal.name}
                 </h1>
-                <p className="text-sm md:text-base text-muted-foreground font-medium leading-relaxed px-2">
+                <p className="text-sm md:text-base lg:text-lg text-muted-foreground font-medium leading-relaxed px-2">
                     {aboutData.personal.title}
                 </p>
-                <div className="flex items-center justify-center gap-2 text-muted-foreground text-sm">
-                    <MapPin className="w-4 h-4 text-primary" />
+                <div className="flex items-center justify-center gap-2 text-muted-foreground text-sm md:text-base">
+                    <MapPin className="w-4 h-4 md:w-5 md:h-5 text-primary" />
                     <span>{aboutData.personal.location}</span>
                 </div>
             </div>
 
             {/* Social Links */}
             {socialData && socialData.links.length > 0 && (
-                <div className="w-full pt-4 border-t">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4">
+                <div className="w-full pt-4 md:pt-6 border-t">
+                    <p className="text-xs md:text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4 md:mb-6">
                         Connect
                     </p>
-                    <div className="flex gap-3 justify-center flex-wrap">
+                    <div className="flex gap-3 md:gap-4 justify-center flex-wrap">
                         {socialData.links.map((link, index) => {
                             const Icon = platformIcons[link.platform.toLowerCase()] || FaGlobe;
                             const bgColor = platformColors[link.platform.toLowerCase()] || "bg-[#3B82F6]";
@@ -153,9 +153,9 @@ export function ProfileSidebar() {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         title={link.name}
-                                        className={`relative flex items-center justify-center w-12 h-12 rounded-xl ${bgColor} text-white hover:scale-110 hover:-translate-y-1 transition-all duration-300 shadow-lg hover:shadow-xl`}
+                                        className={`relative flex items-center justify-center w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 rounded-xl ${bgColor} text-white hover:scale-110 hover:-translate-y-1 transition-all duration-300 shadow-lg hover:shadow-xl`}
                                     >
-                                        <Icon className="w-6 h-6 transition-transform group-hover:scale-110" />
+                                        <Icon className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 transition-transform group-hover:scale-110" />
                                     </a>
                                 </div>
                             );

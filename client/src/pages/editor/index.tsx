@@ -250,24 +250,24 @@ export default function Editor() {
     }
 
     return (
-        <div className="fixed inset-0 flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
+        <div className="fixed inset-0 flex flex-col bg-gradient-to-br from-background via-muted/30 to-background">
             {/* Header */}
-            <div className="flex-shrink-0 border-b bg-white/90 backdrop-blur-md shadow-sm">
+            <div className="flex-shrink-0 border-b bg-background/90 backdrop-blur-md shadow-sm">
                 <div className="max-w-[1800px] mx-auto px-8 py-5">
                     <div className="flex items-center gap-6">
                         <div>
-                            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
                                 Portfolio Editor
                             </h1>
-                            <p className="text-sm text-gray-500 mt-1 font-medium">
+                            <p className="text-sm text-muted-foreground mt-1 font-medium">
                                 Step {currentStep} of {STEPS.length}: {STEPS[currentStep - 1].title}
                             </p>
                         </div>
-                        <div className="h-12 w-px bg-gray-200" />
+                        <div className="h-12 w-px bg-border" />
                         <div className="flex items-center gap-3">
                             <div className="text-right">
-                                <div className="text-xs text-gray-500 uppercase tracking-wide">Progress</div>
-                                <div className="text-lg font-bold text-gray-900">{Math.round(progress)}%</div>
+                                <div className="text-xs text-muted-foreground uppercase tracking-wide">Progress</div>
+                                <div className="text-lg font-bold">{Math.round(progress)}%</div>
                             </div>
                             <div className="w-32">
                                 <Progress value={progress} className="h-2" />
@@ -283,27 +283,27 @@ export default function Editor() {
                     <div className="h-full grid grid-cols-[320px_1fr] gap-6">
                         {/* Left Sidebar */}
                         <div className="h-full overflow-y-auto scrollbar-hide">
-                            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 space-y-3">
+                            <div className="bg-card rounded-2xl shadow-lg border p-6 space-y-3">
                                 <div className="mb-6">
-                                    <h3 className="font-bold text-gray-900 text-lg">Navigation</h3>
-                                    <p className="text-xs text-gray-500 mt-1">Click to jump to any step</p>
+                                    <h3 className="font-bold text-lg">Navigation</h3>
+                                    <p className="text-xs text-muted-foreground mt-1">Click to jump to any step</p>
                                 </div>
                                 {STEPS.map((step) => (
                                     <button
                                         key={step.id}
                                         onClick={() => setCurrentStep(step.id)}
                                         className={`w-full flex items-center gap-4 px-5 py-4 rounded-xl transition-all text-left group ${currentStep === step.id
-                                            ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/30"
+                                            ? "bg-primary text-primary-foreground shadow-lg"
                                             : currentStep > step.id
-                                                ? "bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 hover:shadow-md border border-green-200"
-                                                : "bg-gray-50 text-gray-700 hover:bg-gray-100 hover:shadow-md border border-gray-200"
+                                                ? "bg-green-50 dark:bg-green-950 text-green-700 dark:text-green-400 hover:shadow-md border border-green-200 dark:border-green-800"
+                                                : "bg-muted hover:bg-muted/80 hover:shadow-md border"
                                             }`}
                                     >
                                         <div className={`flex items-center justify-center w-8 h-8 rounded-lg text-sm font-bold transition-all ${currentStep === step.id
-                                            ? "bg-white text-blue-600 shadow-md"
+                                            ? "bg-primary-foreground text-primary shadow-md"
                                             : currentStep > step.id
                                                 ? "bg-green-600 text-white"
-                                                : "bg-white text-gray-600 group-hover:bg-gray-200"
+                                                : "bg-background group-hover:bg-muted"
                                             }`}>
                                             {currentStep > step.id ? <Check className="w-5 h-5" /> : step.id}
                                         </div>
@@ -316,7 +316,7 @@ export default function Editor() {
                         </div>
 
                         {/* Right Content */}
-                        <div className="h-full flex flex-col bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+                        <div className="h-full flex flex-col bg-card rounded-2xl shadow-lg border overflow-hidden">
                             <div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide p-10">
                                 <CurrentStepComponent
                                     data={data}
@@ -326,7 +326,7 @@ export default function Editor() {
                             </div>
 
                             {/* Navigation */}
-                            <div className="flex-shrink-0 border-t bg-gradient-to-r from-gray-50 to-slate-50 px-10 py-6">
+                            <div className="flex-shrink-0 border-t bg-muted/30 px-10 py-6">
                                 {!isStepValid(currentStep) && currentStep < STEPS.length && (
                                     <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-2">
                                         <div className="w-2 h-2 rounded-full bg-amber-500" />

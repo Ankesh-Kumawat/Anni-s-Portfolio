@@ -1,4 +1,75 @@
 {
-  "folders": [],
+  "folders": [
+    {
+      "id": "projects",
+      "name": "Projects",
+      "type": "folder",
+      "coverImage": "/assets/projects/devstudio/cover.png",
+      "children": [
+        {
+          "id": "devstudio",
+          "name": "DevStudio",
+          "type": "folder",
+          "coverImage": "/assets/projects/devstudio/cover.png",
+          "children": [
+            {
+              "id": "devstudio-cover",
+              "name": "Cover",
+              "type": "image",
+              "imageUrl": "/assets/projects/devstudio/cover.png"
+            },
+            {
+              "id": "devstudio-1",
+              "name": "Screenshot 1",
+              "type": "image",
+              "imageUrl": "/assets/projects/devstudio/1.png"
+            },
+            {
+              "id": "devstudio-2",
+              "name": "Screenshot 2",
+              "type": "image",
+              "imageUrl": "/assets/projects/devstudio/2.png"
+            },
+            {
+              "id": "devstudio-3",
+              "name": "Screenshot 3",
+              "type": "image",
+              "imageUrl": "/assets/projects/devstudio/3.png"
+            },
+            {
+              "id": "devstudio-4",
+              "name": "Screenshot 4",
+              "type": "image",
+              "imageUrl": "/assets/projects/devstudio/4.png"
+            },
+            {
+              "id": "devstudio-5",
+              "name": "Screenshot 5",
+              "type": "image",
+              "imageUrl": "/assets/projects/devstudio/5.png"
+            },
+            {
+              "id": "devstudio-6",
+              "name": "Screenshot 6",
+              "type": "image",
+              "imageUrl": "/assets/projects/devstudio/6.png"
+            },
+            {
+              "id": "devstudio-7",
+              "name": "Screenshot 7",
+              "type": "image",
+              "imageUrl": "/assets/projects/devstudio/7.png"
+            },
+            {
+              "id": "devstudio-8",
+              "name": "Screenshot 8",
+              "type": "image",
+              "imageUrl": "/assets/projects/devstudio/8.png"
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "directImages": []
 }

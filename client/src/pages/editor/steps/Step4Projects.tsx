@@ -187,11 +187,12 @@ export default function Step4Projects({ data, setData }: StepProps) {
             const reader = new FileReader();
             reader.onloadend = () => {
                 const preview = reader.result as string;
-                newImages.push(preview);
+                const assetPath = `/assets/projects/${project.id}/${file.name}`;
+                newImages.push(assetPath); // Store /assets/ path instead of data URL
                 newAssets.push({
                     file,
                     path: `projects/${project.id}/${file.name}`,
-                    preview
+                    preview // Keep preview for editor display
                 });
 
                 processedCount++;
@@ -214,7 +215,7 @@ export default function Step4Projects({ data, setData }: StepProps) {
                         // Auto-sync to gallery
                         gallery: {
                             ...prev.gallery,
-                            folders: prev.gallery.folders.map(folder => {
+                            folders: prev.gallery.folders.length > 0 ? prev.gallery.folders.map(folder => {
                                 if (folder.id === "projects") {
                                     return {
                                         ...folder,
@@ -223,12 +224,34 @@ export default function Step4Projects({ data, setData }: StepProps) {
                                             name: p.name || "Untitled Project",
                                             type: "folder" as const,
                                             coverImage: p.images[0] || "",
-                                            images: p.images
+                                            children: p.images.map((path, idx) => ({
+                                                id: `${p.id}-img-${idx}`,
+                                                name: `Screenshot ${idx + 1}`,
+                                                type: "image" as const,
+                                                imageUrl: path
+                                            }))
                                         }))
                                     };
                                 }
                                 return folder;
-                            })
+                            }) : [{
+                                id: "projects",
+                                name: "Projects",
+                                type: "folder" as const,
+                                coverImage: "",
+                                children: prev.projects.projects.map(p => ({
+                                    id: p.id,
+                                    name: p.name || "Untitled Project",
+                                    type: "folder" as const,
+                                    coverImage: p.images[0] || "",
+                                    children: p.images.map((path, idx) => ({
+                                        id: `${p.id}-img-${idx}`,
+                                        name: `Screenshot ${idx + 1}`,
+                                        type: "image" as const,
+                                        imageUrl: path
+                                    }))
+                                }))
+                            }]
                         }
                     }));
                 }
@@ -621,26 +644,41 @@ export default function Step4Projects({ data, setData }: StepProps) {
                                                     </label>
 
                                                     {project.images.length > 0 && (
-                                                        <div className="grid grid-cols-4 gap-3 max-h-[400px] overflow-y-auto scrollbar-hide p-2">
-                                                            {project.images.map((image, imgIndex) => (
-                                                                <div key={imgIndex} className="relative group">
-                                                                    <img
-                                                                        src={image}
-                                                                        alt={`Project ${imgIndex + 1}`}
-                                                                        className="w-full h-24 object-cover rounded-lg border-2 border-gray-200"
-                                                                    />
-                                                                    <button
-                                                                        type="button"
-                                                                        onClick={() => removeImage(index, imgIndex)}
-                                                                        className="absolute top-1 right-1 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                                                                    >
-                                                                        <X className="w-4 h-4" />
-                                                                    </button>
-                                                                    <div className="absolute bottom-1 left-1 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                                                                        #{imgIndex + 1}
-                                                                    </div>
-                                                                </div>
-                                                            ))}
+                                                        <div className="space-y-3">
+                                                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                                                <p className="text-xs text-blue-700 font-medium">
+                                                                    ✓ {project.images.length} image{project.images.length !== 1 ? 's' : ''} uploaded for this project
+                                                                </p>
+                                                            </div>
+                                                            <div className="grid grid-cols-4 gap-3 max-h-[400px] overflow-y-auto scrollbar-hide p-2">
+                                                                {project.images.map((imagePath, imgIndex) => {
+                                                                    // Find preview from assets
+                                                                    const asset = data.assets.images.find(a =>
+                                                                        imagePath.includes(a.path)
+                                                                    );
+                                                                    const displaySrc = asset?.preview || imagePath;
+
+                                                                    return (
+                                                                        <div key={imgIndex} className="relative group">
+                                                                            <img
+                                                                                src={displaySrc}
+                                                                                alt={`Project ${imgIndex + 1}`}
+                                                                                className="w-full h-24 object-cover rounded-lg border-2 border-gray-200"
+                                                                            />
+                                                                            <button
+                                                                                type="button"
+                                                                                onClick={() => removeImage(index, imgIndex)}
+                                                                                className="absolute top-1 right-1 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                                                            >
+                                                                                <X className="w-4 h-4" />
+                                                                            </button>
+                                                                            <div className="absolute bottom-1 left-1 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                                                                                #{imgIndex + 1}
+                                                                            </div>
+                                                                        </div>
+                                                                    );
+                                                                })}
+                                                            </div>
                                                         </div>
                                                     )}
                                                 </div>

@@ -1,16 +1,40 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ImageModal } from "./components/ImageModal";
-import { GALLERY_STRUCTURE, GalleryItem } from "./constants";
 import { Folder, ArrowLeft, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+interface GalleryItem {
+    id: string;
+    name: string;
+    type: 'folder' | 'image';
+    coverImage?: string;
+    imageUrl?: string;
+    children?: GalleryItem[];
+}
+
+interface GalleryData {
+    folders: GalleryItem[];
+    directImages: GalleryItem[];
+}
 
 export default function Gallery() {
     const [breadcrumb, setBreadcrumb] = useState<GalleryItem[]>([]);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const [galleryData, setGalleryData] = useState<GalleryData | null>(null);
+
+    useEffect(() => {
+        fetch(`/data/gallery.json?t=${Date.now()}`, { cache: 'no-store' })
+            .then(res => res.json())
+            .then(setGalleryData)
+            .catch(console.error);
+    }, []);
 
     // Get current items based on breadcrumb
     const getCurrentItems = (): GalleryItem[] => {
-        if (breadcrumb.length === 0) return GALLERY_STRUCTURE;
+        if (!galleryData) return [];
+        if (breadcrumb.length === 0) {
+            return [...galleryData.folders, ...galleryData.directImages];
+        }
         return breadcrumb[breadcrumb.length - 1].children || [];
     };
 
@@ -35,6 +59,17 @@ export default function Gallery() {
                 imageSrc={selectedImage}
                 onClose={() => setSelectedImage(null)}
             />
+        );
+    }
+
+    if (!galleryData) {
+        return (
+            <div className="h-full bg-background flex items-center justify-center">
+                <div className="text-center">
+                    <ImageIcon className="w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-20" />
+                    <p className="text-muted-foreground">Loading gallery...</p>
+                </div>
+            </div>
         );
     }
 
