@@ -1,6 +1,6 @@
 import React from "react";
 import { AppConfig } from "@/lib/os-context";
-import { User, Briefcase, Terminal as TerminalIcon, Settings as SettingsIcon, Mail, Code, Globe, Image, FileText, Music, Video, Database as DatabaseIcon, Edit3, Trash2 } from "lucide-react";
+import { User, Briefcase, Terminal as TerminalIcon, Settings as SettingsIcon, Mail, Code, Globe, Image, FileText, Music, Video, Database as DatabaseIcon, Edit3 } from "lucide-react";
 
 import About from "./about";
 import Projects from "./projects";
@@ -14,7 +14,6 @@ import Contact from "./contact";
 import Spotify from "./spotify";
 import YouTube from "./youtube";
 import Database from "./database";
-import CacheCleaner from "./cleaner";
 
 
 export const APPS: AppConfig[] = [
@@ -135,13 +134,5 @@ export const APPS: AppConfig[] = [
     </div>,
     width: 600,
     height: 400
-  },
-  {
-    id: "cleaner" as any,
-    title: "Cache Cleaner",
-    icon: <Trash2 className="w-full h-full text-blue-500" />,
-    component: <CacheCleaner />,
-    width: 800,
-    height: 700
   }
 ];
