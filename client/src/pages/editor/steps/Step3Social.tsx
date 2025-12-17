@@ -113,12 +113,12 @@ export default function Step3Social({ data, setData }: StepProps) {
             <div className="mb-10">
                 <div className="flex items-start justify-between">
                     <div>
-                        <h2 className="text-4xl font-bold text-gray-900 mb-2">Social Links</h2>
-                        <p className="text-gray-600 text-lg">Select platforms and add your profile links</p>
+                        <h2 className="text-4xl font-bold text-foreground mb-2">Social Links</h2>
+                        <p className="text-muted-foreground text-lg">Select platforms and add your profile links</p>
                     </div>
-                    <div className="flex items-center gap-3 bg-gradient-to-r from-blue-50 to-purple-50 px-6 py-4 rounded-2xl border border-blue-200">
+                    <div className="flex items-center gap-3 bg-gradient-to-r from-primary/10 to-purple-500/10 px-6 py-4 rounded-2xl border border-primary/30">
                         <div className="text-right">
-                            <div className="text-xs text-gray-600 uppercase tracking-wide font-medium">Completion</div>
+                            <div className="text-xs text-muted-foreground uppercase tracking-wide font-medium">Completion</div>
                             <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                                 {completionPercentage()}%
                             </div>
@@ -129,13 +129,13 @@ export default function Step3Social({ data, setData }: StepProps) {
             </div>
 
             {/* Info Notice */}
-            <div className="mb-8 p-6 bg-gradient-to-r from-blue-50 via-purple-50 to-blue-50 border-2 border-blue-200 rounded-2xl flex items-start gap-4 shadow-sm">
-                <div className="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center flex-shrink-0">
+            <div className="mb-8 p-6 bg-gradient-to-r from-primary/10 via-purple-500/10 to-primary/10 border-2 border-primary/30 rounded-2xl flex items-start gap-4 shadow-sm">
+                <div className="w-10 h-10 rounded-xl bg-primary/100 flex items-center justify-center flex-shrink-0">
                     <Link2 className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                    <p className="text-base font-bold text-blue-900">Optional Section - Click to Add</p>
-                    <p className="text-sm text-blue-700 mt-1">
+                    <p className="text-base font-bold text-primary">Optional Section - Click to Add</p>
+                    <p className="text-sm text-primary mt-1">
                         Click on any platform below to add it. You can add as many or as few as you like. All fields are optional.
                     </p>
                 </div>
@@ -146,14 +146,14 @@ export default function Step3Social({ data, setData }: StepProps) {
                 {/* Left Column */}
                 <div className="space-y-6">
                     {/* Platform Selection Grid */}
-                    <div className="bg-white rounded-2xl p-8 border-2 border-gray-200 shadow-md">
+                    <div className="bg-card rounded-2xl p-8 border-2 border shadow-md">
                         <div className="flex items-center gap-3 mb-6">
                             <div className="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center">
                                 <Sparkles className="w-5 h-5 text-purple-600" />
                             </div>
                             <div>
-                                <h3 className="text-xl font-bold text-gray-900">Select Platforms</h3>
-                                <p className="text-sm text-gray-500">Click to add or remove platforms</p>
+                                <h3 className="text-xl font-bold text-foreground">Select Platforms</h3>
+                                <p className="text-sm text-muted-foreground">Click to add or remove platforms</p>
                             </div>
                         </div>
 
@@ -167,7 +167,7 @@ export default function Step3Social({ data, setData }: StepProps) {
                                         onClick={() => togglePlatform(platform.value)}
                                         className={`relative p-3 rounded-xl border-2 transition-all text-center group ${isAdded
                                             ? "border-green-500 bg-green-50 shadow-lg scale-105"
-                                            : "border-gray-200 bg-white hover:border-blue-400 hover:shadow-md hover:scale-105"
+                                            : "border bg-card hover:border-blue-400 hover:shadow-md hover:scale-105"
                                             }`}
                                     >
                                         {isAdded && (
@@ -178,7 +178,7 @@ export default function Step3Social({ data, setData }: StepProps) {
                                         <div className={`w-14 h-14 rounded-xl ${platform.color} flex items-center justify-center mx-auto mb-2 shadow-md`}>
                                             <Icon className="w-8 h-8 text-white" />
                                         </div>
-                                        <p className={`text-[10px] font-bold leading-tight ${isAdded ? "text-green-900" : "text-gray-700"}`}>
+                                        <p className={`text-[10px] font-bold leading-tight ${isAdded ? "text-green-900" : "text-foreground"}`}>
                                             {platform.label}
                                         </p>
                                     </button>
@@ -189,14 +189,14 @@ export default function Step3Social({ data, setData }: StepProps) {
 
                     {/* Added Links Form */}
                     {data.social.links.length > 0 && (
-                        <div className="bg-white rounded-2xl p-8 border-2 border-gray-200 shadow-md">
+                        <div className="bg-card rounded-2xl p-8 border-2 border shadow-md">
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
                                     <Link2 className="w-5 h-5 text-blue-600" />
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-bold text-gray-900">Your Links</h3>
-                                    <p className="text-sm text-gray-500">{data.social.links.length} platform{data.social.links.length !== 1 ? 's' : ''} selected</p>
+                                    <h3 className="text-xl font-bold text-foreground">Your Links</h3>
+                                    <p className="text-sm text-muted-foreground">{data.social.links.length} platform{data.social.links.length !== 1 ? 's' : ''} selected</p>
                                 </div>
                             </div>
 
@@ -207,14 +207,14 @@ export default function Step3Social({ data, setData }: StepProps) {
                                     const isComplete = !!link.url;
 
                                     return (
-                                        <div key={index} className="p-5 bg-gradient-to-br from-gray-50 to-slate-50 rounded-xl border-2 border-gray-200">
+                                        <div key={index} className="p-5 bg-gradient-to-br from-muted/30 to-muted/50 rounded-xl border-2 border">
                                             <div className="flex items-start justify-between mb-4">
                                                 <div className="flex items-center gap-3">
                                                     <div className={`w-10 h-10 rounded-xl ${platformInfo.color} flex items-center justify-center`}>
                                                         <PlatformIcon className="w-5 h-5 text-white" />
                                                     </div>
                                                     <div>
-                                                        <h4 className="font-bold text-gray-900">{platformInfo.label}</h4>
+                                                        <h4 className="font-bold text-foreground">{platformInfo.label}</h4>
                                                         {isComplete && (
                                                             <Badge className="bg-green-100 text-green-700 border-green-200 mt-1">
                                                                 <Check className="w-3 h-3 mr-1" />
@@ -235,22 +235,22 @@ export default function Step3Social({ data, setData }: StepProps) {
 
                                             <div className="space-y-3">
                                                 <div className="space-y-2">
-                                                    <Label className="text-sm font-semibold text-gray-700">Display Name (Optional)</Label>
+                                                    <Label className="text-sm font-semibold text-foreground">Display Name (Optional)</Label>
                                                     <Input
                                                         value={link.name}
                                                         onChange={(e) => updateLink(index, "name", e.target.value)}
                                                         placeholder={platformInfo.label}
-                                                        className="h-11 text-base bg-white"
+                                                        className="h-11 text-base bg-card"
                                                     />
                                                 </div>
 
                                                 <div className="space-y-2">
-                                                    <Label className="text-sm font-semibold text-gray-700">Profile URL (Optional)</Label>
+                                                    <Label className="text-sm font-semibold text-foreground">Profile URL (Optional)</Label>
                                                     <Input
                                                         value={link.url}
                                                         onChange={(e) => updateLink(index, "url", e.target.value)}
                                                         placeholder={platformInfo.placeholder}
-                                                        className="h-11 text-base bg-white"
+                                                        className="h-11 text-base bg-card"
                                                     />
                                                 </div>
 
@@ -259,7 +259,7 @@ export default function Step3Social({ data, setData }: StepProps) {
                                                         href={link.url}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 font-medium"
+                                                        className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-primary font-medium"
                                                     >
                                                         <ExternalLink className="w-4 h-4" />
                                                         Test Link
@@ -277,14 +277,14 @@ export default function Step3Social({ data, setData }: StepProps) {
                 {/* Right Column - Stats & Preview */}
                 <div className="space-y-6">
                     {/* Stats Card */}
-                    <div className="bg-white rounded-2xl p-6 border-2 border-gray-200 shadow-md">
+                    <div className="bg-card rounded-2xl p-6 border-2 border shadow-md">
                         <div className="flex items-center gap-2 mb-5">
                             <Sparkles className="w-5 h-5 text-blue-600" />
-                            <h4 className="font-bold text-gray-900">Statistics</h4>
+                            <h4 className="font-bold text-foreground">Statistics</h4>
                         </div>
                         <div className="space-y-4">
-                            <div className="flex items-center justify-between p-4 bg-blue-50 rounded-xl border border-blue-200">
-                                <span className="text-sm font-medium text-blue-900">Selected</span>
+                            <div className="flex items-center justify-between p-4 bg-primary/10 rounded-xl border border-primary/30">
+                                <span className="text-sm font-medium text-primary">Selected</span>
                                 <span className="text-2xl font-bold text-blue-600">{data.social.links.length}</span>
                             </div>
                             <div className="flex items-center justify-between p-4 bg-green-50 rounded-xl border border-green-200">
@@ -302,28 +302,28 @@ export default function Step3Social({ data, setData }: StepProps) {
 
                     {/* Preview Card */}
                     {data.social.links.length > 0 && (
-                        <div className="bg-gradient-to-br from-gray-50 to-slate-50 rounded-2xl p-6 border-2 border-gray-200 shadow-md">
+                        <div className="bg-gradient-to-br from-muted/30 to-muted/50 rounded-2xl p-6 border-2 border shadow-md">
                             <div className="flex items-center gap-2 mb-5">
                                 <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center">
                                     <Link2 className="w-4 h-4 text-white" />
                                 </div>
-                                <h4 className="font-bold text-gray-900">Live Preview</h4>
+                                <h4 className="font-bold text-foreground">Live Preview</h4>
                             </div>
                             <div className="space-y-3 max-h-[400px] overflow-y-auto scrollbar-hide">
                                 {data.social.links.map((link, index) => {
                                     const platformInfo = getPlatformInfo(link.platform);
                                     const PlatformIcon = platformInfo.icon;
                                     return (
-                                        <div key={index} className="bg-white rounded-xl p-4 border border-gray-200">
+                                        <div key={index} className="bg-card rounded-xl p-4 border border">
                                             <div className="flex items-center gap-3">
                                                 <div className={`w-8 h-8 rounded-lg ${platformInfo.color} flex items-center justify-center flex-shrink-0`}>
                                                     <PlatformIcon className="w-4 h-4 text-white" />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-semibold text-gray-900 truncate">
+                                                    <p className="text-sm font-semibold text-foreground truncate">
                                                         {link.name || platformInfo.label}
                                                     </p>
-                                                    <p className="text-xs text-gray-500 truncate">
+                                                    <p className="text-xs text-muted-foreground truncate">
                                                         {link.url || <span className="text-gray-400 italic">No URL added</span>}
                                                     </p>
                                                 </div>
@@ -336,9 +336,9 @@ export default function Step3Social({ data, setData }: StepProps) {
                     )}
 
                     {/* Help Card */}
-                    <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-6 border-2 border-blue-200">
-                        <h4 className="font-bold text-gray-900 mb-3">💡 Quick Tips</h4>
-                        <ul className="space-y-2 text-sm text-gray-700">
+                    <div className="bg-gradient-to-br from-primary/10 to-purple-500/10 rounded-2xl p-6 border-2 border-primary/30">
+                        <h4 className="font-bold text-foreground mb-3">💡 Quick Tips</h4>
+                        <ul className="space-y-2 text-sm text-foreground">
                             <li className="flex items-start gap-2">
                                 <span className="text-blue-600 mt-0.5">•</span>
                                 <span>Click any platform to add it</span>
@@ -362,3 +362,6 @@ export default function Step3Social({ data, setData }: StepProps) {
         </div>
     );
 }
+
+
+

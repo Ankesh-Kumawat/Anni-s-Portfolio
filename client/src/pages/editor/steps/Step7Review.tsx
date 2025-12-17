@@ -34,12 +34,12 @@ export default function Step7Review({ data, onDownload }: StepProps) {
             <div className="mb-10">
                 <div className="flex items-start justify-between">
                     <div>
-                        <h2 className="text-4xl font-bold text-gray-900 mb-2">Review & Download</h2>
-                        <p className="text-gray-600 text-lg">Review your portfolio data and download the complete package</p>
+                        <h2 className="text-4xl font-bold text-foreground mb-2">Review & Download</h2>
+                        <p className="text-muted-foreground text-lg">Review your portfolio data and download the complete package</p>
                     </div>
-                    <div className="flex items-center gap-3 bg-gradient-to-r from-blue-50 to-purple-50 px-6 py-4 rounded-2xl border border-blue-200">
+                    <div className="flex items-center gap-3 bg-gradient-to-r from-primary/10 to-purple-500/10 px-6 py-4 rounded-2xl border border-primary/30">
                         <div className="text-right">
-                            <div className="text-xs text-gray-600 uppercase tracking-wide font-medium">Overall</div>
+                            <div className="text-xs text-muted-foreground uppercase tracking-wide font-medium">Overall</div>
                             <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                                 {totalCompletion()}%
                             </div>
@@ -81,11 +81,11 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                 {/* Left Column - Review Cards */}
                 <div className="space-y-6">
                     {/* Step 1: Personal Info */}
-                    <div className="bg-white rounded-2xl border-2 border-gray-200 shadow-md overflow-hidden">
+                    <div className="bg-card rounded-2xl border-2 border shadow-md overflow-hidden">
                         <div className="bg-gradient-to-r from-blue-600 to-blue-500 p-5">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                                    <div className="w-10 h-10 rounded-xl bg-card/10 backdrop-blur-sm flex items-center justify-center">
                                         <User className="w-5 h-5 text-white" />
                                     </div>
                                     <div>
@@ -108,38 +108,38 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                         </div>
                         <div className="p-5 space-y-3">
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-gray-600">Name</span>
-                                <span className="text-sm font-semibold text-gray-900">{data.about.personal.name || "Not set"}</span>
+                                <span className="text-sm text-muted-foreground">Name</span>
+                                <span className="text-sm font-semibold text-foreground">{data.about.personal.name || "Not set"}</span>
                             </div>
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-gray-600">Title</span>
-                                <span className="text-sm font-semibold text-gray-900">{data.about.personal.title || "Not set"}</span>
+                                <span className="text-sm text-muted-foreground">Title</span>
+                                <span className="text-sm font-semibold text-foreground">{data.about.personal.title || "Not set"}</span>
                             </div>
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-gray-600">Location</span>
-                                <span className="text-sm font-semibold text-gray-900">{data.about.personal.location || "Not set"}</span>
+                                <span className="text-sm text-muted-foreground">Location</span>
+                                <span className="text-sm font-semibold text-foreground">{data.about.personal.location || "Not set"}</span>
                             </div>
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-gray-600">Skills</span>
-                                <span className="text-sm font-semibold text-gray-900">{data.about.skills.length} added</span>
+                                <span className="text-sm text-muted-foreground">Skills</span>
+                                <span className="text-sm font-semibold text-foreground">{data.about.skills.length} added</span>
                             </div>
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-gray-600">Experience</span>
-                                <span className="text-sm font-semibold text-gray-900">{data.about.experience.length} entries</span>
+                                <span className="text-sm text-muted-foreground">Experience</span>
+                                <span className="text-sm font-semibold text-foreground">{data.about.experience.length} entries</span>
                             </div>
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-gray-600">Avatar</span>
-                                <span className="text-sm font-semibold text-gray-900">{data.about.personal.avatar ? "✓ Uploaded" : "Not set"}</span>
+                                <span className="text-sm text-muted-foreground">Avatar</span>
+                                <span className="text-sm font-semibold text-foreground">{data.about.personal.avatar ? "✓ Uploaded" : "Not set"}</span>
                             </div>
                         </div>
                     </div>
 
                     {/* Step 2: Contact */}
-                    <div className="bg-white rounded-2xl border-2 border-gray-200 shadow-md overflow-hidden">
+                    <div className="bg-card rounded-2xl border-2 border shadow-md overflow-hidden">
                         <div className="bg-gradient-to-r from-purple-600 to-purple-500 p-5">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                                    <div className="w-10 h-10 rounded-xl bg-card/10 backdrop-blur-sm flex items-center justify-center">
                                         <Mail className="w-5 h-5 text-white" />
                                     </div>
                                     <div>
@@ -162,30 +162,30 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                         </div>
                         <div className="p-5 space-y-3">
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-gray-600">Email</span>
-                                <span className="text-sm font-semibold text-gray-900">{data.contact.email || "Not set"}</span>
+                                <span className="text-sm text-muted-foreground">Email</span>
+                                <span className="text-sm font-semibold text-foreground">{data.contact.email || "Not set"}</span>
                             </div>
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-gray-600">Location</span>
-                                <span className="text-sm font-semibold text-gray-900">{data.contact.location || "Not set"}</span>
+                                <span className="text-sm text-muted-foreground">Location</span>
+                                <span className="text-sm font-semibold text-foreground">{data.contact.location || "Not set"}</span>
                             </div>
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-gray-600">Message</span>
-                                <span className="text-sm font-semibold text-gray-900">{data.contact.message ? "✓ Added" : "Not set"}</span>
+                                <span className="text-sm text-muted-foreground">Message</span>
+                                <span className="text-sm font-semibold text-foreground">{data.contact.message ? "✓ Added" : "Not set"}</span>
                             </div>
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-gray-600">Copyright</span>
-                                <span className="text-sm font-semibold text-gray-900">{data.contact.copyright ? "✓ Added" : "Not set"}</span>
+                                <span className="text-sm text-muted-foreground">Copyright</span>
+                                <span className="text-sm font-semibold text-foreground">{data.contact.copyright ? "✓ Added" : "Not set"}</span>
                             </div>
                         </div>
                     </div>
 
                     {/* Step 3: Social Links */}
-                    <div className="bg-white rounded-2xl border-2 border-gray-200 shadow-md overflow-hidden">
+                    <div className="bg-card rounded-2xl border-2 border shadow-md overflow-hidden">
                         <div className="bg-gradient-to-r from-pink-600 to-pink-500 p-5">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                                    <div className="w-10 h-10 rounded-xl bg-card/10 backdrop-blur-sm flex items-center justify-center">
                                         <Link2 className="w-5 h-5 text-white" />
                                     </div>
                                     <div>
@@ -207,18 +207,18 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                         </div>
                         <div className="p-5">
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-gray-600">Total Links</span>
-                                <span className="text-sm font-semibold text-gray-900">{data.social.links.length} platforms</span>
+                                <span className="text-sm text-muted-foreground">Total Links</span>
+                                <span className="text-sm font-semibold text-foreground">{data.social.links.length} platforms</span>
                             </div>
                         </div>
                     </div>
 
                     {/* Step 4: Projects & Gallery */}
-                    <div className="bg-white rounded-2xl border-2 border-gray-200 shadow-md overflow-hidden">
+                    <div className="bg-card rounded-2xl border-2 border shadow-md overflow-hidden">
                         <div className="bg-gradient-to-r from-orange-600 to-orange-500 p-5">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                                    <div className="w-10 h-10 rounded-xl bg-card/10 backdrop-blur-sm flex items-center justify-center">
                                         <FolderKanban className="w-5 h-5 text-white" />
                                     </div>
                                     <div>
@@ -240,12 +240,12 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                         </div>
                         <div className="p-5 space-y-3">
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-gray-600">Projects</span>
-                                <span className="text-sm font-semibold text-gray-900">{data.projects.projects.length} added</span>
+                                <span className="text-sm text-muted-foreground">Projects</span>
+                                <span className="text-sm font-semibold text-foreground">{data.projects.projects.length} added</span>
                             </div>
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-gray-600">Total Images</span>
-                                <span className="text-sm font-semibold text-gray-900">
+                                <span className="text-sm text-muted-foreground">Total Images</span>
+                                <span className="text-sm font-semibold text-foreground">
                                     {data.projects.projects.reduce((acc, p) => acc + p.images.length, 0)} images
                                 </span>
                             </div>
@@ -253,11 +253,11 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                     </div>
 
                     {/* Step 5: Notepad */}
-                    <div className="bg-white rounded-2xl border-2 border-gray-200 shadow-md overflow-hidden">
+                    <div className="bg-card rounded-2xl border-2 border shadow-md overflow-hidden">
                         <div className="bg-gradient-to-r from-teal-600 to-teal-500 p-5">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                                    <div className="w-10 h-10 rounded-xl bg-card/10 backdrop-blur-sm flex items-center justify-center">
                                         <FileText className="w-5 h-5 text-white" />
                                     </div>
                                     <div>
@@ -279,12 +279,12 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                         </div>
                         <div className="p-5 space-y-3">
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-gray-600">Total Notes</span>
-                                <span className="text-sm font-semibold text-gray-900">{data.notepad.defaultNotes.length} notes</span>
+                                <span className="text-sm text-muted-foreground">Total Notes</span>
+                                <span className="text-sm font-semibold text-foreground">{data.notepad.defaultNotes.length} notes</span>
                             </div>
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-gray-600">Pinned</span>
-                                <span className="text-sm font-semibold text-gray-900">
+                                <span className="text-sm text-muted-foreground">Pinned</span>
+                                <span className="text-sm font-semibold text-foreground">
                                     {data.notepad.defaultNotes.filter(n => n.isPinned).length} pinned
                                 </span>
                             </div>
@@ -292,11 +292,11 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                     </div>
 
                     {/* Step 6: Advanced */}
-                    <div className="bg-white rounded-2xl border-2 border-gray-200 shadow-md overflow-hidden">
+                    <div className="bg-card rounded-2xl border-2 border shadow-md overflow-hidden">
                         <div className="bg-gradient-to-r from-slate-700 to-slate-600 p-5">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                                    <div className="w-10 h-10 rounded-xl bg-card/10 backdrop-blur-sm flex items-center justify-center">
                                         <Terminal className="w-5 h-5 text-white" />
                                     </div>
                                     <div>
@@ -313,17 +313,17 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                         <div className="p-5 space-y-3">
                             <div className="flex items-center gap-3">
                                 <Terminal className="w-4 h-4 text-slate-600" />
-                                <span className="text-sm text-gray-600">Terminal</span>
+                                <span className="text-sm text-muted-foreground">Terminal</span>
                                 <Badge className="ml-auto bg-slate-100 text-slate-700">Ready</Badge>
                             </div>
                             <div className="flex items-center gap-3">
                                 <Database className="w-4 h-4 text-blue-600" />
-                                <span className="text-sm text-gray-600">Database</span>
-                                <Badge className="ml-auto bg-blue-100 text-blue-700">Ready</Badge>
+                                <span className="text-sm text-muted-foreground">Database</span>
+                                <Badge className="ml-auto bg-blue-100 text-primary">Ready</Badge>
                             </div>
                             <div className="flex items-center gap-3">
                                 <Settings className="w-4 h-4 text-purple-600" />
-                                <span className="text-sm text-gray-600">Settings</span>
+                                <span className="text-sm text-muted-foreground">Settings</span>
                                 <Badge className="ml-auto bg-purple-100 text-purple-700">Ready</Badge>
                             </div>
                         </div>
@@ -335,7 +335,7 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                     {/* Download Card */}
                     <div className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl p-6 text-white shadow-lg">
                         <div className="flex items-center gap-3 mb-4">
-                            <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                            <div className="w-12 h-12 rounded-xl bg-card/20 backdrop-blur-sm flex items-center justify-center">
                                 <Download className="w-6 h-6 text-white" />
                             </div>
                             <div>
@@ -351,13 +351,13 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                         <Button
                             onClick={onDownload}
                             size="lg"
-                            className="w-full bg-white text-blue-600 hover:bg-blue-50 font-bold text-base py-6 mb-4 shadow-xl"
+                            className="w-full bg-card text-blue-600 hover:bg-primary/10 font-bold text-base py-6 mb-4 shadow-xl"
                         >
                             <Download className="w-5 h-5 mr-2" />
                             Download ZIP Package
                         </Button>
 
-                        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                        <div className="bg-card/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
                             <p className="text-xs text-white/80 mb-2">Package includes:</p>
                             <ul className="space-y-1 text-xs text-white">
                                 <li>✓ All JSON data files</li>
@@ -369,14 +369,14 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                     </div>
 
                     {/* Summary Stats */}
-                    <div className="bg-white rounded-2xl p-6 border-2 border-gray-200 shadow-md">
+                    <div className="bg-card rounded-2xl p-6 border-2 border shadow-md">
                         <div className="flex items-center gap-2 mb-5">
                             <Sparkles className="w-5 h-5 text-blue-600" />
-                            <h4 className="font-bold text-gray-900">Summary</h4>
+                            <h4 className="font-bold text-foreground">Summary</h4>
                         </div>
                         <div className="space-y-4">
-                            <div className="flex items-center justify-between p-3 bg-blue-50 rounded-xl">
-                                <span className="text-sm font-medium text-blue-900">Steps Complete</span>
+                            <div className="flex items-center justify-between p-3 bg-primary/10 rounded-xl">
+                                <span className="text-sm font-medium text-primary">Steps Complete</span>
                                 <span className="text-lg font-bold text-blue-600">7/7</span>
                             </div>
                             <div className="flex items-center justify-between p-3 bg-green-50 rounded-xl">
@@ -394,8 +394,8 @@ export default function Step7Review({ data, onDownload }: StepProps) {
 
                     {/* Help Card */}
                     <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-6 border-2 border-amber-200">
-                        <h4 className="font-bold text-gray-900 mb-3">💡 Next Steps</h4>
-                        <ul className="space-y-2 text-sm text-gray-700">
+                        <h4 className="font-bold text-foreground mb-3">💡 Next Steps</h4>
+                        <ul className="space-y-2 text-sm text-foreground">
                             <li className="flex items-start gap-2">
                                 <span className="text-amber-600 mt-0.5">1.</span>
                                 <span>Review all sections above</span>
@@ -419,3 +419,6 @@ export default function Step7Review({ data, onDownload }: StepProps) {
         </div>
     );
 }
+
+
+

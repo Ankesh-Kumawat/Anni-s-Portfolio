@@ -27,12 +27,12 @@ export default function Step6Advanced({ data }: StepProps) {
             <div className="mb-10">
                 <div className="flex items-start justify-between">
                     <div>
-                        <h2 className="text-4xl font-bold text-gray-900 mb-2">Advanced Settings</h2>
-                        <p className="text-gray-600 text-lg">Auto-generated configurations for Terminal, Database & Settings apps</p>
+                        <h2 className="text-4xl font-bold text-foreground mb-2">Advanced Settings</h2>
+                        <p className="text-muted-foreground text-lg">Auto-generated configurations for Terminal, Database & Settings apps</p>
                     </div>
-                    <div className="flex items-center gap-3 bg-gradient-to-r from-blue-50 to-purple-50 px-6 py-4 rounded-2xl border border-blue-200">
+                    <div className="flex items-center gap-3 bg-gradient-to-r from-primary/10 to-purple-500/10 px-6 py-4 rounded-2xl border border-primary/30">
                         <div className="text-right">
-                            <div className="text-xs text-gray-600 uppercase tracking-wide font-medium">Completion</div>
+                            <div className="text-xs text-muted-foreground uppercase tracking-wide font-medium">Completion</div>
                             <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                                 {completionPercentage()}%
                             </div>
@@ -60,10 +60,10 @@ export default function Step6Advanced({ data }: StepProps) {
                 {/* Left Column - Settings */}
                 <div className="space-y-6">
                     {/* Terminal Settings */}
-                    <div className="bg-white rounded-2xl border-2 border-gray-200 shadow-md overflow-hidden">
+                    <div className="bg-card rounded-2xl border-2 border shadow-md overflow-hidden">
                         <div className="bg-gradient-to-r from-slate-900 to-slate-700 p-6">
                             <div className="flex items-center gap-3">
-                                <div className="w-12 h-12 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                                <div className="w-12 h-12 rounded-xl bg-card/10 backdrop-blur-sm flex items-center justify-center">
                                     <Terminal className="w-6 h-6 text-white" />
                                 </div>
                                 <div>
@@ -76,35 +76,35 @@ export default function Step6Advanced({ data }: StepProps) {
                         <div className="p-6 space-y-5">
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <Label htmlFor="terminal-username" className="text-sm font-semibold text-gray-700">
+                                    <Label htmlFor="terminal-username" className="text-sm font-semibold text-foreground">
                                         Username <span className="text-xs text-green-600">(auto-generated)</span>
                                     </Label>
                                     <Input
                                         id="terminal-username"
                                         value={data.terminal.username}
                                         disabled
-                                        className="bg-gray-50 border-gray-200 h-11"
+                                        className="bg-muted border h-11"
                                     />
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="terminal-role" className="text-sm font-semibold text-gray-700">
+                                    <Label htmlFor="terminal-role" className="text-sm font-semibold text-foreground">
                                         User Role <span className="text-xs text-green-600">(auto-filled)</span>
                                     </Label>
                                     <Input
                                         id="terminal-role"
                                         value={data.terminal.userRole}
                                         disabled
-                                        className="bg-gray-50 border-gray-200 h-11"
+                                        className="bg-muted border h-11"
                                     />
                                 </div>
                             </div>
 
                             <div className="space-y-2">
-                                <Label className="text-sm font-semibold text-gray-700">
+                                <Label className="text-sm font-semibold text-foreground">
                                     Technical Skills <span className="text-xs text-green-600">({data.terminal.skills.technical.length} from Step 1)</span>
                                 </Label>
-                                <div className="flex flex-wrap gap-2 p-4 bg-gradient-to-br from-gray-50 to-slate-50 rounded-xl border-2 border-gray-200 min-h-[80px]">
+                                <div className="flex flex-wrap gap-2 p-4 bg-gradient-to-br from-muted/30 to-muted/50 rounded-xl border-2 border min-h-[80px]">
                                     {data.terminal.skills.technical.length > 0 ? (
                                         data.terminal.skills.technical.map((skill, index) => (
                                             <Badge key={index} className="bg-slate-700 text-white border-slate-600 px-3 py-1">
@@ -112,7 +112,7 @@ export default function Step6Advanced({ data }: StepProps) {
                                             </Badge>
                                         ))
                                     ) : (
-                                        <p className="text-sm text-gray-500">No skills added yet</p>
+                                        <p className="text-sm text-muted-foreground">No skills added yet</p>
                                     )}
                                 </div>
                             </div>
@@ -120,10 +120,10 @@ export default function Step6Advanced({ data }: StepProps) {
                     </div>
 
                     {/* Database Settings */}
-                    <div className="bg-white rounded-2xl border-2 border-gray-200 shadow-md overflow-hidden">
+                    <div className="bg-card rounded-2xl border-2 border shadow-md overflow-hidden">
                         <div className="bg-gradient-to-r from-blue-600 to-blue-500 p-6">
                             <div className="flex items-center gap-3">
-                                <div className="w-12 h-12 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                                <div className="w-12 h-12 rounded-xl bg-card/10 backdrop-blur-sm flex items-center justify-center">
                                     <Database className="w-6 h-6 text-white" />
                                 </div>
                                 <div>
@@ -136,99 +136,99 @@ export default function Step6Advanced({ data }: StepProps) {
                         <div className="p-6 space-y-6">
                             {/* User Table */}
                             <div className="space-y-3">
-                                <h4 className="text-base font-bold text-gray-900 flex items-center gap-2">
-                                    <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                                <h4 className="text-base font-bold text-foreground flex items-center gap-2">
+                                    <span className="w-2 h-2 rounded-full bg-primary/100"></span>
                                     User Table
                                 </h4>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
-                                        <Label htmlFor="db-name" className="text-sm font-semibold text-gray-700">
+                                        <Label htmlFor="db-name" className="text-sm font-semibold text-foreground">
                                             Name <span className="text-xs text-green-600">(auto-filled)</span>
                                         </Label>
                                         <Input
                                             id="db-name"
                                             value={data.database.user.name}
                                             disabled
-                                            className="bg-gray-50 border-gray-200 h-11"
+                                            className="bg-muted border h-11"
                                         />
                                     </div>
 
                                     <div className="space-y-2">
-                                        <Label htmlFor="db-nickname" className="text-sm font-semibold text-gray-700">
+                                        <Label htmlFor="db-nickname" className="text-sm font-semibold text-foreground">
                                             Nickname <span className="text-xs text-green-600">(auto-generated)</span>
                                         </Label>
                                         <Input
                                             id="db-nickname"
                                             value={data.database.user.nickname}
                                             disabled
-                                            className="bg-gray-50 border-gray-200 h-11"
+                                            className="bg-muted border h-11"
                                         />
                                     </div>
 
                                     <div className="space-y-2">
-                                        <Label htmlFor="db-email" className="text-sm font-semibold text-gray-700">
+                                        <Label htmlFor="db-email" className="text-sm font-semibold text-foreground">
                                             Email <span className="text-xs text-green-600">(auto-filled)</span>
                                         </Label>
                                         <Input
                                             id="db-email"
                                             value={data.database.user.email}
                                             disabled
-                                            className="bg-gray-50 border-gray-200 h-11"
+                                            className="bg-muted border h-11"
                                         />
                                     </div>
 
                                     <div className="space-y-2">
-                                        <Label htmlFor="db-role" className="text-sm font-semibold text-gray-700">
+                                        <Label htmlFor="db-role" className="text-sm font-semibold text-foreground">
                                             Role <span className="text-xs text-green-600">(auto-filled)</span>
                                         </Label>
                                         <Input
                                             id="db-role"
                                             value={data.database.user.role}
                                             disabled
-                                            className="bg-gray-50 border-gray-200 h-11"
+                                            className="bg-muted border h-11"
                                         />
                                     </div>
 
                                     <div className="space-y-2">
-                                        <Label htmlFor="db-status" className="text-sm font-semibold text-gray-700">
+                                        <Label htmlFor="db-status" className="text-sm font-semibold text-foreground">
                                             Status <span className="text-xs text-green-600">(auto-set)</span>
                                         </Label>
                                         <Input
                                             id="db-status"
                                             value={data.database.user.status}
                                             disabled
-                                            className="bg-gray-50 border-gray-200 h-11"
+                                            className="bg-muted border h-11"
                                         />
                                     </div>
 
                                     <div className="space-y-2">
-                                        <Label htmlFor="db-department" className="text-sm font-semibold text-gray-700">
+                                        <Label htmlFor="db-department" className="text-sm font-semibold text-foreground">
                                             Department <span className="text-xs text-green-600">(auto-set)</span>
                                         </Label>
                                         <Input
                                             id="db-department"
                                             value={data.database.user.department}
                                             disabled
-                                            className="bg-gray-50 border-gray-200 h-11"
+                                            className="bg-muted border h-11"
                                         />
                                     </div>
                                 </div>
                             </div>
 
                             {/* Projects Table */}
-                            <div className="space-y-3 pt-4 border-t-2 border-gray-200">
+                            <div className="space-y-3 pt-4 border-t-2 border">
                                 <div className="flex items-center justify-between">
-                                    <h4 className="text-base font-bold text-gray-900 flex items-center gap-2">
-                                        <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                                    <h4 className="text-base font-bold text-foreground flex items-center gap-2">
+                                        <span className="w-2 h-2 rounded-full bg-primary/100"></span>
                                         Projects Table
                                     </h4>
-                                    <Badge className="bg-blue-100 text-blue-700 border-blue-200">
+                                    <Badge className="bg-blue-100 text-primary border-primary/30">
                                         {data.database.projects.length} {data.database.projects.length === 1 ? 'Project' : 'Projects'}
                                     </Badge>
                                 </div>
 
                                 {data.database.projects.length > 0 ? (
-                                    <div className="bg-gradient-to-br from-blue-50 to-slate-50 rounded-xl border-2 border-blue-200 overflow-hidden">
+                                    <div className="bg-gradient-to-br from-blue-50 to-slate-50 rounded-xl border-2 border-primary/30 overflow-hidden">
                                         <div className="overflow-x-auto max-h-[400px] scrollbar-hide">
                                             <table className="w-full text-sm">
                                                 <thead className="bg-blue-600 text-white sticky top-0">
@@ -242,20 +242,20 @@ export default function Step6Advanced({ data }: StepProps) {
                                                 </thead>
                                                 <tbody>
                                                     {data.database.projects.map((project, index) => (
-                                                        <tr key={project.project_id} className={index % 2 === 0 ? "bg-white" : "bg-blue-50/50"}>
-                                                            <td className="px-4 py-3 font-mono text-xs text-gray-600">{project.project_id}</td>
-                                                            <td className="px-4 py-3 font-semibold text-gray-900">{project.name}</td>
+                                                        <tr key={project.project_id} className={index % 2 === 0 ? "bg-card" : "bg-primary/10/50"}>
+                                                            <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{project.project_id}</td>
+                                                            <td className="px-4 py-3 font-semibold text-foreground">{project.name}</td>
                                                             <td className="px-4 py-3">
                                                                 <Badge className={
                                                                     project.status === "Completed" ? "bg-green-100 text-green-700 border-green-200" :
-                                                                        project.status === "In Progress" ? "bg-blue-100 text-blue-700 border-blue-200" :
-                                                                            "bg-gray-100 text-gray-700 border-gray-200"
+                                                                        project.status === "In Progress" ? "bg-blue-100 text-primary border-primary/30" :
+                                                                            "bg-muted text-foreground border"
                                                                 }>
                                                                     {project.status}
                                                                 </Badge>
                                                             </td>
-                                                            <td className="px-4 py-3 text-gray-700">{project.platform}</td>
-                                                            <td className="px-4 py-3 text-gray-600 text-xs max-w-[200px] truncate" title={project.tech_stack}>
+                                                            <td className="px-4 py-3 text-foreground">{project.platform}</td>
+                                                            <td className="px-4 py-3 text-muted-foreground text-xs max-w-[200px] truncate" title={project.tech_stack}>
                                                                 {project.tech_stack}
                                                             </td>
                                                         </tr>
@@ -265,10 +265,10 @@ export default function Step6Advanced({ data }: StepProps) {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="bg-gradient-to-br from-gray-50 to-slate-50 rounded-xl border-2 border-dashed border-gray-300 p-8 text-center">
+                                    <div className="bg-gradient-to-br from-muted/30 to-muted/50 rounded-xl border-2 border-dashed border p-8 text-center">
                                         <Database className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                                        <p className="text-sm text-gray-600 font-medium">No projects added yet</p>
-                                        <p className="text-xs text-gray-500 mt-1">Add projects in Step 4 to see them here</p>
+                                        <p className="text-sm text-muted-foreground font-medium">No projects added yet</p>
+                                        <p className="text-xs text-muted-foreground mt-1">Add projects in Step 4 to see them here</p>
                                     </div>
                                 )}
                             </div>
@@ -276,10 +276,10 @@ export default function Step6Advanced({ data }: StepProps) {
                     </div>
 
                     {/* Settings App */}
-                    <div className="bg-white rounded-2xl border-2 border-gray-200 shadow-md overflow-hidden">
+                    <div className="bg-card rounded-2xl border-2 border shadow-md overflow-hidden">
                         <div className="bg-gradient-to-r from-purple-600 to-purple-500 p-6">
                             <div className="flex items-center gap-3">
-                                <div className="w-12 h-12 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                                <div className="w-12 h-12 rounded-xl bg-card/10 backdrop-blur-sm flex items-center justify-center">
                                     <Settings className="w-6 h-6 text-white" />
                                 </div>
                                 <div>
@@ -292,33 +292,33 @@ export default function Step6Advanced({ data }: StepProps) {
                         <div className="p-6 space-y-5">
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <Label htmlFor="settings-name" className="text-sm font-semibold text-gray-700">
+                                    <Label htmlFor="settings-name" className="text-sm font-semibold text-foreground">
                                         Account Name <span className="text-xs text-green-600">(auto-filled)</span>
                                     </Label>
                                     <Input
                                         id="settings-name"
                                         value={data.settings.account.name}
                                         disabled
-                                        className="bg-gray-50 border-gray-200 h-11"
+                                        className="bg-muted border h-11"
                                     />
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="settings-role" className="text-sm font-semibold text-gray-700">
+                                    <Label htmlFor="settings-role" className="text-sm font-semibold text-foreground">
                                         Account Role <span className="text-xs text-green-600">(auto-filled)</span>
                                     </Label>
                                     <Input
                                         id="settings-role"
                                         value={data.settings.account.role}
                                         disabled
-                                        className="bg-gray-50 border-gray-200 h-11"
+                                        className="bg-muted border h-11"
                                     />
                                 </div>
                             </div>
 
                             {data.settings.account.avatar && (
                                 <div className="space-y-2">
-                                    <Label className="text-sm font-semibold text-gray-700">Avatar Preview</Label>
+                                    <Label className="text-sm font-semibold text-foreground">Avatar Preview</Label>
                                     <div className="flex items-center gap-4 p-4 bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl border-2 border-purple-200">
                                         <img
                                             src={data.settings.account.avatar}
@@ -326,8 +326,8 @@ export default function Step6Advanced({ data }: StepProps) {
                                             className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg"
                                         />
                                         <div>
-                                            <p className="font-semibold text-gray-900">{data.settings.account.name}</p>
-                                            <p className="text-sm text-gray-600">{data.settings.account.role}</p>
+                                            <p className="font-semibold text-foreground">{data.settings.account.name}</p>
+                                            <p className="text-sm text-muted-foreground">{data.settings.account.role}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -339,10 +339,10 @@ export default function Step6Advanced({ data }: StepProps) {
                 {/* Right Column - Info */}
                 <div className="space-y-6">
                     {/* Stats Card */}
-                    <div className="bg-white rounded-2xl p-6 border-2 border-gray-200 shadow-md">
+                    <div className="bg-card rounded-2xl p-6 border-2 border shadow-md">
                         <div className="flex items-center gap-2 mb-5">
                             <Sparkles className="w-5 h-5 text-blue-600" />
-                            <h4 className="font-bold text-gray-900">Auto-Generated Data</h4>
+                            <h4 className="font-bold text-foreground">Auto-Generated Data</h4>
                         </div>
                         <div className="space-y-4">
                             <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-200">
@@ -352,8 +352,8 @@ export default function Step6Advanced({ data }: StepProps) {
                                     Ready
                                 </Badge>
                             </div>
-                            <div className="flex items-center justify-between p-4 bg-blue-50 rounded-xl border border-blue-200">
-                                <span className="text-sm font-medium text-blue-900">Database</span>
+                            <div className="flex items-center justify-between p-4 bg-primary/10 rounded-xl border border-primary/30">
+                                <span className="text-sm font-medium text-primary">Database</span>
                                 <Badge className="bg-blue-600 text-white">
                                     <Check className="w-3 h-3 mr-1" />
                                     Ready
@@ -370,12 +370,12 @@ export default function Step6Advanced({ data }: StepProps) {
                     </div>
 
                     {/* Info Card */}
-                    <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-6 border-2 border-blue-200">
+                    <div className="bg-gradient-to-br from-primary/10 to-purple-500/10 rounded-2xl p-6 border-2 border-primary/30">
                         <div className="flex items-center gap-2 mb-4">
                             <Info className="w-5 h-5 text-blue-600" />
-                            <h4 className="font-bold text-gray-900">About This Step</h4>
+                            <h4 className="font-bold text-foreground">About This Step</h4>
                         </div>
-                        <ul className="space-y-3 text-sm text-gray-700">
+                        <ul className="space-y-3 text-sm text-foreground">
                             <li className="flex items-start gap-2">
                                 <span className="text-blue-600 mt-0.5">•</span>
                                 <span>All settings are automatically generated from your personal information</span>
@@ -405,8 +405,8 @@ export default function Step6Advanced({ data }: StepProps) {
 
                     {/* Help Card */}
                     <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border-2 border-green-200">
-                        <h4 className="font-bold text-gray-900 mb-3">✨ Smart Features</h4>
-                        <ul className="space-y-2 text-sm text-gray-700">
+                        <h4 className="font-bold text-foreground mb-3">✨ Smart Features</h4>
+                        <ul className="space-y-2 text-sm text-foreground">
                             <li className="flex items-start gap-2">
                                 <span className="text-green-600 mt-0.5">✓</span>
                                 <span>Username auto-generated from name</span>
@@ -434,3 +434,6 @@ export default function Step6Advanced({ data }: StepProps) {
         </div>
     );
 }
+
+
+

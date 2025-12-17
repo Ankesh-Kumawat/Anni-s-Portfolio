@@ -78,12 +78,12 @@ export default function Step5Notepad({ data, setData }: StepProps) {
             <div className="mb-10">
                 <div className="flex items-start justify-between">
                     <div>
-                        <h2 className="text-4xl font-bold text-gray-900 mb-2">Notepad</h2>
-                        <p className="text-gray-600 text-lg">Add default notes for your portfolio notepad app</p>
+                        <h2 className="text-4xl font-bold text-foreground mb-2">Notepad</h2>
+                        <p className="text-muted-foreground text-lg">Add default notes for your portfolio notepad app</p>
                     </div>
-                    <div className="flex items-center gap-3 bg-gradient-to-r from-blue-50 to-purple-50 px-6 py-4 rounded-2xl border border-blue-200">
+                    <div className="flex items-center gap-3 bg-gradient-to-r from-primary/10 to-purple-500/10 px-6 py-4 rounded-2xl border border-primary/30">
                         <div className="text-right">
-                            <div className="text-xs text-gray-600 uppercase tracking-wide font-medium">Completion</div>
+                            <div className="text-xs text-muted-foreground uppercase tracking-wide font-medium">Completion</div>
                             <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                                 {completionPercentage()}%
                             </div>
@@ -94,13 +94,13 @@ export default function Step5Notepad({ data, setData }: StepProps) {
             </div>
 
             {/* Info Notice */}
-            <div className="mb-8 p-6 bg-gradient-to-r from-blue-50 via-purple-50 to-blue-50 border-2 border-blue-200 rounded-2xl flex items-start gap-4 shadow-sm">
-                <div className="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center flex-shrink-0">
+            <div className="mb-8 p-6 bg-gradient-to-r from-primary/10 via-purple-500/10 to-primary/10 border-2 border-primary/30 rounded-2xl flex items-start gap-4 shadow-sm">
+                <div className="w-10 h-10 rounded-xl bg-primary/100 flex items-center justify-center flex-shrink-0">
                     <FileText className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                    <p className="text-base font-bold text-blue-900">Optional Section - Pre-loaded Notes</p>
-                    <p className="text-sm text-blue-700 mt-1">
+                    <p className="text-base font-bold text-primary">Optional Section - Pre-loaded Notes</p>
+                    <p className="text-sm text-primary mt-1">
                         Add notes that will appear by default in your portfolio's notepad app. Supports Markdown formatting.
                     </p>
                 </div>
@@ -111,15 +111,15 @@ export default function Step5Notepad({ data, setData }: StepProps) {
                 {/* Left Column - Notes */}
                 <div className="space-y-6">
                     {/* Add Note Button */}
-                    <div className="bg-white rounded-2xl p-6 border-2 border-gray-200 shadow-md">
+                    <div className="bg-card rounded-2xl p-6 border-2 border shadow-md">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
                                     <FileText className="w-5 h-5 text-blue-600" />
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-bold text-gray-900">Your Notes</h3>
-                                    <p className="text-sm text-gray-500">{data.notepad.defaultNotes.length} note{data.notepad.defaultNotes.length !== 1 ? 's' : ''} added</p>
+                                    <h3 className="text-xl font-bold text-foreground">Your Notes</h3>
+                                    <p className="text-sm text-muted-foreground">{data.notepad.defaultNotes.length} note{data.notepad.defaultNotes.length !== 1 ? 's' : ''} added</p>
                                 </div>
                             </div>
                             <Button onClick={addNote} type="button" size="lg" className="gap-2 px-6">
@@ -131,12 +131,12 @@ export default function Step5Notepad({ data, setData }: StepProps) {
 
                     {/* Notes List */}
                     {data.notepad.defaultNotes.length === 0 ? (
-                        <div className="bg-white rounded-2xl p-12 border-2 border-dashed border-gray-300 text-center">
-                            <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
+                        <div className="bg-card rounded-2xl p-12 border-2 border-dashed border text-center">
+                            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
                                 <FileText className="w-8 h-8 text-gray-400" />
                             </div>
-                            <h4 className="text-lg font-bold text-gray-900 mb-2">No notes yet</h4>
-                            <p className="text-gray-600 mb-6">Click "Add Note" to create your first note</p>
+                            <h4 className="text-lg font-bold text-foreground mb-2">No notes yet</h4>
+                            <p className="text-muted-foreground mb-6">Click "Add Note" to create your first note</p>
                             <Button onClick={addNote} type="button" variant="outline" size="lg" className="gap-2">
                                 <Plus className="w-4 h-4" />
                                 Add Your First Note
@@ -151,10 +151,10 @@ export default function Step5Notepad({ data, setData }: StepProps) {
                                 const isPreview = previewMode[originalIndex];
 
                                 return (
-                                    <div key={note.id} className="bg-white rounded-2xl border-2 border-gray-200 shadow-md overflow-hidden">
+                                    <div key={note.id} className="bg-card rounded-2xl border-2 border shadow-md overflow-hidden">
                                         {/* Note Header */}
                                         <div
-                                            className="p-6 cursor-pointer hover:bg-gray-50 transition-colors"
+                                            className="p-6 cursor-pointer hover:bg-muted transition-colors"
                                             onClick={() => setExpandedNote(isExpanded ? null : originalIndex)}
                                         >
                                             <div className="flex items-start justify-between">
@@ -168,7 +168,7 @@ export default function Step5Notepad({ data, setData }: StepProps) {
                                                     </div>
                                                     <div className="flex-1">
                                                         <div className="flex items-center gap-3 mb-1">
-                                                            <h4 className="font-bold text-gray-900 text-lg">
+                                                            <h4 className="font-bold text-foreground text-lg">
                                                                 {note.title || `Note #${originalIndex + 1}`}
                                                             </h4>
                                                             {isComplete && (
@@ -184,7 +184,7 @@ export default function Step5Notepad({ data, setData }: StepProps) {
                                                                 </Badge>
                                                             )}
                                                         </div>
-                                                        <p className="text-sm text-gray-600 line-clamp-2">
+                                                        <p className="text-sm text-muted-foreground line-clamp-2">
                                                             {note.content || "No content added"}
                                                         </p>
                                                     </div>
@@ -197,7 +197,7 @@ export default function Step5Notepad({ data, setData }: StepProps) {
                                                         }}
                                                         variant="ghost"
                                                         size="sm"
-                                                        className={note.isPinned ? "text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50" : "text-gray-600 hover:text-gray-700 hover:bg-gray-100"}
+                                                        className={note.isPinned ? "text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50" : "text-muted-foreground hover:text-foreground hover:bg-muted"}
                                                     >
                                                         <Pin className="w-4 h-4" />
                                                     </Button>
@@ -218,20 +218,20 @@ export default function Step5Notepad({ data, setData }: StepProps) {
 
                                         {/* Expanded Content */}
                                         {isExpanded && (
-                                            <div className="border-t bg-gradient-to-br from-gray-50 to-slate-50 p-6 space-y-4">
+                                            <div className="border-t bg-gradient-to-br from-muted/30 to-muted/50 p-6 space-y-4">
                                                 <div className="space-y-2">
-                                                    <Label className="text-sm font-semibold text-gray-700">Note Title *</Label>
+                                                    <Label className="text-sm font-semibold text-foreground">Note Title *</Label>
                                                     <Input
                                                         value={note.title}
                                                         onChange={(e) => updateNote(originalIndex, "title", e.target.value)}
                                                         placeholder="My Awesome Note"
-                                                        className="h-11 text-base bg-white"
+                                                        className="h-11 text-base bg-card"
                                                     />
                                                 </div>
 
                                                 <div className="space-y-2">
                                                     <div className="flex items-center justify-between">
-                                                        <Label className="text-sm font-semibold text-gray-700">Content (Markdown Supported) *</Label>
+                                                        <Label className="text-sm font-semibold text-foreground">Content (Markdown Supported) *</Label>
                                                         <Button
                                                             type="button"
                                                             onClick={() => togglePreview(originalIndex)}
@@ -254,8 +254,8 @@ export default function Step5Notepad({ data, setData }: StepProps) {
                                                     </div>
 
                                                     {isPreview ? (
-                                                        <div className="min-h-[300px] p-4 bg-white rounded-lg border-2 border-gray-200 prose prose-sm max-w-none">
-                                                            <pre className="whitespace-pre-wrap text-sm text-gray-700 font-sans">
+                                                        <div className="min-h-[300px] p-4 bg-card rounded-lg border-2 border prose prose-sm max-w-none">
+                                                            <pre className="whitespace-pre-wrap text-sm text-foreground font-sans">
                                                                 {note.content || "No content to preview"}
                                                             </pre>
                                                         </div>
@@ -265,11 +265,11 @@ export default function Step5Notepad({ data, setData }: StepProps) {
                                                             onChange={(e) => updateNote(originalIndex, "content", e.target.value)}
                                                             placeholder="# Heading&#10;&#10;Write your note content here...&#10;&#10;Supports **Markdown** formatting!"
                                                             rows={12}
-                                                            className="resize-none text-base bg-white font-mono"
+                                                            className="resize-none text-base bg-card font-mono"
                                                         />
                                                     )}
                                                     <div className="flex justify-between items-center">
-                                                        <p className="text-xs text-gray-500">{note.content.length} characters</p>
+                                                        <p className="text-xs text-muted-foreground">{note.content.length} characters</p>
                                                         <p className="text-xs text-gray-400">Markdown: # heading, **bold**, *italic*, - list</p>
                                                     </div>
                                                 </div>
@@ -285,14 +285,14 @@ export default function Step5Notepad({ data, setData }: StepProps) {
                 {/* Right Column - Stats & Info */}
                 <div className="space-y-6">
                     {/* Stats Card */}
-                    <div className="bg-white rounded-2xl p-6 border-2 border-gray-200 shadow-md">
+                    <div className="bg-card rounded-2xl p-6 border-2 border shadow-md">
                         <div className="flex items-center gap-2 mb-5">
                             <Sparkles className="w-5 h-5 text-blue-600" />
-                            <h4 className="font-bold text-gray-900">Statistics</h4>
+                            <h4 className="font-bold text-foreground">Statistics</h4>
                         </div>
                         <div className="space-y-4">
-                            <div className="flex items-center justify-between p-4 bg-blue-50 rounded-xl border border-blue-200">
-                                <span className="text-sm font-medium text-blue-900">Total Notes</span>
+                            <div className="flex items-center justify-between p-4 bg-primary/10 rounded-xl border border-primary/30">
+                                <span className="text-sm font-medium text-primary">Total Notes</span>
                                 <span className="text-2xl font-bold text-blue-600">{data.notepad.defaultNotes.length}</span>
                             </div>
                             <div className="flex items-center justify-between p-4 bg-yellow-50 rounded-xl border border-yellow-200">
@@ -312,30 +312,30 @@ export default function Step5Notepad({ data, setData }: StepProps) {
 
                     {/* Markdown Guide */}
                     <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl p-6 border-2 border-purple-200">
-                        <h4 className="font-bold text-gray-900 mb-3">📝 Markdown Guide</h4>
-                        <div className="space-y-2 text-sm text-gray-700 font-mono">
+                        <h4 className="font-bold text-foreground mb-3">📝 Markdown Guide</h4>
+                        <div className="space-y-2 text-sm text-foreground font-mono">
                             <div className="flex items-center gap-2">
-                                <code className="bg-white px-2 py-1 rounded"># Heading</code>
+                                <code className="bg-card px-2 py-1 rounded"># Heading</code>
                             </div>
                             <div className="flex items-center gap-2">
-                                <code className="bg-white px-2 py-1 rounded">**bold**</code>
+                                <code className="bg-card px-2 py-1 rounded">**bold**</code>
                             </div>
                             <div className="flex items-center gap-2">
-                                <code className="bg-white px-2 py-1 rounded">*italic*</code>
+                                <code className="bg-card px-2 py-1 rounded">*italic*</code>
                             </div>
                             <div className="flex items-center gap-2">
-                                <code className="bg-white px-2 py-1 rounded">- list item</code>
+                                <code className="bg-card px-2 py-1 rounded">- list item</code>
                             </div>
                             <div className="flex items-center gap-2">
-                                <code className="bg-white px-2 py-1 rounded">[link](url)</code>
+                                <code className="bg-card px-2 py-1 rounded">[link](url)</code>
                             </div>
                         </div>
                     </div>
 
                     {/* Help Card */}
-                    <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-6 border-2 border-blue-200">
-                        <h4 className="font-bold text-gray-900 mb-3">💡 Quick Tips</h4>
-                        <ul className="space-y-2 text-sm text-gray-700">
+                    <div className="bg-gradient-to-br from-primary/10 to-purple-500/10 rounded-2xl p-6 border-2 border-primary/30">
+                        <h4 className="font-bold text-foreground mb-3">💡 Quick Tips</h4>
+                        <ul className="space-y-2 text-sm text-foreground">
                             <li className="flex items-start gap-2">
                                 <span className="text-blue-600 mt-0.5">•</span>
                                 <span>Pin important notes to show first</span>
@@ -359,3 +359,6 @@ export default function Step5Notepad({ data, setData }: StepProps) {
         </div>
     );
 }
+
+
+

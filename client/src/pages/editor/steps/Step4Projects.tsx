@@ -286,12 +286,12 @@ export default function Step4Projects({ data, setData }: StepProps) {
             <div className="mb-10">
                 <div className="flex items-start justify-between">
                     <div>
-                        <h2 className="text-4xl font-bold text-gray-900 mb-2">Projects</h2>
-                        <p className="text-gray-600 text-lg">Showcase your best work and achievements</p>
+                        <h2 className="text-4xl font-bold text-foreground mb-2">Projects</h2>
+                        <p className="text-muted-foreground text-lg">Showcase your best work and achievements</p>
                     </div>
-                    <div className="flex items-center gap-3 bg-gradient-to-r from-blue-50 to-purple-50 px-6 py-4 rounded-2xl border border-blue-200">
+                    <div className="flex items-center gap-3 bg-gradient-to-r from-primary/10 to-purple-500/10 px-6 py-4 rounded-2xl border border-primary/30">
                         <div className="text-right">
-                            <div className="text-xs text-gray-600 uppercase tracking-wide font-medium">Completion</div>
+                            <div className="text-xs text-muted-foreground uppercase tracking-wide font-medium">Completion</div>
                             <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                                 {completionPercentage()}%
                             </div>
@@ -302,13 +302,13 @@ export default function Step4Projects({ data, setData }: StepProps) {
             </div>
 
             {/* Info Notice */}
-            <div className="mb-8 p-6 bg-gradient-to-r from-blue-50 via-purple-50 to-blue-50 border-2 border-blue-200 rounded-2xl flex items-start gap-4 shadow-sm">
-                <div className="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center flex-shrink-0">
+            <div className="mb-8 p-6 bg-gradient-to-r from-primary/10 via-purple-500/10 to-primary/10 border-2 border-primary/30 rounded-2xl flex items-start gap-4 shadow-sm">
+                <div className="w-10 h-10 rounded-xl bg-primary/100 flex items-center justify-center flex-shrink-0">
                     <Folder className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                    <p className="text-base font-bold text-blue-900">Optional Section - Showcase Your Work</p>
-                    <p className="text-sm text-blue-700 mt-1">
+                    <p className="text-base font-bold text-primary">Optional Section - Showcase Your Work</p>
+                    <p className="text-sm text-primary mt-1">
                         Add unlimited images per project. Upload screenshots, mockups, and demos to showcase your work.
                     </p>
                 </div>
@@ -319,15 +319,15 @@ export default function Step4Projects({ data, setData }: StepProps) {
                 {/* Left Column - Projects */}
                 <div className="space-y-6">
                     {/* Add Project Button */}
-                    <div className="bg-white rounded-2xl p-6 border-2 border-gray-200 shadow-md">
+                    <div className="bg-card rounded-2xl p-6 border-2 border shadow-md">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
                                     <Folder className="w-5 h-5 text-blue-600" />
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-bold text-gray-900">Your Projects</h3>
-                                    <p className="text-sm text-gray-500">{data.projects.projects.length} project{data.projects.projects.length !== 1 ? 's' : ''} added</p>
+                                    <h3 className="text-xl font-bold text-foreground">Your Projects</h3>
+                                    <p className="text-sm text-muted-foreground">{data.projects.projects.length} project{data.projects.projects.length !== 1 ? 's' : ''} added</p>
                                 </div>
                             </div>
                             <Button onClick={addProject} type="button" size="lg" className="gap-2 px-6">
@@ -339,12 +339,12 @@ export default function Step4Projects({ data, setData }: StepProps) {
 
                     {/* Projects List */}
                     {data.projects.projects.length === 0 ? (
-                        <div className="bg-white rounded-2xl p-12 border-2 border-dashed border-gray-300 text-center">
-                            <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
+                        <div className="bg-card rounded-2xl p-12 border-2 border-dashed border text-center">
+                            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
                                 <Folder className="w-8 h-8 text-gray-400" />
                             </div>
-                            <h4 className="text-lg font-bold text-gray-900 mb-2">No projects yet</h4>
-                            <p className="text-gray-600 mb-6">Click "Add Project" to showcase your work</p>
+                            <h4 className="text-lg font-bold text-foreground mb-2">No projects yet</h4>
+                            <p className="text-muted-foreground mb-6">Click "Add Project" to showcase your work</p>
                             <Button onClick={addProject} type="button" variant="outline" size="lg" className="gap-2">
                                 <Plus className="w-4 h-4" />
                                 Add Your First Project
@@ -357,10 +357,10 @@ export default function Step4Projects({ data, setData }: StepProps) {
                                 const isComplete = !!(project.name && project.tagline && project.description);
 
                                 return (
-                                    <div key={project.id} className="bg-white rounded-2xl border-2 border-gray-200 shadow-md overflow-hidden">
+                                    <div key={project.id} className="bg-card rounded-2xl border-2 border shadow-md overflow-hidden">
                                         {/* Project Header */}
                                         <div
-                                            className="p-6 cursor-pointer hover:bg-gray-50 transition-colors"
+                                            className="p-6 cursor-pointer hover:bg-muted transition-colors"
                                             onClick={() => setExpandedProject(isExpanded ? null : index)}
                                         >
                                             <div className="flex items-start justify-between">
@@ -370,7 +370,7 @@ export default function Step4Projects({ data, setData }: StepProps) {
                                                     </div>
                                                     <div className="flex-1">
                                                         <div className="flex items-center gap-3 mb-1">
-                                                            <h4 className="font-bold text-gray-900 text-lg">
+                                                            <h4 className="font-bold text-foreground text-lg">
                                                                 {project.name || `Project #${index + 1}`}
                                                             </h4>
                                                             {isComplete && (
@@ -382,12 +382,12 @@ export default function Step4Projects({ data, setData }: StepProps) {
                                                             <Badge variant="outline">{project.status}</Badge>
                                                             <Badge variant="outline">{project.platform}</Badge>
                                                         </div>
-                                                        <p className="text-sm text-gray-600">
+                                                        <p className="text-sm text-muted-foreground">
                                                             {project.tagline || "No tagline added"}
                                                         </p>
                                                         <div className="flex items-center gap-2 mt-2">
                                                             <ImageIcon className="w-4 h-4 text-gray-400" />
-                                                            <span className="text-xs text-gray-500">
+                                                            <span className="text-xs text-muted-foreground">
                                                                 {project.images.length}/6 images
                                                             </span>
                                                         </div>
@@ -409,47 +409,47 @@ export default function Step4Projects({ data, setData }: StepProps) {
 
                                         {/* Expanded Content */}
                                         {isExpanded && (
-                                            <div className="border-t bg-gradient-to-br from-gray-50 to-slate-50 p-6 space-y-6">
+                                            <div className="border-t bg-gradient-to-br from-muted/30 to-muted/50 p-6 space-y-6">
                                                 {/* Basic Info */}
                                                 <div className="grid grid-cols-2 gap-4">
                                                     <div className="space-y-2">
-                                                        <Label className="text-sm font-semibold text-gray-700">Project Name *</Label>
+                                                        <Label className="text-sm font-semibold text-foreground">Project Name *</Label>
                                                         <Input
                                                             value={project.name}
                                                             onChange={(e) => updateProject(index, "name", e.target.value)}
                                                             placeholder="My Awesome Project"
-                                                            className="h-11 text-base bg-white"
+                                                            className="h-11 text-base bg-card"
                                                         />
                                                     </div>
                                                     <div className="space-y-2">
-                                                        <Label className="text-sm font-semibold text-gray-700">Tagline *</Label>
+                                                        <Label className="text-sm font-semibold text-foreground">Tagline *</Label>
                                                         <Input
                                                             value={project.tagline}
                                                             onChange={(e) => updateProject(index, "tagline", e.target.value)}
                                                             placeholder="One-line description"
-                                                            className="h-11 text-base bg-white"
+                                                            className="h-11 text-base bg-card"
                                                         />
                                                     </div>
                                                 </div>
 
                                                 <div className="space-y-2">
-                                                    <Label className="text-sm font-semibold text-gray-700">Description *</Label>
+                                                    <Label className="text-sm font-semibold text-foreground">Description *</Label>
                                                     <Textarea
                                                         value={project.description}
                                                         onChange={(e) => updateProject(index, "description", e.target.value)}
                                                         placeholder="Brief project description..."
                                                         rows={3}
-                                                        className="resize-none text-base bg-white"
+                                                        className="resize-none text-base bg-card"
                                                     />
                                                 </div>
 
                                                 <div className="space-y-2">
-                                                    <Label className="text-sm font-semibold text-gray-700">Status</Label>
+                                                    <Label className="text-sm font-semibold text-foreground">Status</Label>
                                                     <Select
                                                         value={project.status}
                                                         onValueChange={(value) => updateProject(index, "status", value)}
                                                     >
-                                                        <SelectTrigger className="h-11 bg-white">
+                                                        <SelectTrigger className="h-11 bg-card">
                                                             <SelectValue />
                                                         </SelectTrigger>
                                                         <SelectContent>
@@ -462,7 +462,7 @@ export default function Step4Projects({ data, setData }: StepProps) {
 
                                                 {/* Multi-Platform Selection */}
                                                 <div className="space-y-3">
-                                                    <Label className="text-sm font-semibold text-gray-700">Platform (Select Multiple)</Label>
+                                                    <Label className="text-sm font-semibold text-foreground">Platform (Select Multiple)</Label>
                                                     <div className="grid grid-cols-3 gap-2">
                                                         {PLATFORM_OPTIONS.map((platform) => {
                                                             const isSelected = isPlatformSelected(index, platform);
@@ -472,8 +472,8 @@ export default function Step4Projects({ data, setData }: StepProps) {
                                                                     type="button"
                                                                     onClick={() => togglePlatform(index, platform)}
                                                                     className={`p-3 rounded-lg border-2 text-sm font-semibold transition-all ${isSelected
-                                                                        ? "border-blue-500 bg-blue-50 text-blue-700"
-                                                                        : "border-gray-200 bg-white text-gray-700 hover:border-blue-300"
+                                                                        ? "border-blue-500 bg-primary/10 text-primary"
+                                                                        : "border bg-card text-foreground hover:border-blue-300"
                                                                         }`}
                                                                 >
                                                                     {isSelected && <Check className="w-4 h-4 inline mr-1" />}
@@ -483,7 +483,7 @@ export default function Step4Projects({ data, setData }: StepProps) {
                                                         })}
                                                     </div>
                                                     {project.platform && (
-                                                        <p className="text-xs text-gray-500">
+                                                        <p className="text-xs text-muted-foreground">
                                                             Selected: {project.platform}
                                                         </p>
                                                     )}
@@ -492,7 +492,7 @@ export default function Step4Projects({ data, setData }: StepProps) {
                                                 {/* Tech Stack with Chips */}
                                                 <div className="space-y-4">
                                                     <div className="flex items-center justify-between">
-                                                        <Label className="text-sm font-semibold text-gray-700">Tech Stack</Label>
+                                                        <Label className="text-sm font-semibold text-foreground">Tech Stack</Label>
                                                         <Badge variant="secondary" className="text-sm">
                                                             {project.techStack.length} selected
                                                         </Badge>
@@ -507,7 +507,7 @@ export default function Step4Projects({ data, setData }: StepProps) {
                                                                 onClick={() => setSelectedCategory({ ...selectedCategory, [index]: category })}
                                                                 className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${(selectedCategory[index] || "Frontend") === category
                                                                     ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/30"
-                                                                    : "bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300"
+                                                                    : "bg-muted text-foreground hover:bg-muted border border"
                                                                     }`}
                                                             >
                                                                 {category}
@@ -516,7 +516,7 @@ export default function Step4Projects({ data, setData }: StepProps) {
                                                     </div>
 
                                                     {/* Tech Chips */}
-                                                    <div className="border-2 border-gray-200 rounded-2xl p-5 bg-gray-50 min-h-[160px]">
+                                                    <div className="border-2 border rounded-2xl p-5 bg-muted min-h-[160px]">
                                                         <div className="flex flex-wrap gap-2">
                                                             {TECH_STACK_CATEGORIES[
                                                                 (selectedCategory[index] || "Frontend") as keyof typeof TECH_STACK_CATEGORIES
@@ -529,7 +529,7 @@ export default function Step4Projects({ data, setData }: StepProps) {
                                                                         onClick={() => toggleTechStack(index, tech)}
                                                                         className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${isSelected
                                                                             ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg shadow-green-500/30"
-                                                                            : "bg-white text-gray-700 border-2 border-gray-300 hover:border-purple-500 hover:shadow-md"
+                                                                            : "bg-card text-foreground border-2 border hover:border-purple-500 hover:shadow-md"
                                                                             }`}
                                                                     >
                                                                         {isSelected && <Check className="w-4 h-4" />}
@@ -552,7 +552,7 @@ export default function Step4Projects({ data, setData }: StepProps) {
                                                                 }
                                                             }}
                                                             placeholder="Add custom technology (e.g., Photoshop, Blender)"
-                                                            className="h-11 text-base bg-white flex-1"
+                                                            className="h-11 text-base bg-card flex-1"
                                                         />
                                                         <Button
                                                             type="button"
@@ -574,7 +574,7 @@ export default function Step4Projects({ data, setData }: StepProps) {
                                                             </Label>
                                                             <div className="flex flex-wrap gap-2">
                                                                 {project.techStack.map((tech) => (
-                                                                    <Badge key={tech} className="gap-2 px-4 py-2 bg-white text-gray-700 border-2 border-gray-300 text-sm">
+                                                                    <Badge key={tech} className="gap-2 px-4 py-2 bg-card text-foreground border-2 border text-sm">
                                                                         {tech}
                                                                         <button
                                                                             type="button"
@@ -593,7 +593,7 @@ export default function Step4Projects({ data, setData }: StepProps) {
                                                 {/* Links */}
                                                 <div className="grid grid-cols-2 gap-4">
                                                     <div className="space-y-2">
-                                                        <Label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                        <Label className="text-sm font-semibold text-foreground flex items-center gap-2">
                                                             <Github className="w-4 h-4" />
                                                             GitHub URL (Optional)
                                                         </Label>
@@ -601,11 +601,11 @@ export default function Step4Projects({ data, setData }: StepProps) {
                                                             value={project.github || ""}
                                                             onChange={(e) => updateProject(index, "github", e.target.value)}
                                                             placeholder="https://github.com/..."
-                                                            className="h-11 text-base bg-white"
+                                                            className="h-11 text-base bg-card"
                                                         />
                                                     </div>
                                                     <div className="space-y-2">
-                                                        <Label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                        <Label className="text-sm font-semibold text-foreground flex items-center gap-2">
                                                             <Globe className="w-4 h-4" />
                                                             Live Demo (Optional)
                                                         </Label>
@@ -613,7 +613,7 @@ export default function Step4Projects({ data, setData }: StepProps) {
                                                             value={project.liveDemo || ""}
                                                             onChange={(e) => updateProject(index, "liveDemo", e.target.value)}
                                                             placeholder="https://..."
-                                                            className="h-11 text-base bg-white"
+                                                            className="h-11 text-base bg-card"
                                                         />
                                                     </div>
                                                 </div>
@@ -621,18 +621,18 @@ export default function Step4Projects({ data, setData }: StepProps) {
                                                 {/* Project Images (Unlimited) */}
                                                 <div className="space-y-3">
                                                     <div className="flex items-center justify-between">
-                                                        <Label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                        <Label className="text-sm font-semibold text-foreground flex items-center gap-2">
                                                             <ImageIcon className="w-4 h-4" />
                                                             Project Images (Unlimited)
                                                         </Label>
-                                                        <span className="text-xs text-gray-500">{project.images.length} image{project.images.length !== 1 ? 's' : ''}</span>
+                                                        <span className="text-xs text-muted-foreground">{project.images.length} image{project.images.length !== 1 ? 's' : ''}</span>
                                                     </div>
 
                                                     <label className="cursor-pointer block">
-                                                        <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 bg-white hover:border-blue-400 hover:bg-blue-50 transition-all text-center">
+                                                        <div className="border-2 border-dashed border rounded-xl p-6 bg-card hover:border-blue-400 hover:bg-primary/10 transition-all text-center">
                                                             <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                                                            <p className="text-sm font-medium text-gray-700">Click to upload images</p>
-                                                            <p className="text-xs text-gray-500 mt-1">PNG, JPG up to 10MB each • Upload as many as you want</p>
+                                                            <p className="text-sm font-medium text-foreground">Click to upload images</p>
+                                                            <p className="text-xs text-muted-foreground mt-1">PNG, JPG up to 10MB each • Upload as many as you want</p>
                                                         </div>
                                                         <input
                                                             type="file"
@@ -645,8 +645,8 @@ export default function Step4Projects({ data, setData }: StepProps) {
 
                                                     {project.images.length > 0 && (
                                                         <div className="space-y-3">
-                                                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                                                                <p className="text-xs text-blue-700 font-medium">
+                                                            <div className="bg-primary/10 border border-primary/30 rounded-lg p-3">
+                                                                <p className="text-xs text-primary font-medium">
                                                                     ✓ {project.images.length} image{project.images.length !== 1 ? 's' : ''} uploaded for this project
                                                                 </p>
                                                             </div>
@@ -663,7 +663,7 @@ export default function Step4Projects({ data, setData }: StepProps) {
                                                                             <img
                                                                                 src={displaySrc}
                                                                                 alt={`Project ${imgIndex + 1}`}
-                                                                                className="w-full h-24 object-cover rounded-lg border-2 border-gray-200"
+                                                                                className="w-full h-24 object-cover rounded-lg border-2 border"
                                                                             />
                                                                             <button
                                                                                 type="button"
@@ -694,14 +694,14 @@ export default function Step4Projects({ data, setData }: StepProps) {
                 {/* Right Column - Stats & Info */}
                 <div className="space-y-6">
                     {/* Stats Card */}
-                    <div className="bg-white rounded-2xl p-6 border-2 border-gray-200 shadow-md">
+                    <div className="bg-card rounded-2xl p-6 border-2 border shadow-md">
                         <div className="flex items-center gap-2 mb-5">
                             <Sparkles className="w-5 h-5 text-blue-600" />
-                            <h4 className="font-bold text-gray-900">Statistics</h4>
+                            <h4 className="font-bold text-foreground">Statistics</h4>
                         </div>
                         <div className="space-y-4">
-                            <div className="flex items-center justify-between p-4 bg-blue-50 rounded-xl border border-blue-200">
-                                <span className="text-sm font-medium text-blue-900">Total Projects</span>
+                            <div className="flex items-center justify-between p-4 bg-primary/10 rounded-xl border border-primary/30">
+                                <span className="text-sm font-medium text-primary">Total Projects</span>
                                 <span className="text-2xl font-bold text-blue-600">{data.projects.projects.length}</span>
                             </div>
                             <div className="flex items-center justify-between p-4 bg-green-50 rounded-xl border border-green-200">
@@ -720,9 +720,9 @@ export default function Step4Projects({ data, setData }: StepProps) {
                     </div>
 
                     {/* Help Card */}
-                    <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-6 border-2 border-blue-200">
-                        <h4 className="font-bold text-gray-900 mb-3">💡 Quick Tips</h4>
-                        <ul className="space-y-2 text-sm text-gray-700">
+                    <div className="bg-gradient-to-br from-primary/10 to-purple-500/10 rounded-2xl p-6 border-2 border-primary/30">
+                        <h4 className="font-bold text-foreground mb-3">💡 Quick Tips</h4>
+                        <ul className="space-y-2 text-sm text-foreground">
                             <li className="flex items-start gap-2">
                                 <span className="text-blue-600 mt-0.5">•</span>
                                 <span>Add unlimited images per project</span>
@@ -746,3 +746,6 @@ export default function Step4Projects({ data, setData }: StepProps) {
         </div>
     );
 }
+
+
+
