@@ -3,13 +3,24 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus, X, Upload } from "lucide-react";
+import { Plus, X, Upload, Check } from "lucide-react";
 import { useState } from "react";
 import type { StepProps } from "../types";
+
+const SKILL_CATEGORIES = {
+    "Frontend": ["React", "Vue", "Angular", "Next.js", "TypeScript", "JavaScript", "HTML", "CSS", "TailwindCSS", "Sass", "Redux", "Zustand"],
+    "Backend": ["Node.js", "Python", "Java", "PHP", "Ruby", "Go", "Express", "Django", "Spring Boot", "Laravel", "FastAPI"],
+    "Mobile": ["React Native", "Flutter", "Swift", "Kotlin", "Android", "iOS", "Expo"],
+    "Database": ["MongoDB", "PostgreSQL", "MySQL", "Redis", "Firebase", "Supabase", "SQLite", "DynamoDB"],
+    "DevOps": ["Docker", "Kubernetes", "AWS", "Azure", "GCP", "CI/CD", "Jenkins", "GitHub Actions", "Vercel", "Netlify"],
+    "Tools": ["Git", "VS Code", "Figma", "Postman", "Jira", "Webpack", "Vite", "npm", "yarn"],
+    "Other": ["GraphQL", "REST API", "WebSocket", "Testing", "Jest", "Agile", "Scrum", "Three.js", "WebGL"]
+};
 
 export default function Step1Personal({ data, setData }: StepProps) {
     const [newSkill, setNewSkill] = useState("");
     const [avatarPreview, setAvatarPreview] = useState(data.about.personal.avatar);
+    const [selectedCategory, setSelectedCategory] = useState<string>("Frontend");
 
     const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -44,8 +55,23 @@ export default function Step1Personal({ data, setData }: StepProps) {
         }
     };
 
-    const addSkill = () => {
-        if (newSkill.trim()) {
+    const toggleSkill = (skill: string) => {
+        setData((prev) => {
+            const isSelected = prev.about.skills.includes(skill);
+            return {
+                ...prev,
+                about: {
+                    ...prev.about,
+                    skills: isSelected
+                        ? prev.about.skills.filter((s) => s !== skill)
+                        : [...prev.about.skills, skill],
+                },
+            };
+        });
+    };
+
+    const addCustomSkill = () => {
+        if (newSkill.trim() && !data.about.skills.includes(newSkill.trim())) {
             setData((prev) => ({
                 ...prev,
                 about: {
@@ -57,12 +83,12 @@ export default function Step1Personal({ data, setData }: StepProps) {
         }
     };
 
-    const removeSkill = (index: number) => {
+    const removeSkill = (skill: string) => {
         setData((prev) => ({
             ...prev,
             about: {
                 ...prev.about,
-                skills: prev.about.skills.filter((_, i) => i !== index),
+                skills: prev.about.skills.filter((s) => s !== skill),
             },
         }));
     };
@@ -109,16 +135,16 @@ export default function Step1Personal({ data, setData }: StepProps) {
     };
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-6 sm:space-y-8">
             <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Personal Information</h2>
-                <p className="text-gray-600">Tell us about yourself</p>
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Personal Information</h2>
+                <p className="text-sm sm:text-base text-gray-600">Tell us about yourself</p>
             </div>
 
             {/* Avatar Upload */}
             <div className="space-y-2">
                 <Label>Profile Picture</Label>
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                     {avatarPreview && (
                         <img
                             src={avatarPreview}
@@ -127,7 +153,7 @@ export default function Step1Personal({ data, setData }: StepProps) {
                         />
                     )}
                     <label className="cursor-pointer">
-                        <div className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                        <div className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
                             <Upload className="w-4 h-4" />
                             Upload Image
                         </div>
@@ -142,7 +168,7 @@ export default function Step1Personal({ data, setData }: StepProps) {
             </div>
 
             {/* Basic Info */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                     <Label htmlFor="name">Full Name *</Label>
                     <Input
@@ -215,48 +241,105 @@ export default function Step1Personal({ data, setData }: StepProps) {
                     rows={4}
                     className="resize-none"
                 />
-                <p className="text-sm text-gray-500">{data.about.personal.bio.length} characters</p>
+                <p className="text-xs sm:text-sm text-gray-500">{data.about.personal.bio.length} characters</p>
             </div>
 
-            {/* Skills */}
+            {/* Skills - Category Based */}
             <div className="space-y-4">
-                <Label>Skills</Label>
-                <div className="flex gap-2">
-                    <Input
-                        value={newSkill}
-                        onChange={(e) => setNewSkill(e.target.value)}
-                        onKeyPress={(e) => e.key === "Enter" && addSkill()}
-                        placeholder="Add a skill (e.g., React, TypeScript)"
-                    />
-                    <Button onClick={addSkill} type="button">
-                        <Plus className="w-4 h-4" />
-                    </Button>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <Label>Skills</Label>
+                    <p className="text-xs sm:text-sm text-gray-500">{data.about.skills.length} selected</p>
                 </div>
+
+                {/* Category Tabs */}
                 <div className="flex flex-wrap gap-2">
-                    {data.about.skills.map((skill, index) => (
-                        <Badge key={index} variant="secondary" className="gap-1">
-                            {skill}
-                            <button onClick={() => removeSkill(index)} className="ml-1">
-                                <X className="w-3 h-3" />
-                            </button>
-                        </Badge>
+                    {Object.keys(SKILL_CATEGORIES).map((category) => (
+                        <button
+                            key={category}
+                            onClick={() => setSelectedCategory(category)}
+                            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${selectedCategory === category
+                                    ? "bg-blue-600 text-white"
+                                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                }`}
+                        >
+                            {category}
+                        </button>
                     ))}
                 </div>
+
+                {/* Skill Chips for Selected Category */}
+                <div className="border rounded-lg p-4 bg-gray-50 min-h-[120px]">
+                    <div className="flex flex-wrap gap-2">
+                        {SKILL_CATEGORIES[selectedCategory as keyof typeof SKILL_CATEGORIES].map((skill) => {
+                            const isSelected = data.about.skills.includes(skill);
+                            return (
+                                <button
+                                    key={skill}
+                                    onClick={() => toggleSkill(skill)}
+                                    className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all flex items-center gap-1.5 ${isSelected
+                                            ? "bg-green-600 text-white"
+                                            : "bg-white text-gray-700 border border-gray-300 hover:border-blue-500"
+                                        }`}
+                                >
+                                    {isSelected && <Check className="w-3 h-3" />}
+                                    {skill}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+
+                {/* Custom Skill Input */}
+                <div className="space-y-2">
+                    <Label className="text-sm">Add Custom Skill</Label>
+                    <div className="flex gap-2">
+                        <Input
+                            value={newSkill}
+                            onChange={(e) => setNewSkill(e.target.value)}
+                            onKeyPress={(e) => e.key === "Enter" && addCustomSkill()}
+                            placeholder="e.g., Photoshop, Blender..."
+                            className="flex-1"
+                        />
+                        <Button onClick={addCustomSkill} type="button" size="sm">
+                            <Plus className="w-4 h-4" />
+                        </Button>
+                    </div>
+                </div>
+
+                {/* Selected Skills Display */}
+                {data.about.skills.length > 0 && (
+                    <div className="space-y-2">
+                        <Label className="text-sm">Your Selected Skills</Label>
+                        <div className="flex flex-wrap gap-2">
+                            {data.about.skills.map((skill) => (
+                                <Badge key={skill} variant="secondary" className="gap-1.5 px-3 py-1">
+                                    {skill}
+                                    <button onClick={() => removeSkill(skill)} className="ml-1 hover:text-red-600">
+                                        <X className="w-3 h-3" />
+                                    </button>
+                                </Badge>
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
 
-            {/* Experience */}
+            {/* Experience - Optional */}
             <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                    <Label>Work Experience</Label>
-                    <Button onClick={addExperience} type="button" variant="outline" size="sm">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                        <Label>Work Experience (Optional)</Label>
+                        <p className="text-xs text-gray-500 mt-1">Add your professional experience</p>
+                    </div>
+                    <Button onClick={addExperience} type="button" variant="outline" size="sm" className="w-full sm:w-auto">
                         <Plus className="w-4 h-4 mr-2" />
                         Add Experience
                     </Button>
                 </div>
                 {data.about.experience.map((exp, index) => (
-                    <div key={exp.id} className="border rounded-lg p-4 space-y-4">
+                    <div key={exp.id} className="border rounded-lg p-4 space-y-4 bg-gray-50">
                         <div className="flex justify-between items-start">
-                            <h4 className="font-semibold">Experience {index + 1}</h4>
+                            <h4 className="font-semibold text-sm sm:text-base">Experience {index + 1}</h4>
                             <Button
                                 onClick={() => removeExperience(index)}
                                 variant="ghost"
@@ -265,7 +348,7 @@ export default function Step1Personal({ data, setData }: StepProps) {
                                 <X className="w-4 h-4" />
                             </Button>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <Input
                                 value={exp.title}
                                 onChange={(e) => updateExperience(index, "title", e.target.value)}
@@ -287,6 +370,7 @@ export default function Step1Personal({ data, setData }: StepProps) {
                             onChange={(e) => updateExperience(index, "description", e.target.value)}
                             placeholder="Job description..."
                             rows={3}
+                            className="resize-none"
                         />
                     </div>
                 ))}
