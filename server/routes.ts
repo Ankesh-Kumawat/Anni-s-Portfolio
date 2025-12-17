@@ -1,6 +1,20 @@
 import type { Express } from "express";
-import { createServer, type Server } from "http";
-import { storage } from "./storage";
+import { type Server } from "http";
+import nodemailer from "nodemailer";
+
+// Email configuration
+// You need to set these environment variables:
+// EMAIL_USER - your email address (e.g., your.email@gmail.com)
+// EMAIL_PASS - your app password (for Gmail, generate from Google Account settings)
+// EMAIL_TO - email where you want to receive messages (can be same as EMAIL_USER)
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail', // or 'outlook', 'yahoo', etc.
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
 export async function registerRoutes(
   httpServer: Server,
@@ -28,22 +42,49 @@ export async function registerRoutes(
         });
       }
 
-      // Here you can:
-      // 1. Save to database
-      // 2. Send email using nodemailer
-      // 3. Send to a third-party service
-      // For now, we'll just log it and return success
+      // Check if email is configured
+      if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+        console.log("Contact form submission (email not configured):", {
+          name,
+          email,
+          subject,
+          message,
+          timestamp: new Date().toISOString()
+        });
 
-      console.log("Contact form submission:", {
+        return res.json({
+          success: true,
+          message: "Message received! (Email service not configured yet)"
+        });
+      }
+
+      // Send email
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: process.env.EMAIL_TO || process.env.EMAIL_USER,
+        subject: `Portfolio Contact: ${subject}`,
+        html: `
+          <h2>New Contact Form Submission</h2>
+          <p><strong>From:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Subject:</strong> ${subject}</p>
+          <hr>
+          <h3>Message:</h3>
+          <p>${message.replace(/\n/g, '<br>')}</p>
+          <hr>
+          <p><small>Sent from your portfolio contact form at ${new Date().toLocaleString()}</small></p>
+        `,
+        replyTo: email,
+      };
+
+      await transporter.sendMail(mailOptions);
+
+      console.log("Contact form email sent successfully:", {
         name,
         email,
         subject,
-        message,
         timestamp: new Date().toISOString()
       });
-
-      // TODO: Implement email sending with nodemailer
-      // or save to database using storage
 
       res.json({
         success: true,
