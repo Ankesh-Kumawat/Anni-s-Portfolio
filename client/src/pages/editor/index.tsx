@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { ChevronLeft, ChevronRight, Download, Check, Monitor } from "lucide-react";
+import { ChevronLeft, ChevronRight, Check, Monitor, Save, LogOut, Loader2, Settings } from "lucide-react";
 import Step1Personal from "./steps/Step1Personal";
 import Step2Contact from "./steps/Step2Contact";
 import Step3Social from "./steps/Step3Social";
@@ -9,8 +9,13 @@ import Step4Projects from "./steps/Step4Projects";
 import Step5Notepad from "./steps/Step5Notepad";
 import Step6Advanced from "./steps/Step6Advanced";
 import Step7Review from "./steps/Step7Review";
-import { generateZip } from "./lib/generator";
 import type { EditorData } from "./types";
+import { saveAllData, getAllData } from "@/lib/firebase-service";
+import { useAuth } from "@/lib/auth-context";
+import { useToast } from "@/hooks/use-toast";
+import { useLocation } from "wouter";
+import { calculateOverallCompletion } from "./lib/completionCalculator";
+import { TechStackManager } from "./steps/TechStackManager";
 
 // Mobile Detection Component
 function MobileBlocker() {
@@ -50,6 +55,12 @@ const STEPS = [
 export default function Editor() {
     const [isMobile, setIsMobile] = useState(false);
     const [currentStep, setCurrentStep] = useState(1);
+    const [saving, setSaving] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [showTechStackManager, setShowTechStackManager] = useState(false);
+    const { logout } = useAuth();
+    const { toast } = useToast();
+    const [, setLocation] = useLocation();
     const [data, setData] = useState<EditorData>({
         about: {
             personal: {
@@ -114,6 +125,44 @@ export default function Editor() {
             music: [],
         },
     });
+
+    // Load data from Firebase on mount
+    useEffect(() => {
+        async function loadData() {
+            try {
+                setLoading(true);
+                const firebaseData = await getAllData();
+                if (firebaseData && firebaseData.about) {
+                    setData(prev => ({
+                        ...prev,
+                        about: firebaseData.about as typeof prev.about || prev.about,
+                        projects: firebaseData.projects as typeof prev.projects || prev.projects,
+                        contact: firebaseData.contact as typeof prev.contact || prev.contact,
+                        social: firebaseData.social as typeof prev.social || prev.social,
+                        gallery: firebaseData.gallery as typeof prev.gallery || prev.gallery,
+                        notepad: firebaseData.notepad as typeof prev.notepad || prev.notepad,
+                        terminal: firebaseData.terminal as typeof prev.terminal || prev.terminal,
+                        database: firebaseData.database as typeof prev.database || prev.database,
+                        settings: firebaseData.settings as typeof prev.settings || prev.settings,
+                    }));
+                    toast({
+                        title: "Data Loaded",
+                        description: "Your portfolio data has been loaded from Firebase",
+                    });
+                }
+            } catch (error) {
+                console.error("Error loading data:", error);
+                toast({
+                    title: "Load Failed",
+                    description: "Could not load data from Firebase. Starting with empty data.",
+                    variant: "destructive",
+                });
+            } finally {
+                setLoading(false);
+            }
+        }
+        loadData();
+    }, [toast]);
 
     // Check screen size
     useEffect(() => {
@@ -195,8 +244,39 @@ export default function Editor() {
         });
     }, [data.about.personal, data.contact.email]);
 
-    const progress = (currentStep / STEPS.length) * 100;
+    const progress = calculateOverallCompletion(data);
     const CurrentStepComponent = STEPS[currentStep - 1].component;
+
+    // Save to Firebase
+    const handleSave = async () => {
+        try {
+            setSaving(true);
+            await saveAllData(data);
+            toast({
+                title: "Saved Successfully!",
+                description: "Your portfolio data has been saved to Firebase",
+            });
+        } catch (error) {
+            console.error("Error saving data:", error);
+            toast({
+                title: "Save Failed",
+                description: "Could not save data to Firebase. Please try again.",
+                variant: "destructive",
+            });
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    // Logout
+    const handleLogout = async () => {
+        try {
+            await logout();
+            setLocation("/admin-login");
+        } catch (error) {
+            console.error("Error logging out:", error);
+        }
+    };
 
     // Validation for each step
     const isStepValid = (step: number): boolean => {
@@ -241,97 +321,146 @@ export default function Editor() {
     };
 
     const handleDownload = async () => {
-        await generateZip(data);
+        // Download functionality removed - all data is saved to Firebase
     };
 
-    // Show mobile blocker on small screens
-    if (isMobile) {
-        return <MobileBlocker />;
+    // Mobile blocker temporarily disabled for testing
+    // if (isMobile) {
+    //     return <MobileBlocker />;
+    // }
+
+    // Show loading state
+    if (loading) {
+        return (
+            <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-background via-muted/30 to-background">
+                <div className="text-center">
+                    <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-3" />
+                    <p className="text-sm font-medium">Loading...</p>
+                </div>
+            </div>
+        );
     }
 
     return (
         <div className="fixed inset-0 flex flex-col bg-gradient-to-br from-background via-muted/30 to-background">
-            {/* Header */}
-            <div className="flex-shrink-0 border-b bg-background/90 backdrop-blur-md shadow-sm">
-                <div className="max-w-[1800px] mx-auto px-8 py-5">
-                    <div className="flex items-center gap-6">
-                        <div>
-                            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-                                Portfolio Editor
-                            </h1>
-                            <p className="text-sm text-muted-foreground mt-1 font-medium">
-                                Step {currentStep} of {STEPS.length}: {STEPS[currentStep - 1].title}
-                            </p>
+            {/* Compact Header */}
+            <div className="flex-shrink-0 border-b bg-background/95 backdrop-blur-md shadow-sm">
+                <div className="max-w-full mx-auto px-6 py-3">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <div>
+                                <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                                    Portfolio Editor
+                                </h1>
+                                <p className="text-xs text-muted-foreground font-medium">
+                                    {STEPS[currentStep - 1].title}
+                                </p>
+                            </div>
+                            <div className="h-8 w-px bg-border" />
+                            <div className="flex items-center gap-2">
+                                <div className="text-xs text-muted-foreground">Step {currentStep}/{STEPS.length}</div>
+                                <div className="w-24">
+                                    <Progress value={progress} className="h-1.5" />
+                                </div>
+                                <div className="text-xs font-bold text-primary">{Math.round(progress)}%</div>
+                            </div>
                         </div>
-                        <div className="h-12 w-px bg-border" />
-                        <div className="flex items-center gap-3">
-                            <div className="text-right">
-                                <div className="text-xs text-muted-foreground uppercase tracking-wide">Progress</div>
-                                <div className="text-lg font-bold">{Math.round(progress)}%</div>
-                            </div>
-                            <div className="w-32">
-                                <Progress value={progress} className="h-2" />
-                            </div>
+                        <div className="flex items-center gap-2">
+                            <Button
+                                onClick={handleSave}
+                                disabled={saving}
+                                size="sm"
+                                className="gap-2 h-8"
+                            >
+                                {saving ? (
+                                    <>
+                                        <Loader2 className="w-3 h-3 animate-spin" />
+                                        Saving...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Save className="w-3 h-3" />
+                                        Save
+                                    </>
+                                )}
+                            </Button>
+                            <Button
+                                onClick={() => setShowTechStackManager(true)}
+                                variant="outline"
+                                size="sm"
+                                className="gap-2 h-8"
+                            >
+                                <Settings className="w-3 h-3" />
+                                Tech Stacks
+                            </Button>
+                            <Button
+                                onClick={handleLogout}
+                                variant="outline"
+                                size="sm"
+                                className="gap-2 h-8"
+                            >
+                                <LogOut className="w-3 h-3" />
+                                Logout
+                            </Button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Main Content */}
+            {/* Compact Main Content */}
             <div className="flex-1 min-h-0 overflow-hidden">
-                <div className="h-full max-w-[1800px] mx-auto px-8 py-6">
-                    <div className="h-full grid grid-cols-[320px_1fr] gap-6">
-                        {/* Left Sidebar */}
+                <div className="h-full max-w-full mx-auto px-4 py-4">
+                    <div className="h-full grid grid-cols-[240px_1fr] gap-4">
+                        {/* Compact Left Sidebar */}
                         <div className="h-full overflow-y-auto scrollbar-hide">
-                            <div className="bg-card rounded-2xl shadow-lg border p-6 space-y-3">
-                                <div className="mb-6">
-                                    <h3 className="font-bold text-lg">Navigation</h3>
-                                    <p className="text-xs text-muted-foreground mt-1">Click to jump to any step</p>
+                            <div className="bg-card rounded-xl shadow-md border p-4 space-y-2">
+                                <div className="mb-3">
+                                    <h3 className="font-bold text-sm">Steps</h3>
+                                    <p className="text-xs text-muted-foreground">Jump to any step</p>
                                 </div>
                                 {STEPS.map((step) => (
                                     <button
                                         key={step.id}
                                         onClick={() => setCurrentStep(step.id)}
-                                        className={`w-full flex items-center gap-4 px-5 py-4 rounded-xl transition-all text-left group ${currentStep === step.id
-                                            ? "bg-primary text-primary-foreground shadow-lg"
+                                        className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-all text-left group ${currentStep === step.id
+                                            ? "bg-primary text-primary-foreground shadow-md"
                                             : currentStep > step.id
-                                                ? "bg-green-50 dark:bg-green-950 text-green-700 dark:text-green-400 hover:shadow-md border border-green-200 dark:border-green-800"
-                                                : "bg-muted hover:bg-muted/80 hover:shadow-md border"
+                                                ? "bg-green-50 dark:bg-green-950 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800"
+                                                : "bg-muted hover:bg-muted/80 border"
                                             }`}
                                     >
-                                        <div className={`flex items-center justify-center w-8 h-8 rounded-lg text-sm font-bold transition-all ${currentStep === step.id
-                                            ? "bg-primary-foreground text-primary shadow-md"
+                                        <div className={`flex items-center justify-center w-6 h-6 rounded-md text-xs font-bold ${currentStep === step.id
+                                            ? "bg-primary-foreground text-primary"
                                             : currentStep > step.id
                                                 ? "bg-green-600 text-white"
-                                                : "bg-background group-hover:bg-muted"
+                                                : "bg-background"
                                             }`}>
-                                            {currentStep > step.id ? <Check className="w-5 h-5" /> : step.id}
+                                            {currentStep > step.id ? <Check className="w-3 h-3" /> : step.id}
                                         </div>
                                         <div className="flex-1">
-                                            <div className="font-semibold text-sm leading-tight">{step.title}</div>
+                                            <div className="font-semibold text-xs leading-tight">{step.title}</div>
                                         </div>
                                     </button>
                                 ))}
                             </div>
                         </div>
 
-                        {/* Right Content */}
-                        <div className="h-full flex flex-col bg-card rounded-2xl shadow-lg border overflow-hidden">
-                            <div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide p-10">
+                        {/* Compact Right Content */}
+                        <div className="h-full flex flex-col bg-card rounded-xl shadow-md border overflow-hidden">
+                            <div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide p-6">
                                 <CurrentStepComponent
                                     data={data}
                                     setData={setData}
-                                    {...(currentStep === 7 && { onDownload: handleDownload })}
                                 />
                             </div>
 
-                            {/* Navigation */}
-                            <div className="flex-shrink-0 border-t bg-muted/30 px-10 py-6">
+                            {/* Compact Navigation */}
+                            <div className="flex-shrink-0 border-t bg-muted/30 px-6 py-3">
                                 {!isStepValid(currentStep) && currentStep < STEPS.length && (
-                                    <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-2">
-                                        <div className="w-2 h-2 rounded-full bg-amber-500" />
-                                        <p className="text-sm text-amber-800 font-medium">
-                                            Please fill all required fields to continue
+                                    <div className="mb-2 p-2 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-2">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                                        <p className="text-xs text-amber-800 font-medium">
+                                            Please fill required fields
                                         </p>
                                     </div>
                                 )}
@@ -340,32 +469,32 @@ export default function Editor() {
                                         onClick={handlePrev}
                                         disabled={currentStep === 1}
                                         variant="outline"
-                                        size="lg"
-                                        className="gap-2 px-6"
+                                        size="sm"
+                                        className="gap-1 px-4 h-8"
                                     >
-                                        <ChevronLeft className="w-4 h-4" />
+                                        <ChevronLeft className="w-3 h-3" />
                                         Previous
                                     </Button>
                                     {currentStep < STEPS.length && (
                                         <>
-                                            <div className="text-sm font-medium text-gray-500">
-                                                Step {currentStep} of {STEPS.length}
+                                            <div className="text-xs font-medium text-gray-500">
+                                                {currentStep}/{STEPS.length}
                                             </div>
                                             <Button
                                                 onClick={handleNext}
                                                 disabled={!isStepValid(currentStep)}
-                                                size="lg"
-                                                className="gap-2 px-6"
-                                                title={!isStepValid(currentStep) ? "Please fill all required fields" : ""}
+                                                size="sm"
+                                                className="gap-1 px-4 h-8"
+                                                title={!isStepValid(currentStep) ? "Fill required fields" : ""}
                                             >
                                                 Next
-                                                <ChevronRight className="w-4 h-4" />
+                                                <ChevronRight className="w-3 h-3" />
                                             </Button>
                                         </>
                                     )}
                                     {currentStep === STEPS.length && (
-                                        <div className="ml-4 text-sm font-medium text-gray-500">
-                                            Final Step - Review & Download
+                                        <div className="ml-2 text-xs font-medium text-gray-500">
+                                            Final Step
                                         </div>
                                     )}
                                 </div>
@@ -374,8 +503,25 @@ export default function Editor() {
                     </div>
                 </div>
             </div>
+
+            {/* Tech Stack Manager Modal */}
+            {showTechStackManager && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-background rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                        <div className="sticky top-0 bg-background border-b p-4 flex items-center justify-between">
+                            <h2 className="text-xl font-bold">Tech Stack Manager</h2>
+                            <Button
+                                onClick={() => setShowTechStackManager(false)}
+                                variant="ghost"
+                                size="sm"
+                            >
+                                Close
+                            </Button>
+                        </div>
+                        <TechStackManager />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
-
-

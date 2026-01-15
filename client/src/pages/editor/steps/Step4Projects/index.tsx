@@ -5,11 +5,13 @@ import type { StepProps } from "../../types";
 import { ProjectCard } from "./ProjectCard";
 import { StatsCard, HelpCard } from "./StatsCard";
 import { useProjectHandlers } from "./useProjectHandlers";
+import { useTechStacks } from "@/hooks/use-tech-stacks";
 
 export default function Step4Projects({ data, setData }: StepProps) {
     const [expandedProject, setExpandedProject] = useState<number | null>(null);
     const [customTech, setCustomTech] = useState<{ [key: number]: string }>({});
     const [selectedCategory, setSelectedCategory] = useState<{ [key: number]: string }>({});
+    const { techStacks, loading: techStacksLoading } = useTechStacks();
 
     const handlers = useProjectHandlers(data, setData);
 
@@ -113,6 +115,8 @@ export default function Step4Projects({ data, setData }: StepProps) {
                                     setCustomTech={setCustomTech}
                                     selectedCategory={selectedCategory}
                                     setSelectedCategory={setSelectedCategory}
+                                    techStacks={techStacks}
+                                    techStacksLoading={techStacksLoading}
                                 />
                             ))}
                         </div>

@@ -27,6 +27,11 @@ export interface EditorData {
             name: string;
             url: string;
             platform: string;
+            whatsapp?: {
+                contactNumber?: string;
+                groupLink?: string;
+                channelLink?: string;
+            };
         }>;
     };
     projects: {
@@ -57,7 +62,14 @@ export interface EditorData {
                 solution: string;
                 learning: string;
             }>;
+            coverImage: string;
+            coverImages: {
+                [platform: string]: string;
+            };
             images: string[];
+            platformImages: {
+                [platform: string]: string[];
+            };
             github?: string;
             liveDemo?: string;
         }>;

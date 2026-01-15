@@ -4,21 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, X, Check, Github, Globe } from "lucide-react";
+import { X, Check, Github, Globe, Loader2 } from "lucide-react";
 import type { EditorData } from "../../types";
-import { TECH_STACK_CATEGORIES, STATUS_OPTIONS, PLATFORM_OPTIONS } from "./constants";
+import { STATUS_OPTIONS, PLATFORM_OPTIONS } from "./constants";
 import { ImageGallery } from "./ImageGallery";
-
-interface ProjectFormProps {
-    project: any;
-    index: number;
-    data: EditorData;
-    handlers: any;
-    customTech: { [key: number]: string };
-    setCustomTech: React.Dispatch<React.SetStateAction<{ [key: number]: string }>>;
-    selectedCategory: { [key: number]: string };
-    setSelectedCategory: React.Dispatch<React.SetStateAction<{ [key: number]: string }>>;
-}
+import type { ProjectFormProps } from "./types";
 
 export function ProjectForm({
     project,
@@ -28,7 +18,9 @@ export function ProjectForm({
     customTech,
     setCustomTech,
     selectedCategory,
-    setSelectedCategory
+    setSelectedCategory,
+    techStacks,
+    techStacksLoading
 }: ProjectFormProps) {
     return (
         <div className="border-t bg-muted p-6 space-y-6">
@@ -122,7 +114,13 @@ export function ProjectForm({
 
                 {/* Category Tabs */}
                 <div className="flex flex-wrap gap-2">
-                    {Object.keys(TECH_STACK_CATEGORIES).map((category) => (
+                    {techStacksLoading ? (
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            <span className="text-sm">Loading...</span>
+                        </div>
+                    ) : (
+                        Object.keys(techStacks).map((category) => (
                         <button
                             key={category}
                             type="button"
@@ -134,57 +132,38 @@ export function ProjectForm({
                         >
                             {category}
                         </button>
-                    ))}
+                    ))
+                    )}
                 </div>
 
                 {/* Tech Chips */}
                 <div className="border-2 border rounded-2xl p-5 bg-muted min-h-[160px]">
-                    <div className="flex flex-wrap gap-2">
-                        {TECH_STACK_CATEGORIES[
-                            (selectedCategory[index] || "Frontend") as keyof typeof TECH_STACK_CATEGORIES
-                        ].map((tech) => {
-                            const isSelected = project.techStack.includes(tech);
-                            return (
-                                <button
-                                    key={tech}
-                                    type="button"
-                                    onClick={() => handlers.toggleTechStack(index, tech)}
-                                    className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${isSelected
-                                        ? "bg-primary text-primary-foreground shadow-md"
-                                        : "bg-card text-foreground border-2 border hover:border-primary hover:shadow-md"
-                                        }`}
-                                >
-                                    {isSelected && <Check className="w-4 h-4" />}
-                                    {tech}
-                                </button>
-                            );
-                        })}
-                    </div>
-                </div>
-
-                {/* Custom Tech Input */}
-                <div className="flex gap-2">
-                    <Input
-                        value={customTech[index] || ""}
-                        onChange={(e) => setCustomTech({ ...customTech, [index]: e.target.value })}
-                        onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                                e.preventDefault();
-                                handlers.addCustomTech(index, customTech, setCustomTech);
-                            }
-                        }}
-                        placeholder="Add custom technology (e.g., Photoshop, Blender)"
-                        className="h-11 text-base bg-card flex-1"
-                    />
-                    <Button
-                        type="button"
-                        onClick={() => handlers.addCustomTech(index, customTech, setCustomTech)}
-                        size="lg"
-                        className="px-6"
-                    >
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add
-                    </Button>
+                    {Object.keys(techStacks).length === 0 ? (
+                        <div className="text-center py-8 text-muted-foreground">
+                            <p className="text-base font-semibold mb-1">No Tech Stacks Available</p>
+                            <p className="text-sm">Please upload tech stacks using the "Tech Stacks" button in the header</p>
+                        </div>
+                    ) : (
+                        <div className="flex flex-wrap gap-2">
+                            {techStacks[selectedCategory[index] || "Frontend"]?.map((tech) => {
+                                const isSelected = project.techStack.includes(tech);
+                                return (
+                                    <button
+                                        key={tech}
+                                        type="button"
+                                        onClick={() => handlers.toggleTechStack(index, tech)}
+                                        className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${isSelected
+                                            ? "bg-primary text-primary-foreground shadow-md"
+                                            : "bg-card text-foreground border-2 border hover:border-primary hover:shadow-md"
+                                            }`}
+                                    >
+                                        {isSelected && <Check className="w-4 h-4" />}
+                                        {tech}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
                 </div>
 
                 {/* Selected Tech Stack */}

@@ -1,32 +1,19 @@
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { User, Mail, Link2, FolderKanban, FileText, Terminal, Database, Settings, Download, CheckCircle2, AlertCircle, Sparkles } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { User, Mail, Link2, FolderKanban, FileText, Terminal, Database, Settings, CheckCircle2, AlertCircle, Sparkles, Cloud } from "lucide-react";
 import type { StepProps } from "../types";
+import {
+  calculateStep1Completion,
+  calculateStep2Completion,
+  calculateStep3Completion,
+  calculateStep4Completion,
+  calculateStep5Completion,
+  calculateStep6Completion,
+  calculateOverallCompletion
+} from "../lib/completionCalculator";
 
-export default function Step7Review({ data, onDownload }: StepProps) {
-    const totalCompletion = () => {
-        let completed = 0;
-        let total = 7;
-
-        // Step 1: Personal Info (required)
-        if (data.about.personal.name && data.about.personal.avatar && data.about.personal.bio) completed++;
-        // Step 2: Contact (required)
-        if (data.contact.email && data.contact.location) completed++;
-        // Step 3: Social (optional but count if added)
-        if (data.social.links.length > 0) completed++;
-        // Step 4: Projects (optional but count if added)
-        if (data.projects.projects.length > 0) completed++;
-        // Step 5: Notepad (optional but count if added)
-        if (data.notepad.defaultNotes.length > 0) completed++;
-        // Step 6: Advanced (auto-generated, always complete)
-        completed++;
-        // Step 7: Review (current step, always complete)
-        completed++;
-
-        return Math.round((completed / total) * 100);
-    };
-
-    const isComplete = totalCompletion() === 100;
+export default function Step7Review({ data }: StepProps) {
+    const isComplete = calculateStep1Completion(data) === 100 && calculateStep2Completion(data) === 100;
 
     return (
         <div className="max-w-[1400px] mx-auto">
@@ -34,14 +21,14 @@ export default function Step7Review({ data, onDownload }: StepProps) {
             <div className="mb-10">
                 <div className="flex items-start justify-between">
                     <div>
-                        <h2 className="text-4xl font-bold text-foreground mb-2">Review & Download</h2>
-                        <p className="text-muted-foreground text-lg">Review your portfolio data and download the complete package</p>
+                        <h2 className="text-4xl font-bold text-foreground mb-2">Review & Summary</h2>
+                        <p className="text-muted-foreground text-lg">Review your portfolio data - All changes are automatically saved to Firebase</p>
                     </div>
                     <div className="flex items-center gap-3 bg-card px-6 py-4 rounded-2xl border-2 border">
                         <div className="text-right">
                             <div className="text-xs text-muted-foreground uppercase tracking-wide font-medium">Overall</div>
                             <div className="text-2xl font-bold text-primary">
-                                {totalCompletion()}%
+                                {calculateOverallCompletion(data)}%
                             </div>
                         </div>
                         <Sparkles className="w-6 h-6 text-primary" />
@@ -58,7 +45,7 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                     <div>
                         <p className="text-base font-bold text-foreground">Portfolio Complete! 🎉</p>
                         <p className="text-sm text-muted-foreground mt-1">
-                            All required sections are filled. Click "Download ZIP" in the header to get your portfolio data package.
+                            All required sections are filled and automatically saved to Firebase. Your portfolio is ready!
                         </p>
                     </div>
                 </div>
@@ -70,7 +57,7 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                     <div>
                         <p className="text-base font-bold text-foreground">Almost There!</p>
                         <p className="text-sm text-muted-foreground mt-1">
-                            Some optional sections are incomplete. You can still download, or go back to add more content.
+                            Some optional sections are incomplete. All changes are automatically saved to Firebase.
                         </p>
                     </div>
                 </div>
@@ -83,7 +70,7 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                     {/* Step 1: Personal Info */}
                     <div className="bg-card rounded-2xl border-2 border shadow-md overflow-hidden">
                         <div className="bg-muted p-5 border-b">
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center justify-between mb-3">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
                                         <User className="w-5 h-5 text-primary" />
@@ -93,43 +80,64 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                                         <p className="text-xs text-muted-foreground">Step 1</p>
                                     </div>
                                 </div>
-                                {data.about.personal.name && data.about.personal.avatar && data.about.personal.bio ? (
-                                    <Badge className="bg-primary text-primary-foreground border-primary">
-                                        <CheckCircle2 className="w-3 h-3 mr-1" />
-                                        Complete
-                                    </Badge>
-                                ) : (
-                                    <Badge className="bg-muted text-foreground border">
-                                        <AlertCircle className="w-3 h-3 mr-1" />
-                                        Required
-                                    </Badge>
-                                )}
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm font-bold text-primary">{calculateStep1Completion(data)}%</span>
+                                    {calculateStep1Completion(data) === 100 ? (
+                                        <Badge className="bg-primary text-primary-foreground border-primary">
+                                            <CheckCircle2 className="w-3 h-3 mr-1" />
+                                            Complete
+                                        </Badge>
+                                    ) : (
+                                        <Badge className="bg-muted text-foreground border">
+                                            In Progress
+                                        </Badge>
+                                    )}
+                                </div>
                             </div>
+                            <Progress value={calculateStep1Completion(data)} className="h-2" />
                         </div>
                         <div className="p-5 space-y-3">
                             <div className="flex items-center justify-between">
                                 <span className="text-sm text-muted-foreground">Name</span>
-                                <span className="text-sm font-semibold text-foreground">{data.about.personal.name || "Not set"}</span>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm font-semibold text-foreground">{data.about.personal.name || "Not set"}</span>
+                                    {data.about.personal.name && <CheckCircle2 className="w-4 h-4 text-primary" />}
+                                </div>
                             </div>
                             <div className="flex items-center justify-between">
                                 <span className="text-sm text-muted-foreground">Title</span>
-                                <span className="text-sm font-semibold text-foreground">{data.about.personal.title || "Not set"}</span>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm font-semibold text-foreground">{data.about.personal.title || "Not set"}</span>
+                                    {data.about.personal.title && <CheckCircle2 className="w-4 h-4 text-primary" />}
+                                </div>
                             </div>
                             <div className="flex items-center justify-between">
                                 <span className="text-sm text-muted-foreground">Location</span>
-                                <span className="text-sm font-semibold text-foreground">{data.about.personal.location || "Not set"}</span>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm font-semibold text-foreground">{data.about.personal.location || "Not set"}</span>
+                                    {data.about.personal.location && <CheckCircle2 className="w-4 h-4 text-primary" />}
+                                </div>
                             </div>
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-muted-foreground">Skills</span>
-                                <span className="text-sm font-semibold text-foreground">{data.about.skills.length} added</span>
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <span className="text-sm text-muted-foreground">Experience</span>
-                                <span className="text-sm font-semibold text-foreground">{data.about.experience.length} entries</span>
+                                <span className="text-sm text-muted-foreground">Bio</span>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm font-semibold text-foreground">{data.about.personal.bio ? `${data.about.personal.bio.length} chars` : "Not set"}</span>
+                                    {data.about.personal.bio && <CheckCircle2 className="w-4 h-4 text-primary" />}
+                                </div>
                             </div>
                             <div className="flex items-center justify-between">
                                 <span className="text-sm text-muted-foreground">Avatar</span>
-                                <span className="text-sm font-semibold text-foreground">{data.about.personal.avatar ? "✓ Uploaded" : "Not set"}</span>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm font-semibold text-foreground">{data.about.personal.avatar ? "✓ Uploaded" : "Not set"}</span>
+                                    {data.about.personal.avatar && <CheckCircle2 className="w-4 h-4 text-primary" />}
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm text-muted-foreground">Skills</span>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm font-semibold text-foreground">{data.about.skills.length} added</span>
+                                    {data.about.skills.length > 0 && <CheckCircle2 className="w-4 h-4 text-primary" />}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -137,7 +145,7 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                     {/* Step 2: Contact */}
                     <div className="bg-card rounded-2xl border-2 border shadow-md overflow-hidden">
                         <div className="bg-muted p-5 border-b">
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center justify-between mb-3">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
                                         <Mail className="w-5 h-5 text-primary" />
@@ -147,35 +155,50 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                                         <p className="text-xs text-muted-foreground">Step 2</p>
                                     </div>
                                 </div>
-                                {data.contact.email && data.contact.location ? (
-                                    <Badge className="bg-primary text-primary-foreground border-primary">
-                                        <CheckCircle2 className="w-3 h-3 mr-1" />
-                                        Complete
-                                    </Badge>
-                                ) : (
-                                    <Badge className="bg-muted text-foreground border">
-                                        <AlertCircle className="w-3 h-3 mr-1" />
-                                        Required
-                                    </Badge>
-                                )}
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm font-bold text-primary">{calculateStep2Completion(data)}%</span>
+                                    {calculateStep2Completion(data) === 100 ? (
+                                        <Badge className="bg-primary text-primary-foreground border-primary">
+                                            <CheckCircle2 className="w-3 h-3 mr-1" />
+                                            Complete
+                                        </Badge>
+                                    ) : (
+                                        <Badge className="bg-muted text-foreground border">
+                                            In Progress
+                                        </Badge>
+                                    )}
+                                </div>
                             </div>
+                            <Progress value={calculateStep2Completion(data)} className="h-2" />
                         </div>
                         <div className="p-5 space-y-3">
                             <div className="flex items-center justify-between">
                                 <span className="text-sm text-muted-foreground">Email</span>
-                                <span className="text-sm font-semibold text-foreground">{data.contact.email || "Not set"}</span>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm font-semibold text-foreground">{data.contact.email || "Not set"}</span>
+                                    {data.contact.email && <CheckCircle2 className="w-4 h-4 text-primary" />}
+                                </div>
                             </div>
                             <div className="flex items-center justify-between">
                                 <span className="text-sm text-muted-foreground">Location</span>
-                                <span className="text-sm font-semibold text-foreground">{data.contact.location || "Not set"}</span>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm font-semibold text-foreground">{data.contact.location || "Not set"}</span>
+                                    {data.contact.location && <CheckCircle2 className="w-4 h-4 text-primary" />}
+                                </div>
                             </div>
                             <div className="flex items-center justify-between">
                                 <span className="text-sm text-muted-foreground">Message</span>
-                                <span className="text-sm font-semibold text-foreground">{data.contact.message ? "✓ Added" : "Not set"}</span>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm font-semibold text-foreground">{data.contact.message ? "✓ Added" : "Not set"}</span>
+                                    {data.contact.message && <CheckCircle2 className="w-4 h-4 text-primary" />}
+                                </div>
                             </div>
                             <div className="flex items-center justify-between">
                                 <span className="text-sm text-muted-foreground">Copyright</span>
-                                <span className="text-sm font-semibold text-foreground">{data.contact.copyright ? "✓ Added" : "Not set"}</span>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm font-semibold text-foreground">{data.contact.copyright ? "✓ Added" : "Not set"}</span>
+                                    {data.contact.copyright && <CheckCircle2 className="w-4 h-4 text-primary" />}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -183,7 +206,7 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                     {/* Step 3: Social Links */}
                     <div className="bg-card rounded-2xl border-2 border shadow-md overflow-hidden">
                         <div className="bg-muted p-5 border-b">
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center justify-between mb-3">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
                                         <Link2 className="w-5 h-5 text-primary" />
@@ -193,22 +216,23 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                                         <p className="text-xs text-muted-foreground">Step 3 - Optional</p>
                                     </div>
                                 </div>
-                                {data.social.links.length > 0 ? (
-                                    <Badge className="bg-primary text-primary-foreground border-primary">
-                                        <CheckCircle2 className="w-3 h-3 mr-1" />
-                                        {data.social.links.length} Added
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm font-bold text-primary">{calculateStep3Completion(data)}%</span>
+                                    <Badge className={data.social.links.length > 0 ? "bg-primary text-primary-foreground border-primary" : "bg-muted text-foreground border"}>
+                                        {data.social.links.length > 0 ? `${data.social.links.length} Added` : 'Optional'}
                                     </Badge>
-                                ) : (
-                                    <Badge className="bg-muted text-foreground border">
-                                        Optional
-                                    </Badge>
-                                )}
+                                </div>
                             </div>
+                            <Progress value={calculateStep3Completion(data)} className="h-2" />
                         </div>
                         <div className="p-5">
                             <div className="flex items-center justify-between">
                                 <span className="text-sm text-muted-foreground">Total Links</span>
                                 <span className="text-sm font-semibold text-foreground">{data.social.links.length} platforms</span>
+                            </div>
+                            <div className="flex items-center justify-between mt-2">
+                                <span className="text-sm text-muted-foreground">With URLs</span>
+                                <span className="text-sm font-semibold text-foreground">{data.social.links.filter(l => l.url).length} completed</span>
                             </div>
                         </div>
                     </div>
@@ -216,7 +240,7 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                     {/* Step 4: Projects & Gallery */}
                     <div className="bg-card rounded-2xl border-2 border shadow-md overflow-hidden">
                         <div className="bg-muted p-5 border-b">
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center justify-between mb-3">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
                                         <FolderKanban className="w-5 h-5 text-primary" />
@@ -226,17 +250,14 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                                         <p className="text-xs text-muted-foreground">Step 4 - Optional</p>
                                     </div>
                                 </div>
-                                {data.projects.projects.length > 0 ? (
-                                    <Badge className="bg-primary text-primary-foreground border-primary">
-                                        <CheckCircle2 className="w-3 h-3 mr-1" />
-                                        {data.projects.projects.length} Projects
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm font-bold text-primary">{calculateStep4Completion(data)}%</span>
+                                    <Badge className={data.projects.projects.length > 0 ? "bg-primary text-primary-foreground border-primary" : "bg-muted text-foreground border"}>
+                                        {data.projects.projects.length > 0 ? `${data.projects.projects.length} Projects` : 'Optional'}
                                     </Badge>
-                                ) : (
-                                    <Badge className="bg-muted text-foreground border">
-                                        Optional
-                                    </Badge>
-                                )}
+                                </div>
                             </div>
+                            <Progress value={calculateStep4Completion(data)} className="h-2" />
                         </div>
                         <div className="p-5 space-y-3">
                             <div className="flex items-center justify-between">
@@ -255,7 +276,7 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                     {/* Step 5: Notepad */}
                     <div className="bg-card rounded-2xl border-2 border shadow-md overflow-hidden">
                         <div className="bg-muted p-5 border-b">
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center justify-between mb-3">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
                                         <FileText className="w-5 h-5 text-primary" />
@@ -265,17 +286,14 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                                         <p className="text-xs text-muted-foreground">Step 5 - Optional</p>
                                     </div>
                                 </div>
-                                {data.notepad.defaultNotes.length > 0 ? (
-                                    <Badge className="bg-primary text-primary-foreground border-primary">
-                                        <CheckCircle2 className="w-3 h-3 mr-1" />
-                                        {data.notepad.defaultNotes.length} Notes
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm font-bold text-primary">{calculateStep5Completion(data)}%</span>
+                                    <Badge className={data.notepad.defaultNotes.length > 0 ? "bg-primary text-primary-foreground border-primary" : "bg-muted text-foreground border"}>
+                                        {data.notepad.defaultNotes.length > 0 ? `${data.notepad.defaultNotes.length} Notes` : 'Optional'}
                                     </Badge>
-                                ) : (
-                                    <Badge className="bg-muted text-foreground border">
-                                        Optional
-                                    </Badge>
-                                )}
+                                </div>
                             </div>
+                            <Progress value={calculateStep5Completion(data)} className="h-2" />
                         </div>
                         <div className="p-5 space-y-3">
                             <div className="flex items-center justify-between">
@@ -283,9 +301,9 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                                 <span className="text-sm font-semibold text-foreground">{data.notepad.defaultNotes.length} notes</span>
                             </div>
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-muted-foreground">Pinned</span>
+                                <span className="text-sm text-muted-foreground">Complete</span>
                                 <span className="text-sm font-semibold text-foreground">
-                                    {data.notepad.defaultNotes.filter(n => n.isPinned).length} pinned
+                                    {data.notepad.defaultNotes.filter(n => n.title && n.content).length} filled
                                 </span>
                             </div>
                         </div>
@@ -294,7 +312,7 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                     {/* Step 6: Advanced */}
                     <div className="bg-card rounded-2xl border-2 border shadow-md overflow-hidden">
                         <div className="bg-muted p-5 border-b">
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center justify-between mb-3">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
                                         <Terminal className="w-5 h-5 text-primary" />
@@ -304,27 +322,37 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                                         <p className="text-xs text-muted-foreground">Step 6 - Auto-Generated</p>
                                     </div>
                                 </div>
-                                <Badge className="bg-primary text-primary-foreground border-primary">
-                                    <CheckCircle2 className="w-3 h-3 mr-1" />
-                                    Auto-Generated
-                                </Badge>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm font-bold text-primary">{calculateStep6Completion(data)}%</span>
+                                    <Badge className="bg-primary text-primary-foreground border-primary">
+                                        <CheckCircle2 className="w-3 h-3 mr-1" />
+                                        Auto-Generated
+                                    </Badge>
+                                </div>
                             </div>
+                            <Progress value={calculateStep6Completion(data)} className="h-2" />
                         </div>
                         <div className="p-5 space-y-3">
                             <div className="flex items-center gap-3">
                                 <Terminal className="w-4 h-4 text-muted-foreground" />
                                 <span className="text-sm text-muted-foreground">Terminal</span>
-                                <Badge className="ml-auto bg-muted text-foreground">Ready</Badge>
+                                <Badge className="ml-auto bg-muted text-foreground">
+                                    {data.terminal.username ? 'Ready' : 'Waiting'}
+                                </Badge>
                             </div>
                             <div className="flex items-center gap-3">
                                 <Database className="w-4 h-4 text-primary" />
                                 <span className="text-sm text-muted-foreground">Database</span>
-                                <Badge className="ml-auto bg-primary/10 text-primary border-primary">Ready</Badge>
+                                <Badge className="ml-auto bg-primary/10 text-primary border-primary">
+                                    {data.database.user.name ? 'Ready' : 'Waiting'}
+                                </Badge>
                             </div>
                             <div className="flex items-center gap-3">
                                 <Settings className="w-4 h-4 text-primary" />
                                 <span className="text-sm text-muted-foreground">Settings</span>
-                                <Badge className="ml-auto bg-primary/10 text-primary border-primary">Ready</Badge>
+                                <Badge className="ml-auto bg-primary/10 text-primary border-primary">
+                                    {data.settings.account.name ? 'Ready' : 'Waiting'}
+                                </Badge>
                             </div>
                         </div>
                     </div>
@@ -332,38 +360,29 @@ export default function Step7Review({ data, onDownload }: StepProps) {
 
                 {/* Right Column - Summary */}
                 <div className="space-y-6">
-                    {/* Download Card */}
+                    {/* Firebase Status Card */}
                     <div className="bg-card rounded-2xl p-6 border-2 border shadow-lg">
                         <div className="flex items-center gap-3 mb-4">
                             <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                                <Download className="w-6 h-6 text-primary" />
+                                <Cloud className="w-6 h-6 text-primary" />
                             </div>
                             <div>
-                                <h4 className="font-bold text-lg text-foreground">Ready to Download</h4>
-                                <p className="text-xs text-muted-foreground">Get your portfolio package</p>
+                                <h4 className="font-bold text-lg text-foreground">Cloud Sync Active</h4>
+                                <p className="text-xs text-muted-foreground">Auto-saved to Firebase</p>
                             </div>
                         </div>
                         <p className="text-sm text-muted-foreground mb-4">
-                            Click the button below to generate and download your complete portfolio data package.
+                            All your portfolio data is automatically saved to Firebase. You can access and edit it anytime from the editor.
                         </p>
 
-                        {/* Download Button */}
-                        <Button
-                            onClick={onDownload}
-                            size="lg"
-                            className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold text-base py-6 mb-4 shadow-xl"
-                        >
-                            <Download className="w-5 h-5 mr-2" />
-                            Download ZIP Package
-                        </Button>
-
-                        <div className="bg-muted rounded-xl p-4 border border">
-                            <p className="text-xs text-muted-foreground mb-2">Package includes:</p>
+                        <div className="bg-primary/10 rounded-xl p-4 border-2 border-primary">
+                            <p className="text-xs font-semibold text-primary mb-2">✓ Saved to Cloud:</p>
                             <ul className="space-y-1 text-xs text-foreground">
-                                <li>✓ All JSON data files</li>
-                                <li>✓ Uploaded images</li>
-                                <li>✓ Configuration files</li>
-                                <li>✓ Ready to use</li>
+                                <li>✓ Personal information</li>
+                                <li>✓ Contact details</li>
+                                <li>✓ Social links</li>
+                                <li>✓ Projects & images</li>
+                                <li>✓ All configurations</li>
                             </ul>
                         </div>
                     </div>
@@ -387,30 +406,30 @@ export default function Step7Review({ data, onDownload }: StepProps) {
                             </div>
                             <div className="flex items-center justify-between p-3 bg-muted rounded-xl border border">
                                 <span className="text-sm font-medium text-foreground">Overall Progress</span>
-                                <span className="text-lg font-bold text-foreground">{totalCompletion()}%</span>
+                                <span className="text-lg font-bold text-foreground">{calculateOverallCompletion(data)}%</span>
                             </div>
                         </div>
                     </div>
 
                     {/* Help Card */}
                     <div className="bg-card rounded-2xl p-6 border-2 border">
-                        <h4 className="font-bold text-foreground mb-3">💡 Next Steps</h4>
+                        <h4 className="font-bold text-foreground mb-3">💡 What's Next?</h4>
                         <ul className="space-y-2 text-sm text-muted-foreground">
                             <li className="flex items-start gap-2">
-                                <span className="text-primary mt-0.5">1.</span>
-                                <span>Review all sections above</span>
+                                <span className="text-primary mt-0.5">✓</span>
+                                <span>All data is saved to Firebase</span>
                             </li>
                             <li className="flex items-start gap-2">
-                                <span className="text-primary mt-0.5">2.</span>
-                                <span>Go back to edit if needed</span>
+                                <span className="text-primary mt-0.5">✓</span>
+                                <span>Images uploaded to Cloudinary</span>
                             </li>
                             <li className="flex items-start gap-2">
-                                <span className="text-primary mt-0.5">3.</span>
-                                <span>Click "Download ZIP" in header</span>
+                                <span className="text-primary mt-0.5">✓</span>
+                                <span>Edit anytime from this editor</span>
                             </li>
                             <li className="flex items-start gap-2">
-                                <span className="text-primary mt-0.5">4.</span>
-                                <span>Extract and use in your portfolio</span>
+                                <span className="text-primary mt-0.5">✓</span>
+                                <span>Your portfolio is live and ready!</span>
                             </li>
                         </ul>
                     </div>

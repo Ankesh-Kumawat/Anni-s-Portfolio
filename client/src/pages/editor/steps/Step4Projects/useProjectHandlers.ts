@@ -1,10 +1,11 @@
 import type { EditorData } from "../../types";
+import { uploadToCloudinary, uploadMultipleToCloudinary } from "@/lib/cloudinary";
 
 export function useProjectHandlers(data: EditorData, setData: React.Dispatch<React.SetStateAction<EditorData>>) {
     const syncGallery = (updatedProjects: any[]) => {
         // Get cover image for projects folder (first project's cover)
-        const projectsFolderCover = updatedProjects.length > 0 && updatedProjects[0].images.length > 0
-            ? updatedProjects[0].images[0].replace(/\/(\d+)\.(png|jpg|jpeg)$/, '/cover.$2')
+        const projectsFolderCover = updatedProjects.length > 0 && updatedProjects[0].coverImage
+            ? updatedProjects[0].coverImage
             : "";
 
         return {
@@ -14,21 +15,16 @@ export function useProjectHandlers(data: EditorData, setData: React.Dispatch<Rea
                         ...folder,
                         coverImage: projectsFolderCover,
                         children: updatedProjects.map(p => {
-                            // Use cover.png for project folder cover
-                            const projectCover = p.images.length > 0
-                                ? p.images[0].replace(/\/(\d+)\.(png|jpg|jpeg)$/, '/cover.$2')
-                                : "";
-
                             return {
                                 id: p.id,
                                 name: p.name || "Untitled Project",
                                 type: "folder" as const,
-                                coverImage: projectCover,
-                                children: p.images.map((path: string, idx: number) => ({
+                                coverImage: p.coverImage || "",
+                                children: p.images.map((url: string, idx: number) => ({
                                     id: `${p.id}-img-${idx}`,
                                     name: `Screenshot ${idx + 1}`,
                                     type: "image" as const,
-                                    imageUrl: path
+                                    imageUrl: url
                                 }))
                             };
                         })
@@ -41,20 +37,16 @@ export function useProjectHandlers(data: EditorData, setData: React.Dispatch<Rea
                 type: "folder" as const,
                 coverImage: projectsFolderCover,
                 children: updatedProjects.map(p => {
-                    const projectCover = p.images.length > 0
-                        ? p.images[0].replace(/\/(\d+)\.(png|jpg|jpeg)$/, '/cover.$2')
-                        : "";
-
                     return {
                         id: p.id,
                         name: p.name || "Untitled Project",
                         type: "folder" as const,
-                        coverImage: projectCover,
-                        children: p.images.map((path: string, idx: number) => ({
+                        coverImage: p.coverImage || "",
+                        children: p.images.map((url: string, idx: number) => ({
                             id: `${p.id}-img-${idx}`,
                             name: `Screenshot ${idx + 1}`,
                             type: "image" as const,
-                            imageUrl: path
+                            imageUrl: url
                         }))
                     };
                 })
@@ -89,7 +81,10 @@ export function useProjectHandlers(data: EditorData, setData: React.Dispatch<Rea
                             performance: ""
                         },
                         challenges: [],
+                        coverImage: "",
+                        coverImages: {},
                         images: [],
+                        platformImages: {},
                         github: "",
                         liveDemo: ""
                     }
@@ -164,82 +159,110 @@ export function useProjectHandlers(data: EditorData, setData: React.Dispatch<Rea
         });
     };
 
-    const handleImageUpload = (projectIndex: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    // REMOVED: Legacy handleCoverImageUpload - Use handlePlatformCoverImageUpload instead
+
+    // REMOVED: Legacy handleImageUpload - Use handlePlatformImageUpload instead
+
+    const handlePlatformImageUpload = async (projectIndex: number, platform: string, e: React.ChangeEvent<HTMLInputElement>, onProgress?: (current: number, total: number) => void) => {
         const files = Array.from(e.target.files || []);
-        const project = data.projects.projects[projectIndex];
+        if (files.length === 0) return;
 
-        // Create folder name from project name (sanitized)
-        // If no name, use "untitled-project-{index}"
-        const folderName = project.name
-            ? project.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-            : `untitled-project-${projectIndex + 1}`;
+        try {
+            // Upload images one by one to track progress
+            const cloudinaryUrls: string[] = [];
 
-        const filesToProcess = files;
-        let processedCount = 0;
-        const newImages: string[] = [];
-        const newAssets: any[] = [];
+            for (let i = 0; i < files.length; i++) {
+                const url = await uploadToCloudinary(files[i]);
+                cloudinaryUrls.push(url);
 
-        filesToProcess.forEach((file, fileIndex) => {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const preview = reader.result as string;
-                const currentImageCount = project.images.length;
-                const imageNumber = currentImageCount + fileIndex + 1;
-                const extension = file.name.split('.').pop() || 'png';
+                // Report progress
+                if (onProgress) {
+                    onProgress(i + 1, files.length);
+                }
+            }
 
-                // Numbered filename
-                const numberedFilename = `${imageNumber}.${extension}`;
-                const assetPath = `/assets/projects/${folderName}/${numberedFilename}`;
+            // Update project with platform-specific image URLs
+            setData((prev) => {
+                const updatedProjects = prev.projects.projects.map((proj, i) => {
+                    if (i !== projectIndex) return proj;
 
-                newImages.push(assetPath);
-                newAssets.push({
-                    file,
-                    path: `projects/${folderName}/${numberedFilename}`,
-                    preview
+                    // Initialize platformImages if it doesn't exist
+                    if (!proj.platformImages) {
+                        proj.platformImages = {};
+                    }
+
+                    const existingPlatformImages = proj.platformImages?.[platform] || [];
+                    return {
+                        ...proj,
+                        platformImages: {
+                            ...proj.platformImages,
+                            [platform]: [...existingPlatformImages, ...cloudinaryUrls]
+                        }
+                    };
                 });
 
-                processedCount++;
+                return {
+                    ...prev,
+                    projects: { projects: updatedProjects },
+                    gallery: syncGallery(updatedProjects)
+                };
+            });
+        } catch (error) {
+            console.error("Failed to upload platform images:", error);
+            alert("Failed to upload some images. Please try again.");
+        }
+    };
 
-                if (processedCount === filesToProcess.length) {
-                    setData((prev) => {
-                        const updatedProjects = prev.projects.projects.map((proj, i) =>
-                            i === projectIndex
-                                ? { ...proj, images: [...proj.images, ...newImages] }
-                                : proj
-                        );
+    const removePlatformImage = (projectIndex: number, platform: string, imageIndex: number) => {
+        setData((prev) => {
+            const updatedProjects = prev.projects.projects.map((proj, i) => {
+                if (i !== projectIndex) return proj;
 
-                        // Add cover image (copy of first image) if this is the first upload
-                        const finalAssets = [...prev.assets.images, ...newAssets];
-                        if (project.images.length === 0 && newAssets.length > 0) {
-                            // Find the first numbered image (1.png/jpg/etc)
-                            const firstImage = newAssets.find(a => a.path.includes(`projects/${folderName}/1.`));
-                            if (firstImage) {
-                                const extension = firstImage.path.split('.').pop();
-                                // Check if cover already exists
-                                const coverExists = finalAssets.some(a => a.path.includes(`projects/${folderName}/cover.`));
-                                if (!coverExists) {
-                                    finalAssets.push({
-                                        file: firstImage.file,
-                                        path: `projects/${folderName}/cover.${extension}`,
-                                        preview: firstImage.preview
-                                    });
-                                }
-                            }
-                        }
+                const platformImages = proj.platformImages?.[platform] || [];
+                return {
+                    ...proj,
+                    platformImages: {
+                        ...proj.platformImages,
+                        [platform]: platformImages.filter((_, idx) => idx !== imageIndex)
+                    }
+                };
+            });
 
-                        return {
-                            ...prev,
-                            projects: { projects: updatedProjects },
-                            assets: {
-                                ...prev.assets,
-                                images: finalAssets
-                            },
-                            gallery: syncGallery(updatedProjects)
-                        };
-                    });
-                }
+            return {
+                ...prev,
+                projects: { projects: updatedProjects },
+                gallery: syncGallery(updatedProjects)
             };
-            reader.readAsDataURL(file);
+        });
+    };
+
+    const handlePlatformDragEnd = (projectIndex: number, platform: string, result: any) => {
+        if (!result.destination) return;
+
+        setData((prev) => {
+            const project = prev.projects.projects[projectIndex];
+            const platformImages = project.platformImages?.[platform] || [];
+            const items = Array.from(platformImages);
+            const [reorderedItem] = items.splice(result.source.index, 1);
+            items.splice(result.destination.index, 0, reorderedItem);
+
+            const updatedProjects = prev.projects.projects.map((proj, i) => {
+                if (i !== projectIndex) return proj;
+
+                return {
+                    ...proj,
+                    platformImages: {
+                        ...proj.platformImages,
+                        [platform]: items
+                    }
+                };
+            });
+
+            return {
+                ...prev,
+                projects: { projects: updatedProjects },
+                gallery: syncGallery(updatedProjects)
+            };
         });
     };
 
@@ -268,61 +291,13 @@ export function useProjectHandlers(data: EditorData, setData: React.Dispatch<Rea
             const [reorderedItem] = items.splice(result.source.index, 1);
             items.splice(result.destination.index, 0, reorderedItem);
 
-            // Rename images with new numbering
-            const folderName = project.name
-                ? project.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || project.id
-                : project.id;
-
-            const renamedImages = items.map((imagePath, idx) => {
-                const extension = imagePath.split('.').pop() || 'png';
-                return `/assets/projects/${folderName}/${idx + 1}.${extension}`;
-            });
-
-            // Update assets with new paths
-            const updatedAssets = prev.assets.images.map(asset => {
-                const oldIndex = items.findIndex(img => img.includes(asset.path.split('/').pop() || ''));
-                if (oldIndex !== -1) {
-                    const newIndex = items.indexOf(items[oldIndex]);
-                    const extension = asset.path.split('.').pop() || 'png';
-                    return {
-                        ...asset,
-                        path: `projects/${folderName}/${newIndex + 1}.${extension}`
-                    };
-                }
-                return asset;
-            });
-
-            // Update cover image to match new first image (1.png)
-            const firstImageAsset = updatedAssets.find(a =>
-                a.path === `projects/${folderName}/1.png` ||
-                a.path === `projects/${folderName}/1.jpg` ||
-                a.path === `projects/${folderName}/1.jpeg`
-            );
-
-            if (firstImageAsset) {
-                const extension = firstImageAsset.path.split('.').pop() || 'png';
-                // Remove old cover if exists
-                const filteredAssets = updatedAssets.filter(a => !a.path.includes(`projects/${folderName}/cover.`));
-                // Add new cover
-                filteredAssets.push({
-                    ...firstImageAsset,
-                    path: `projects/${folderName}/cover.${extension}`
-                });
-                updatedAssets.length = 0;
-                updatedAssets.push(...filteredAssets);
-            }
-
             const updatedProjects = prev.projects.projects.map((proj, i) =>
-                i === projectIndex ? { ...proj, images: renamedImages } : proj
+                i === projectIndex ? { ...proj, images: items } : proj
             );
 
             return {
                 ...prev,
                 projects: { projects: updatedProjects },
-                assets: {
-                    ...prev.assets,
-                    images: updatedAssets
-                },
                 gallery: syncGallery(updatedProjects)
             };
         });
@@ -367,13 +342,75 @@ export function useProjectHandlers(data: EditorData, setData: React.Dispatch<Rea
         return project.platform.split(", ").includes(platform);
     };
 
+    const handlePlatformCoverImageUpload = async (projectIndex: number, platform: string, e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        try {
+            const cloudinaryUrl = await uploadToCloudinary(file);
+
+            setData((prev) => {
+                const updatedProjects = prev.projects.projects.map((proj, i) => {
+                    if (i !== projectIndex) return proj;
+
+                    // Initialize coverImages if it doesn't exist
+                    if (!proj.coverImages) {
+                        proj.coverImages = {};
+                    }
+
+                    return {
+                        ...proj,
+                        coverImages: {
+                            ...proj.coverImages,
+                            [platform]: cloudinaryUrl
+                        }
+                    };
+                });
+
+                return {
+                    ...prev,
+                    projects: { projects: updatedProjects },
+                    gallery: syncGallery(updatedProjects)
+                };
+            });
+        } catch (error) {
+            console.error("Failed to upload cover image:", error);
+            alert("Failed to upload cover image. Please try again.");
+        }
+    };
+
+    const removePlatformCoverImage = (projectIndex: number, platform: string) => {
+        setData((prev) => {
+            const updatedProjects = prev.projects.projects.map((proj, i) => {
+                if (i !== projectIndex) return proj;
+
+                const coverImages = { ...proj.coverImages };
+                delete coverImages[platform];
+
+                return {
+                    ...proj,
+                    coverImages
+                };
+            });
+
+            return {
+                ...prev,
+                projects: { projects: updatedProjects },
+                gallery: syncGallery(updatedProjects)
+            };
+        });
+    };
+
     return {
         addProject,
         removeProject,
         updateProject,
-        handleImageUpload,
-        removeImage,
-        handleDragEnd,
+        // Legacy handlers removed - use platform-specific handlers
+        handlePlatformImageUpload,
+        handlePlatformCoverImageUpload,
+        removePlatformImage,
+        removePlatformCoverImage,
+        handlePlatformDragEnd,
         toggleTechStack,
         addCustomTech,
         removeTechStack,

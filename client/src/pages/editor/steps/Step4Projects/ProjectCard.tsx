@@ -15,6 +15,8 @@ interface ProjectCardProps {
     setCustomTech: React.Dispatch<React.SetStateAction<{ [key: number]: string }>>;
     selectedCategory: { [key: number]: string };
     setSelectedCategory: React.Dispatch<React.SetStateAction<{ [key: number]: string }>>;
+    techStacks: { [key: string]: string[] };
+    techStacksLoading: boolean;
 }
 
 export function ProjectCard({
@@ -27,7 +29,9 @@ export function ProjectCard({
     customTech,
     setCustomTech,
     selectedCategory,
-    setSelectedCategory
+    setSelectedCategory,
+    techStacks,
+    techStacksLoading
 }: ProjectCardProps) {
     const isComplete = !!(project.name && project.tagline && project.description);
 
@@ -103,6 +107,8 @@ export function ProjectCard({
                     setCustomTech={setCustomTech}
                     selectedCategory={selectedCategory}
                     setSelectedCategory={setSelectedCategory}
+                    techStacks={techStacks}
+                    techStacksLoading={techStacksLoading}
                 />
             )}
         </div>

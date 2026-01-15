@@ -58,6 +58,39 @@ async function createFavicon(avatarDataUrl: string): Promise<Blob> {
     });
 }
 
+// Helper to remove empty fields from objects
+function sanitizeProject(obj: any): any {
+    if (Array.isArray(obj)) {
+        // Remove empty arrays
+        const filtered = obj.map(item => sanitizeProject(item)).filter(item => item !== null);
+        return filtered.length > 0 ? filtered : null;
+    }
+
+    if (obj !== null && typeof obj === 'object') {
+        const sanitized: any = {};
+
+        for (const [key, value] of Object.entries(obj)) {
+            const cleaned = sanitizeProject(value);
+
+            // Skip if value is:
+            // - null or undefined
+            // - empty string
+            // - empty array
+            // - empty object
+            if (cleaned === null || cleaned === undefined) continue;
+            if (cleaned === '') continue;
+            if (Array.isArray(cleaned) && cleaned.length === 0) continue;
+            if (typeof cleaned === 'object' && Object.keys(cleaned).length === 0) continue;
+
+            sanitized[key] = cleaned;
+        }
+
+        return Object.keys(sanitized).length > 0 ? sanitized : null;
+    }
+
+    return obj;
+}
+
 export async function generateZip(data: EditorData) {
     const zip = new JSZip();
 
@@ -70,7 +103,7 @@ export async function generateZip(data: EditorData) {
     dataFolder.file("contact.json", JSON.stringify(data.contact, null, 2));
     dataFolder.file("social.json", JSON.stringify(data.social, null, 2));
 
-    // Projects JSON - Only top 6 images per project + cover image
+    // Projects JSON - Sanitize to remove empty fields
     const projectsForJson = {
         projects: data.projects.projects.map(project => {
             const top6Images = project.images.slice(0, 6);
@@ -80,12 +113,15 @@ export async function generateZip(data: EditorData) {
                 ? top6Images[0].replace(/\/(\d+)\.(png|jpg|jpeg)$/, '/cover.$2')
                 : '';
 
-            return {
+            const projectData = {
                 ...project,
                 images: top6Images,
                 coverImage // Add cover image path
             };
-        })
+
+            // Sanitize project to remove empty fields
+            return sanitizeProject(projectData);
+        }).filter(p => p !== null)
     };
     dataFolder.file("projects.json", JSON.stringify(projectsForJson, null, 2));
 
