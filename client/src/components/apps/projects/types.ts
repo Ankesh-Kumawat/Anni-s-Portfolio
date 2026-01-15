@@ -38,7 +38,9 @@ export interface Project {
 
     // Media
     images: string[];
-    coverImage?: string; // Cover image path
+    coverImage?: string; // Legacy - single cover image
+    coverImages?: { [platform: string]: string }; // Platform-based cover images
+    platformImages?: { [platform: string]: string[] }; // Platform-based screenshot galleries
 
     // Links
     github?: string;

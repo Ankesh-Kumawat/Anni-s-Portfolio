@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 
 interface ProjectDetailProps {
     project: Project;
+    platform: string; // Which platform was clicked
     onBack: () => void;
 }
 
@@ -23,12 +24,26 @@ const statusColors: Record<string, string> = {
     Completed: "bg-gray-500/10 text-gray-700 border-gray-500/20",
 };
 
-export function ProjectDetail({ project, onBack }: ProjectDetailProps) {
+export function ProjectDetail({ project, platform, onBack }: ProjectDetailProps) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const PlatformIcon = platformIcons[project.platform] || Monitor;
 
-    // Get screenshots (exclude first image which is cover)
-    const screenshots = project.images.slice(1);
+    // Get screenshots for the specific platform that was clicked
+    const getScreenshotsForPlatform = () => {
+        // First try platform-specific images
+        if (project.platformImages && project.platformImages[platform]) {
+            return project.platformImages[platform];
+        }
+        
+        // Fallback to regular images if no platform-specific images
+        if (project.images && project.images.length > 0) {
+            return project.images;
+        }
+        
+        return [];
+    };
+
+    const screenshots = getScreenshotsForPlatform();
 
     // Auto scroll carousel every 5 seconds
     useEffect(() => {
@@ -105,62 +120,140 @@ export function ProjectDetail({ project, onBack }: ProjectDetailProps) {
                     </section>
                 )}
 
-                {/* Image Carousel - Only show if there are screenshots (more than just cover) */}
+                {/* Image Carousel - Only show if there are screenshots */}
                 {screenshots.length > 0 && (
                     <section className="space-y-3">
                         <h2 className="text-xl font-semibold">Screenshots</h2>
-                        <div className="relative w-full aspect-video bg-muted/30 rounded-xl overflow-hidden shadow-lg group">
-                            {/* Images container with slide animation */}
-                            <div className="relative w-full h-full">
-                                {screenshots.map((image, index) => (
-                                    <div
-                                        key={index}
-                                        className={`absolute inset-0 transition-all duration-700 ease-in-out ${index === currentImageIndex
-                                            ? "opacity-100 translate-x-0"
-                                            : index < currentImageIndex
-                                                ? "opacity-0 -translate-x-full"
-                                                : "opacity-0 translate-x-full"
-                                            }`}
-                                    >
-                                        <img
-                                            src={image}
-                                            alt={`${project.name} screenshot ${index + 1}`}
-                                            className="w-full h-full object-cover"
-                                        />
-                                    </div>
-                                ))}
-                            </div>
+                        
+                        {platform === "Mobile" ? (
+                            /* Mobile Carousel - Show 5 images with center focus */
+                            <div className="relative w-full py-8 px-8">
+                                <div className="flex items-center justify-center gap-4 overflow-visible">
+                                    {[-2, -1, 0, 1, 2].map((offset) => {
+                                        const index = (currentImageIndex + offset + screenshots.length) % screenshots.length;
+                                        const isCurrent = offset === 0;
+                                        
+                                        return (
+                                            <div
+                                                key={offset}
+                                                onClick={() => setCurrentImageIndex(index)}
+                                                className={`relative transition-all duration-500 cursor-pointer flex-shrink-0 ${
+                                                    isCurrent
+                                                        ? "w-48 h-96 z-20 scale-100 opacity-100"
+                                                        : Math.abs(offset) === 1
+                                                        ? "w-40 h-80 z-10 scale-90 opacity-60"
+                                                        : "w-32 h-64 z-0 scale-75 opacity-30"
+                                                }`}
+                                            >
+                                                <div className={`relative w-full h-full rounded-2xl overflow-hidden shadow-2xl ${
+                                                    isCurrent ? "ring-4 ring-primary" : ""
+                                                }`}>
+                                                    <img
+                                                        src={screenshots[index]}
+                                                        alt={`${project.name} screenshot ${index + 1}`}
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                    {isCurrent && (
+                                                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+                                                    )}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
 
-                            {screenshots.length > 1 && (
-                                <>
-                                    <button
-                                        onClick={prevImage}
-                                        className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background/90 backdrop-blur-sm border shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background z-10"
-                                    >
-                                        <ArrowLeft className="w-5 h-5" />
-                                    </button>
-                                    <button
-                                        onClick={nextImage}
-                                        className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background/90 backdrop-blur-sm border shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background z-10"
-                                    >
-                                        <ArrowLeft className="w-5 h-5 rotate-180" />
-                                    </button>
+                                {/* Navigation Arrows */}
+                                {screenshots.length > 1 && (
+                                    <>
+                                        <button
+                                            onClick={prevImage}
+                                            className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-background/90 backdrop-blur-sm border-2 shadow-lg flex items-center justify-center hover:bg-background hover:scale-110 transition-all z-30"
+                                        >
+                                            <ArrowLeft className="w-6 h-6" />
+                                        </button>
+                                        <button
+                                            onClick={nextImage}
+                                            className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-background/90 backdrop-blur-sm border-2 shadow-lg flex items-center justify-center hover:bg-background hover:scale-110 transition-all z-30"
+                                        >
+                                            <ArrowLeft className="w-6 h-6 rotate-180" />
+                                        </button>
+                                    </>
+                                )}
 
-                                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 bg-background/80 backdrop-blur-sm px-3 py-2 rounded-full z-10">
+                                {/* Dots Indicator */}
+                                {screenshots.length > 1 && (
+                                    <div className="flex justify-center gap-2 mt-6">
                                         {screenshots.map((_, index) => (
                                             <button
                                                 key={index}
                                                 onClick={() => setCurrentImageIndex(index)}
-                                                className={`w-2 h-2 rounded-full transition-all ${index === currentImageIndex
-                                                    ? "bg-primary w-6"
-                                                    : "bg-muted-foreground/40 hover:bg-muted-foreground/60"
-                                                    }`}
+                                                className={`transition-all ${
+                                                    index === currentImageIndex
+                                                        ? "bg-primary w-8 h-3"
+                                                        : "bg-muted-foreground/40 w-3 h-3 hover:bg-muted-foreground/60"
+                                                } rounded-full`}
                                             />
                                         ))}
                                     </div>
-                                </>
-                            )}
-                        </div>
+                                )}
+                            </div>
+                        ) : (
+                            /* Desktop/Web Carousel - Traditional full-width */
+                            <div className="relative w-full aspect-video bg-muted/30 rounded-xl overflow-hidden shadow-lg group">
+                                {/* Images container with slide animation */}
+                                <div className="relative w-full h-full">
+                                    {screenshots.map((image, index) => (
+                                        <div
+                                            key={index}
+                                            className={`absolute inset-0 transition-all duration-700 ease-in-out ${
+                                                index === currentImageIndex
+                                                    ? "opacity-100 translate-x-0"
+                                                    : index < currentImageIndex
+                                                    ? "opacity-0 -translate-x-full"
+                                                    : "opacity-0 translate-x-full"
+                                            }`}
+                                        >
+                                            <img
+                                                src={image}
+                                                alt={`${project.name} screenshot ${index + 1}`}
+                                                className="w-full h-full object-contain bg-muted/50"
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {screenshots.length > 1 && (
+                                    <>
+                                        <button
+                                            onClick={prevImage}
+                                            className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background/90 backdrop-blur-sm border shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background z-10"
+                                        >
+                                            <ArrowLeft className="w-5 h-5" />
+                                        </button>
+                                        <button
+                                            onClick={nextImage}
+                                            className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background/90 backdrop-blur-sm border shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background z-10"
+                                        >
+                                            <ArrowLeft className="w-5 h-5 rotate-180" />
+                                        </button>
+
+                                        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 bg-background/80 backdrop-blur-sm px-3 py-2 rounded-full z-10">
+                                            {screenshots.map((_, index) => (
+                                                <button
+                                                    key={index}
+                                                    onClick={() => setCurrentImageIndex(index)}
+                                                    className={`w-2 h-2 rounded-full transition-all ${
+                                                        index === currentImageIndex
+                                                            ? "bg-primary w-6"
+                                                            : "bg-muted-foreground/40 hover:bg-muted-foreground/60"
+                                                    }`}
+                                                />
+                                            ))}
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                        )}
 
                         {/* Image counter */}
                         {screenshots.length > 1 && (

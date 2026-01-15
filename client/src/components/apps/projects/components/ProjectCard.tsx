@@ -1,87 +1,72 @@
-import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Smartphone, Globe, Monitor, Layers } from "lucide-react";
+import { Briefcase } from "lucide-react";
 import { Project } from "../types";
 
 interface ProjectCardProps {
     project: Project;
+    platform?: string; // Specific platform to show cover image for
     onClick: () => void;
 }
 
-const platformIcons: Record<string, any> = {
-    Mobile: Smartphone,
-    Web: Globe,
-    Desktop: Monitor,
-    "Cross-Platform": Layers,
-};
+export function ProjectCard({ project, platform, onClick }: ProjectCardProps) {
+    // Get cover image - if platform prop provided, use that specific platform's image
+    const getCoverImage = () => {
+        if (platform && project.coverImages?.[platform]) {
+            return project.coverImages[platform];
+        }
+        
+        if (project.coverImages && Object.keys(project.coverImages).length > 0) {
+            // Try to get platform-specific cover image
+            const platformCover = project.coverImages[project.platform];
+            if (platformCover) return platformCover;
+            
+            // Fallback to any available cover image
+            return Object.values(project.coverImages)[0];
+        }
+        
+        // Legacy fallback
+        return project.coverImage || project.images?.[0] || '';
+    };
 
-const statusColors: Record<string, string> = {
-    Active: "bg-green-500/10 text-green-700 border-green-500/20",
-    "In Development": "bg-blue-500/10 text-blue-700 border-blue-500/20",
-    Rebuilding: "bg-orange-500/10 text-orange-700 border-orange-500/20",
-    Completed: "bg-gray-500/10 text-gray-700 border-gray-500/20",
-};
+    const coverImageUrl = getCoverImage();
 
-export function ProjectCard({ project, onClick }: ProjectCardProps) {
-    const PlatformIcon = platformIcons[project.platform] || Monitor;
+    // Determine card aspect ratio based on platform
+    const getAspectRatio = () => {
+        const currentPlatform = platform || project.platform;
+        if (currentPlatform === "Mobile") {
+            return "aspect-[9/16]"; // Mobile portrait
+        }
+        return "aspect-video"; // Desktop/Web landscape
+    };
 
     return (
         <button
             onClick={onClick}
             className="group relative bg-card border rounded-xl overflow-hidden text-left transition-all duration-300 hover:shadow-xl hover:border-primary/50 hover:-translate-y-1 active:scale-[0.98] flex flex-col"
         >
-            {/* Cover Image - 16:9 ratio */}
-            <div className="relative w-full aspect-video bg-gradient-to-br from-primary/10 via-primary/5 to-background overflow-hidden">
-                <img
-                    src={project.coverImage || project.images[0]}
-                    alt={project.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-
-                {/* Status Badge on Image */}
-                <div className="absolute top-3 right-3">
-                    <Badge className={`${statusColors[project.status] || statusColors["In Development"]} border font-normal text-xs backdrop-blur-sm`}>
-                        {project.status}
-                    </Badge>
-                </div>
-            </div>
-
-            {/* Content */}
-            <div className="p-5 flex flex-col gap-3 flex-1">
-                {/* Header */}
-                <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-semibold mb-1 group-hover:text-primary transition-colors">
-                            {project.name}
-                        </h3>
-                        <p className="text-sm text-muted-foreground line-clamp-2">
-                            {project.tagline}
-                        </p>
+            {/* Cover Image with dynamic aspect ratio */}
+            <div className={`relative w-full ${getAspectRatio()} bg-gradient-to-br from-primary/10 via-primary/5 to-background overflow-hidden`}>
+                {coverImageUrl ? (
+                    <img
+                        src={coverImageUrl}
+                        alt={project.name}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        onError={(e) => {
+                            // Fallback to gradient if image fails to load
+                            e.currentTarget.style.display = 'none';
+                        }}
+                    />
+                ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                        <Briefcase className="w-12 h-12 text-primary/20" />
                     </div>
-                    <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" />
-                </div>
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 
-                {/* Platform */}
-                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                    {PlatformIcon && <PlatformIcon className="w-3.5 h-3.5" />}
-                    <span>{project.platform}</span>
-                </div>
-
-                {/* Tech Stack */}
-                <div className="flex flex-wrap gap-1.5">
-                    {project.techStack.slice(0, 3).map((tech) => (
-                        <span
-                            key={tech}
-                            className="text-xs px-2 py-1 rounded-md bg-muted text-muted-foreground font-medium"
-                        >
-                            {tech}
-                        </span>
-                    ))}
-                    {project.techStack.length > 3 && (
-                        <span className="text-xs px-2 py-1 rounded-md bg-muted text-muted-foreground font-medium">
-                            +{project.techStack.length - 3}
-                        </span>
-                    )}
+                {/* Project Name Overlay */}
+                <div className="absolute bottom-0 left-0 right-0 p-3">
+                    <h3 className="text-sm font-semibold text-white line-clamp-2 group-hover:text-primary transition-colors">
+                        {project.name}
+                    </h3>
                 </div>
             </div>
 
