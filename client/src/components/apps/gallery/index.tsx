@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ImageModal } from "./components/ImageModal";
 import { Folder, ArrowLeft, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useFirestoreData } from "@/hooks/useFirestoreData";
 
 interface GalleryItem {
     id: string;
@@ -20,14 +21,7 @@ interface GalleryData {
 export default function Gallery() {
     const [breadcrumb, setBreadcrumb] = useState<GalleryItem[]>([]);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
-    const [galleryData, setGalleryData] = useState<GalleryData | null>(null);
-
-    useEffect(() => {
-        fetch(`/data/gallery.json?t=${Date.now()}`, { cache: 'no-store' })
-            .then(res => res.json())
-            .then(setGalleryData)
-            .catch(console.error);
-    }, []);
+    const { data: galleryData, loading } = useFirestoreData<GalleryData>("gallery");
 
     // Get current items based on breadcrumb
     const getCurrentItems = (): GalleryItem[] => {

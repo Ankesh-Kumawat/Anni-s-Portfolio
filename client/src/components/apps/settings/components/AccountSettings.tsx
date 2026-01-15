@@ -1,13 +1,15 @@
-import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Github, Linkedin, Twitter, Mail, Download, Code2, Briefcase } from "lucide-react";
 import { useOS } from "@/lib/os-context";
+import { useFirestoreData } from "@/hooks/useFirestoreData";
 
-interface AccountData {
-    name: string;
-    role: string;
-    avatar: string;
+interface SettingsData {
+    account: {
+        name: string;
+        role: string;
+        avatar: string;
+    };
 }
 
 const skills = [
@@ -25,15 +27,10 @@ const socialLinks = [
 ];
 
 export function AccountSettings() {
-    const [data, setData] = useState<AccountData | null>(null);
+    const { data: settingsData } = useFirestoreData<SettingsData>("settings");
     const { launchApp } = useOS();
 
-    useEffect(() => {
-        fetch('/data/settings.json?t=' + Date.now(), { cache: 'no-store' })
-            .then(res => res.json())
-            .then(result => setData(result.account))
-            .catch(console.error);
-    }, []);
+    const data = settingsData?.account;
 
     const handleDownloadResume = () => {
         const link = document.createElement('a');

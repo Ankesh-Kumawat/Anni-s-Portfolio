@@ -5,54 +5,53 @@ import { Input } from "@/components/ui/input";
 import { Plus, Search, Grid3x3, List, StickyNote } from "lucide-react";
 import { NoteCard } from "./components/NoteCard";
 import { NoteEditor } from "./components/NoteEditor";
+import { useFirestoreData } from "@/hooks/useFirestoreData";
 
-let DEFAULT_NOTES: Note[] = [];
+interface NotepadData {
+    defaultNotes: Array<{
+        id: string;
+        title: string;
+        content: string;
+        isPinned: boolean;
+    }>;
+}
 
 export default function Notepad() {
+    const { data: notepadData, loading } = useFirestoreData<NotepadData>("notepad");
     const [notes, setNotes] = useState<Note[]>([]);
     const [selectedNote, setSelectedNote] = useState<Note | null>(null);
     const [viewMode, setViewMode] = useState<ViewMode>('grid');
     const [searchQuery, setSearchQuery] = useState("");
     const [isEditing, setIsEditing] = useState(false);
 
-    // Load default notes from JSON
+    // Load default notes from Firestore and merge with localStorage
     useEffect(() => {
-        fetch(`/data/notepad.json?t=${Date.now()}`, { cache: 'no-store' })
-            .then(res => {
-                if (!res.ok) throw new Error('Failed to fetch notepad data');
-                return res.json();
-            })
-            .then(data => {
-                console.log('Notepad data loaded:', data);
-                DEFAULT_NOTES = data.defaultNotes.map((n: any) => ({
-                    ...n,
-                    createdAt: new Date(),
-                    updatedAt: new Date()
-                }));
+        if (notepadData?.defaultNotes) {
+            const defaultNotes = notepadData.defaultNotes.map((n: any) => ({
+                ...n,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            }));
 
-                // Load notes from localStorage
-                const saved = localStorage.getItem('notepad-notes');
-                if (saved) {
-                    try {
-                        const parsed = JSON.parse(saved);
-                        setNotes(parsed.map((n: any) => ({
-                            ...n,
-                            createdAt: new Date(n.createdAt),
-                            updatedAt: new Date(n.updatedAt)
-                        })));
-                    } catch (e) {
-                        console.error('Error parsing saved notes:', e);
-                        setNotes(DEFAULT_NOTES);
-                    }
-                } else {
-                    console.log('No saved notes, using defaults');
-                    setNotes(DEFAULT_NOTES);
+            // Load notes from localStorage
+            const saved = localStorage.getItem('notepad-notes');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    setNotes(parsed.map((n: any) => ({
+                        ...n,
+                        createdAt: new Date(n.createdAt),
+                        updatedAt: new Date(n.updatedAt)
+                    })));
+                } catch (e) {
+                    console.error('Error parsing saved notes:', e);
+                    setNotes(defaultNotes);
                 }
-            })
-            .catch(err => {
-                console.error('Error loading notepad data:', err);
-            });
-    }, []);
+            } else {
+                setNotes(defaultNotes);
+            }
+        }
+    }, [notepadData]);
 
     // Save notes to localStorage
     useEffect(() => {

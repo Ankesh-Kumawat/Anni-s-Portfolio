@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Database as DatabaseIcon, Search, ChevronRight, ChevronDown, FileJson } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { JSX } from "react/jsx-runtime";
+import { useFirestoreData } from "@/hooks/useFirestoreData";
 
 interface DataNode {
     name: string;
@@ -13,32 +14,31 @@ interface DataNode {
 }
 
 export default function Database() {
-    const [data, setData] = useState<Record<string, any>>({});
+    const { data: aboutData } = useFirestoreData("about");
+    const { data: projectsData } = useFirestoreData("projects");
+    const { data: contactData } = useFirestoreData("contact");
+    const { data: socialData } = useFirestoreData("social");
+    const { data: galleryData } = useFirestoreData("gallery");
+    const { data: notepadData } = useFirestoreData("notepad");
+    const { data: terminalData } = useFirestoreData("terminal");
+    const { data: databaseData } = useFirestoreData("database");
+    const { data: settingsData } = useFirestoreData("settings");
+    
     const [searchQuery, setSearchQuery] = useState("");
     const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set(["root"]));
 
-    // Load all JSON files
-    useEffect(() => {
-        const loadData = async () => {
-            try {
-                const [about, projects, contact] = await Promise.all([
-                    fetch(`/data/about.json?t=${Date.now()}`).then(r => r.json()).catch(() => null),
-                    fetch(`/data/projects.json?t=${Date.now()}`).then(r => r.json()).catch(() => null),
-                    fetch(`/data/contact.json?t=${Date.now()}`).then(r => r.json()).catch(() => null),
-                ]);
-
-                setData({
-                    about: about || {},
-                    projects: projects || {},
-                    contact: contact || {},
-                });
-            } catch (error) {
-                console.error('Failed to load data:', error);
-            }
-        };
-
-        loadData();
-    }, []);
+    // Combine all Firestore data
+    const data = {
+        about: aboutData || {},
+        projects: projectsData || {},
+        contact: contactData || {},
+        social: socialData || {},
+        gallery: galleryData || {},
+        notepad: notepadData || {},
+        terminal: terminalData || {},
+        database: databaseData || {},
+        settings: settingsData || {},
+    };
 
     const toggleNode = (path: string) => {
         setExpandedNodes(prev => {

@@ -6,7 +6,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Send, MessageSquare, CheckCircle2, AlertCircle } from "lucide-react";
 import { useOS } from "@/lib/os-context";
 
-export function ContactForm() {
+interface ContactFormProps {
+    onClose?: () => void;
+}
+
+export function ContactForm({ onClose }: ContactFormProps) {
     const { addNotification } = useOS();
     const [formData, setFormData] = useState({
         name: "",
@@ -49,6 +53,13 @@ export function ContactForm() {
                 );
 
                 setFormData({ name: "", email: "", subject: "", message: "" });
+                
+                // Close modal after 2 seconds
+                if (onClose) {
+                    setTimeout(() => {
+                        onClose();
+                    }, 2000);
+                }
             } else {
                 setSubmitStatus({
                     type: "error",

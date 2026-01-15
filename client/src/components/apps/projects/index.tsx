@@ -1,24 +1,28 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { ProjectCard } from "./components/ProjectCard";
 import { ProjectDetail } from "./components/ProjectDetail";
 import { Project } from "./types";
 import { Briefcase } from "lucide-react";
+import { useFirestoreData } from "@/hooks/useFirestoreData";
 
 interface ProjectsData {
     projects: Project[];
 }
 
 export default function Projects() {
-    const [data, setData] = useState<ProjectsData | null>(null);
+    const { data, loading } = useFirestoreData<ProjectsData>("projects");
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
-    // Load projects from JSON
-    useEffect(() => {
-        fetch(`/data/projects.json?t=${Date.now()}`, { cache: 'no-store' })
-            .then(res => res.json())
-            .then(setData)
-            .catch(console.error);
-    }, []);
+    if (loading) {
+        return (
+            <div className="h-full flex items-center justify-center bg-background">
+                <div className="text-center">
+                    <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+                    <p className="text-sm text-muted-foreground">Loading projects...</p>
+                </div>
+            </div>
+        );
+    }
 
     if (!data) return null;
 
