@@ -28,6 +28,7 @@ export interface AppConfig {
 interface WindowState {
   id: AppId;
   minimized: boolean;
+  maximized: boolean;
   zIndex: number;
 }
 
@@ -73,6 +74,7 @@ export function OSProvider({ children }: { children: ReactNode }) {
     const newWindow: WindowState = {
       id,
       minimized: false,
+      maximized: false,
       zIndex: zIndexCounter + 1,
     };
 

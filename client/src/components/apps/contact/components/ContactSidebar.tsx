@@ -99,9 +99,11 @@ const platformColors: Record<string, string> = {
 
 interface ContactSidebarProps {
     onSendMessage: () => void;
+    showButton: boolean;
+    isLargeScreen?: boolean;
 }
 
-export function ContactSidebar({ onSendMessage }: ContactSidebarProps) {
+export function ContactSidebar({ onSendMessage, showButton, isLargeScreen = false }: ContactSidebarProps) {
     const { data: contactData } = useFirestoreData<ContactData>("contact");
     const { data: aboutData } = useFirestoreData<AboutData>("about");
     const { data: socialData } = useFirestoreData<SocialData>("social");
@@ -110,7 +112,7 @@ export function ContactSidebar({ onSendMessage }: ContactSidebarProps) {
     if (!contactData || !aboutData) return null;
 
     return (
-        <div className="w-full md:w-[480px] lg:w-[520px] xl:w-[580px] bg-gradient-to-br from-muted/30 to-background p-6 md:p-8 lg:p-10 flex flex-col justify-between shrink-0 md:overflow-y-auto no-scrollbar border-b md:border-b-0 md:border-r">
+        <div className={`${isLargeScreen ? 'w-[480px]' : 'w-full'} bg-gradient-to-br from-muted/30 to-background p-6 md:p-8 lg:p-10 flex flex-col justify-between shrink-0 overflow-y-auto no-scrollbar border-b md:border-b-0 md:border-r`}>
             <div className="space-y-6 md:space-y-8">
                 {/* Profile Section */}
                 <div className="flex items-center gap-4 pb-6 border-b">
@@ -137,15 +139,17 @@ export function ContactSidebar({ onSendMessage }: ContactSidebarProps) {
                         {contactData.message}
                     </p>
                     
-                    {/* Send Message Button */}
-                    <Button
-                        onClick={onSendMessage}
-                        size="lg"
-                        className="w-full mb-6 md:mb-8 h-12 md:h-14 text-base md:text-lg font-semibold shadow-lg hover:shadow-xl transition-all"
-                    >
-                        <Send className="w-5 h-5 mr-2" />
-                        Send Message
-                    </Button>
+                    {/* Send Message Button - Conditionally shown */}
+                    {showButton && (
+                        <Button
+                            onClick={onSendMessage}
+                            size="lg"
+                            className="w-full mb-6 md:mb-8 h-12 md:h-14 text-base md:text-lg font-semibold shadow-lg hover:shadow-xl transition-all"
+                        >
+                            <Send className="w-5 h-5 mr-2" />
+                            Send Message
+                        </Button>
+                    )}
                 </div>
 
                 <div className="space-y-4 md:space-y-5">

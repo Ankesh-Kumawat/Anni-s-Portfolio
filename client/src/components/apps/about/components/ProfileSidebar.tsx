@@ -108,11 +108,11 @@ export function ProfileSidebar() {
     if (!aboutData) return null;
 
     return (
-        <div className="w-full md:w-48 xl:w-[480px] bg-gradient-to-b from-muted/30 to-background p-6 md:p-4 xl:p-14 border-b md:border-b-0 md:border-r flex flex-col items-center text-center gap-6 md:gap-4 xl:gap-12 shrink-0 md:overflow-y-auto no-scrollbar">
+        <div className="w-full md:w-48 xl:w-[380px] bg-gradient-to-b from-muted/30 to-background p-6 md:p-4 xl:p-8 border-b md:border-b-0 md:border-r flex flex-col items-center text-center gap-6 md:gap-4 xl:gap-8 shrink-0 md:overflow-y-auto no-scrollbar">
             {/* Avatar with gradient ring */}
             <div className="relative mt-4 md:mt-2 xl:mt-4">
                 <div className="absolute inset-0 bg-gradient-to-r from-primary to-purple-500 rounded-full blur-md opacity-50"></div>
-                <Avatar className="relative w-32 h-32 md:w-24 md:h-24 xl:w-48 xl:h-48 border-4 border-background shadow-2xl">
+                <Avatar className="relative w-32 h-32 md:w-24 md:h-24 xl:w-36 xl:h-36 border-4 border-background shadow-2xl">
                     <AvatarImage src={aboutData.personal.avatar} className="object-cover" />
                     <AvatarFallback className="text-2xl md:text-3xl font-bold">
                         {aboutData.personal.name.split(' ').map(n => n[0]).join('')}
@@ -121,26 +121,26 @@ export function ProfileSidebar() {
             </div>
 
             {/* Name and Title */}
-            <div className="space-y-3 md:space-y-2 xl:space-y-4 w-full">
-                <h1 className="text-xl md:text-sm xl:text-3xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text">
+            <div className="space-y-3 md:space-y-2 xl:space-y-3 w-full">
+                <h1 className="text-xl md:text-sm xl:text-2xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text">
                     {aboutData.personal.name}
                 </h1>
-                <p className="text-sm md:text-xs xl:text-lg text-muted-foreground font-medium leading-relaxed px-2">
+                <p className="text-sm md:text-xs xl:text-base text-muted-foreground font-medium leading-relaxed px-2">
                     {aboutData.personal.title}
                 </p>
-                <div className="flex items-center justify-center gap-2 text-muted-foreground text-sm md:text-xs xl:text-base">
-                    <MapPin className="w-4 h-4 md:w-3 md:h-3 xl:w-5 xl:h-5 text-primary" />
-                    <span className="text-xs md:text-[10px] xl:text-base">{aboutData.personal.location}</span>
+                <div className="flex items-center justify-center gap-2 text-muted-foreground text-sm md:text-xs xl:text-sm">
+                    <MapPin className="w-4 h-4 md:w-3 md:h-3 xl:w-4 xl:h-4 text-primary" />
+                    <span className="text-xs md:text-[10px] xl:text-sm">{aboutData.personal.location}</span>
                 </div>
             </div>
 
             {/* Social Links */}
             {socialData && socialData.links.length > 0 && (
-                <div className="w-full pt-4 md:pt-3 xl:pt-6 border-t">
-                    <p className="text-xs md:text-[10px] xl:text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4 md:mb-3 xl:mb-6">
+                <div className="w-full pt-4 md:pt-3 xl:pt-4 border-t">
+                    <p className="text-xs md:text-[10px] xl:text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4 md:mb-3 xl:mb-4">
                         Connect
                     </p>
-                    <div className="flex gap-3 md:gap-2 xl:gap-4 justify-center flex-wrap">
+                    <div className="flex gap-3 md:gap-2 xl:gap-3 justify-center flex-wrap">
                         {socialData.links.map((link, index) => {
                             const Icon = platformIcons[link.platform.toLowerCase()] || FaGlobe;
                             const bgColor = platformColors[link.platform.toLowerCase()] || "bg-[#3B82F6]";
@@ -161,11 +161,11 @@ export function ProfileSidebar() {
                                         <div className={`absolute inset-0 ${bgColor} rounded-xl blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-300`}></div>
                                         <button
                                             onClick={() => setWhatsappMenuOpen(whatsappMenuOpen === link.name ? null : link.name)}
-                                            className={`relative flex items-center justify-center w-12 h-12 md:w-9 md:h-9 xl:w-16 xl:h-16 rounded-xl ${bgColor} text-white hover:scale-110 hover:-translate-y-1 transition-all duration-300 shadow-lg hover:shadow-xl`}
+                                            className={`relative flex items-center justify-center w-12 h-12 md:w-9 md:h-9 xl:w-12 xl:h-12 rounded-xl ${bgColor} text-white hover:scale-110 hover:-translate-y-1 transition-all duration-300 shadow-lg hover:shadow-xl`}
                                         >
-                                            <Icon className="w-6 h-6 md:w-4 md:h-4 xl:w-8 xl:h-8 transition-transform group-hover:scale-110" />
+                                            <Icon className="w-6 h-6 md:w-4 md:h-4 xl:w-6 xl:h-6 transition-transform group-hover:scale-110" />
                                             {hasMultipleOptions && (
-                                                <span className="absolute -top-1 -right-1 w-4 h-4 md:w-3 md:h-3 xl:w-5 xl:h-5 bg-red-500 rounded-full text-[10px] md:text-[8px] xl:text-[10px] flex items-center justify-center font-bold">
+                                                <span className="absolute -top-1 -right-1 w-4 h-4 md:w-3 md:h-3 xl:w-4 xl:h-4 bg-red-500 rounded-full text-[10px] md:text-[8px] xl:text-[10px] flex items-center justify-center font-bold">
                                                     {[contactNumber, groupLink, channelLink].filter(Boolean).length}
                                                 </span>
                                             )}
@@ -261,9 +261,9 @@ export function ProfileSidebar() {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         title={link.name}
-                                        className={`relative flex items-center justify-center w-12 h-12 md:w-9 md:h-9 xl:w-16 xl:h-16 rounded-xl ${bgColor} text-white hover:scale-110 hover:-translate-y-1 transition-all duration-300 shadow-lg hover:shadow-xl`}
+                                        className={`relative flex items-center justify-center w-12 h-12 md:w-9 md:h-9 xl:w-12 xl:h-12 rounded-xl ${bgColor} text-white hover:scale-110 hover:-translate-y-1 transition-all duration-300 shadow-lg hover:shadow-xl`}
                                     >
-                                        <Icon className="w-6 h-6 md:w-4 md:h-4 xl:w-8 xl:h-8 transition-transform group-hover:scale-110" />
+                                        <Icon className="w-6 h-6 md:w-4 md:h-4 xl:w-6 xl:h-6 transition-transform group-hover:scale-110" />
                                     </a>
                                 </div>
                             );
