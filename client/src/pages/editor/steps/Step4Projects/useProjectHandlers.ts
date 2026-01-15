@@ -2,71 +2,6 @@ import type { EditorData } from "../../types";
 import { uploadToCloudinary, uploadMultipleToCloudinary } from "@/lib/cloudinary";
 
 export function useProjectHandlers(data: EditorData, setData: React.Dispatch<React.SetStateAction<EditorData>>) {
-    const syncGallery = (updatedProjects: any[]) => {
-        // Helper function to get the best cover image from coverImages object
-        const getCoverImage = (project: any): string => {
-            if (!project.coverImages || Object.keys(project.coverImages).length === 0) {
-                return "";
-            }
-            // Priority: Desktop > Mobile > any other platform
-            return project.coverImages["Desktop"] ||
-                project.coverImages["Mobile"] ||
-                Object.values(project.coverImages)[0] ||
-                "";
-        };
-
-        // Get cover image for projects folder (first project's cover)
-        const projectsFolderCover = updatedProjects.length > 0
-            ? getCoverImage(updatedProjects[0])
-            : "";
-
-        return {
-            folders: data.gallery.folders.length > 0 ? data.gallery.folders.map(folder => {
-                if (folder.id === "projects") {
-                    return {
-                        ...folder,
-                        coverImage: projectsFolderCover,
-                        children: updatedProjects.map(p => {
-                            return {
-                                id: p.id,
-                                name: p.name || "Untitled Project",
-                                type: "folder" as const,
-                                coverImage: getCoverImage(p),
-                                children: p.images.map((url: string, idx: number) => ({
-                                    id: `${p.id}-img-${idx}`,
-                                    name: `Screenshot ${idx + 1}`,
-                                    type: "image" as const,
-                                    imageUrl: url
-                                }))
-                            };
-                        })
-                    };
-                }
-                return folder;
-            }) : [{
-                id: "projects",
-                name: "Projects",
-                type: "folder" as const,
-                coverImage: projectsFolderCover,
-                children: updatedProjects.map(p => {
-                    return {
-                        id: p.id,
-                        name: p.name || "Untitled Project",
-                        type: "folder" as const,
-                        coverImage: getCoverImage(p),
-                        children: p.images.map((url: string, idx: number) => ({
-                            id: `${p.id}-img-${idx}`,
-                            name: `Screenshot ${idx + 1}`,
-                            type: "image" as const,
-                            imageUrl: url
-                        }))
-                    };
-                })
-            }],
-            directImages: data.gallery.directImages || []
-        };
-    };
-
     const addProject = () => {
         setData((prev) => ({
             ...prev,
@@ -154,8 +89,7 @@ export function useProjectHandlers(data: EditorData, setData: React.Dispatch<Rea
                     assets: {
                         ...prev.assets,
                         images: updatedAssets
-                    },
-                    gallery: syncGallery(updatedProjects)
+                    }
                 };
             }
 
@@ -215,8 +149,7 @@ export function useProjectHandlers(data: EditorData, setData: React.Dispatch<Rea
 
                 return {
                     ...prev,
-                    projects: { projects: updatedProjects },
-                    gallery: syncGallery(updatedProjects)
+                    projects: { projects: updatedProjects }
                 };
             });
         } catch (error) {
@@ -242,8 +175,7 @@ export function useProjectHandlers(data: EditorData, setData: React.Dispatch<Rea
 
             return {
                 ...prev,
-                projects: { projects: updatedProjects },
-                gallery: syncGallery(updatedProjects)
+                projects: { projects: updatedProjects }
             };
         });
     };
@@ -272,8 +204,7 @@ export function useProjectHandlers(data: EditorData, setData: React.Dispatch<Rea
 
             return {
                 ...prev,
-                projects: { projects: updatedProjects },
-                gallery: syncGallery(updatedProjects)
+                projects: { projects: updatedProjects }
             };
         });
     };
@@ -288,8 +219,7 @@ export function useProjectHandlers(data: EditorData, setData: React.Dispatch<Rea
 
             return {
                 ...prev,
-                projects: { projects: updatedProjects },
-                gallery: syncGallery(updatedProjects)
+                projects: { projects: updatedProjects }
             };
         });
     };
@@ -309,8 +239,7 @@ export function useProjectHandlers(data: EditorData, setData: React.Dispatch<Rea
 
             return {
                 ...prev,
-                projects: { projects: updatedProjects },
-                gallery: syncGallery(updatedProjects)
+                projects: { projects: updatedProjects }
             };
         });
     };
@@ -381,8 +310,7 @@ export function useProjectHandlers(data: EditorData, setData: React.Dispatch<Rea
 
                 return {
                     ...prev,
-                    projects: { projects: updatedProjects },
-                    gallery: syncGallery(updatedProjects)
+                    projects: { projects: updatedProjects }
                 };
             });
         } catch (error) {
@@ -407,8 +335,7 @@ export function useProjectHandlers(data: EditorData, setData: React.Dispatch<Rea
 
             return {
                 ...prev,
-                projects: { projects: updatedProjects },
-                gallery: syncGallery(updatedProjects)
+                projects: { projects: updatedProjects }
             };
         });
     };

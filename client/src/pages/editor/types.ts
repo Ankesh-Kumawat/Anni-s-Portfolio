@@ -76,24 +76,16 @@ export interface EditorData {
         }>;
     };
     gallery: {
-        folders: Array<{
-            id: string;
-            name: string;
-            coverImage: string;
-            children: Array<{
-                id: string;
-                name: string;
-                type: "folder" | "image";
-                coverImage?: string;
-                imageUrl?: string;
-                images?: string[];
-            }>;
-        }>;
-        directImages: Array<{
-            id: string;
-            name: string;
-            imageUrl: string;
-        }>;
+        coverImages: {
+            [projectId: string]: {
+                [platform: string]: string;
+            };
+        };
+        platformImages: {
+            [projectId: string]: {
+                [platform: string]: string[];
+            };
+        };
     };
     notepad: {
         defaultNotes: Array<{

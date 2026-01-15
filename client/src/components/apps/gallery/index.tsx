@@ -1,226 +1,423 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { ImageModal } from "./components/ImageModal";
-import { Folder, ArrowLeft, Image as ImageIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Image as ImageIcon, Monitor, Smartphone, Globe, Layers, Briefcase, ArrowLeft, FolderOpen } from "lucide-react";
 import { useFirestoreData } from "@/hooks/useFirestoreData";
-
-interface GalleryItem {
-    id: string;
-    name: string;
-    type: 'folder' | 'image';
-    coverImage?: string;
-    imageUrl?: string;
-    children?: GalleryItem[];
-}
+import { useWindowState } from "@/hooks/useWindowState";
 
 interface GalleryData {
-    folders: GalleryItem[];
-    directImages: GalleryItem[];
+    coverImages: {
+        [projectId: string]: {
+            [platform: string]: string;
+        };
+    };
+    platformImages: {
+        [projectId: string]: {
+            [platform: string]: string[];
+        };
+    };
+}
+
+interface ProjectsData {
+    projects: Array<{
+        id: string;
+        name: string;
+        platform: string;
+        coverImages?: { [platform: string]: string };
+        platformImages?: { [platform: string]: string[] };
+    }>;
+}
+
+interface GalleryImage {
+    id: string;
+    imageUrl: string;
+    platform: string;
+}
+
+interface ProjectPlatformCard {
+    projectId: string;
+    projectName: string;
+    platform: string;
+    coverImage: string | null;
+    imageCount: number;
 }
 
 export default function Gallery() {
-    const [breadcrumb, setBreadcrumb] = useState<GalleryItem[]>([]);
-    const [selectedImage, setSelectedImage] = useState<string | null>(null);
-    const { data: galleryData, loading } = useFirestoreData<GalleryData>("gallery");
+    const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+    const [selectedProject, setSelectedProject] = useState<string | null>(null);
+    const [selectedProjectPlatform, setSelectedProjectPlatform] = useState<string | null>(null);
+    const [selectedPlatform, setSelectedPlatform] = useState<string>("All");
+    const { data: galleryData, loading: galleryLoading } = useFirestoreData<GalleryData>("gallery");
+    const { data: projectsData, loading: projectsLoading } = useFirestoreData<ProjectsData>("projects");
+    const { isMaximized } = useWindowState();
 
-    // Get current items based on breadcrumb
-    const getCurrentItems = (): GalleryItem[] => {
-        if (!galleryData) return [];
-        if (breadcrumb.length === 0) {
-            return [...galleryData.folders, ...galleryData.directImages];
+    const loading = galleryLoading || projectsLoading;
+
+    const platformIcons: { [key: string]: any } = {
+        All: Briefcase,
+        Mobile: Smartphone,
+        Desktop: Monitor,
+        Web: Globe,
+        "Cross-Platform": Layers,
+    };
+
+    // Get project-platform cards (separate card for each platform) - Same as Projects app
+    const projectPlatformCards = useMemo(() => {
+        if (!galleryData?.platformImages || !projectsData?.projects) return [];
+        
+        const cards: ProjectPlatformCard[] = [];
+        
+        if (selectedPlatform === "All") {
+            // For "All" tab, expand projects with multiple platforms
+            projectsData.projects.forEach(project => {
+                const projectImages = galleryData.platformImages[project.id];
+                if (!projectImages) return;
+                
+                // Add separate card for each platform that has images
+                Object.entries(projectImages).forEach(([platform, images]) => {
+                    if (images.length > 0) {
+                        const coverImage = galleryData.coverImages?.[project.id]?.[platform] || images[0];
+                        
+                        cards.push({
+                            projectId: project.id,
+                            projectName: project.name,
+                            platform,
+                            coverImage,
+                            imageCount: images.length
+                        });
+                    }
+                });
+            });
+        } else {
+            // For specific platform tabs, show only that platform
+            projectsData.projects.forEach(project => {
+                const projectImages = galleryData.platformImages[project.id];
+                if (!projectImages || !projectImages[selectedPlatform]) return;
+                
+                const images = projectImages[selectedPlatform];
+                if (images.length > 0) {
+                    const coverImage = galleryData.coverImages?.[project.id]?.[selectedPlatform] || images[0];
+                    
+                    cards.push({
+                        projectId: project.id,
+                        projectName: project.name,
+                        platform: selectedPlatform,
+                        coverImage,
+                        imageCount: images.length
+                    });
+                }
+            });
         }
-        return breadcrumb[breadcrumb.length - 1].children || [];
+        
+        return cards;
+    }, [galleryData, projectsData, selectedPlatform]);
+
+    // Get available platforms
+    const availablePlatforms = useMemo(() => {
+        if (!galleryData?.platformImages || !projectsData?.projects) return ["All"];
+        
+        const platforms = new Set<string>(["All"]);
+        
+        projectsData.projects.forEach((project) => {
+            const projectImages = galleryData.platformImages[project.id];
+            if (projectImages) {
+                Object.keys(projectImages).forEach((platform) => {
+                    if (projectImages[platform].length > 0) {
+                        platforms.add(platform);
+                    }
+                });
+            }
+        });
+        
+        return Array.from(platforms);
+    }, [galleryData, projectsData]);
+
+    // No need for filteredCards - projectPlatformCards already handles filtering
+
+    // Get images for selected project (filtered by platform if clicked from platform card)
+    const projectImages = useMemo(() => {
+        if (!selectedProject || !galleryData?.platformImages?.[selectedProject]) return [];
+        
+        const images: GalleryImage[] = [];
+        const projectPlatformImages = galleryData.platformImages[selectedProject];
+        
+        // If a specific platform was selected (clicked from platform card), show only that platform's images
+        if (selectedProjectPlatform) {
+            const platformUrls = projectPlatformImages[selectedProjectPlatform];
+            if (Array.isArray(platformUrls)) {
+                platformUrls.forEach((url, idx) => {
+                    images.push({
+                        id: `${selectedProject}-${selectedProjectPlatform}-${idx}`,
+                        imageUrl: url,
+                        platform: selectedProjectPlatform
+                    });
+                });
+            }
+        } else {
+            // Show all platforms (fallback, shouldn't happen normally)
+            Object.entries(projectPlatformImages).forEach(([platform, urls]) => {
+                if (Array.isArray(urls)) {
+                    urls.forEach((url, idx) => {
+                        images.push({
+                            id: `${selectedProject}-${platform}-${idx}`,
+                            imageUrl: url,
+                            platform
+                        });
+                    });
+                }
+            });
+        }
+        
+        return images;
+    }, [selectedProject, selectedProjectPlatform, galleryData]);
+
+    // Get selected project details
+    const currentProject = useMemo(() => {
+        if (!selectedProject || !projectsData?.projects) return null;
+        return projectsData.projects.find(p => p.id === selectedProject);
+    }, [selectedProject, projectsData]);
+
+    // Modal navigation handlers
+    const handleNextImage = () => {
+        if (selectedImageIndex !== null && selectedImageIndex < projectImages.length - 1) {
+            setSelectedImageIndex(selectedImageIndex + 1);
+        } else if (selectedImageIndex === projectImages.length - 1) {
+            // Loop back to first image
+            setSelectedImageIndex(0);
+        }
     };
 
-    const currentItems = getCurrentItems();
-    const folders = currentItems.filter(item => item.type === 'folder');
-    const images = currentItems.filter(item => item.type === 'image');
-
-    // Navigate into folder
-    const openFolder = (folder: GalleryItem) => {
-        setBreadcrumb([...breadcrumb, folder]);
-    };
-
-    // Go back
-    const goBack = () => {
-        setBreadcrumb(breadcrumb.slice(0, -1));
+    const handlePreviousImage = () => {
+        if (selectedImageIndex !== null && selectedImageIndex > 0) {
+            setSelectedImageIndex(selectedImageIndex - 1);
+        } else if (selectedImageIndex === 0) {
+            // Loop to last image
+            setSelectedImageIndex(projectImages.length - 1);
+        }
     };
 
     // If image is selected, show modal
-    if (selectedImage) {
+    if (selectedImageIndex !== null && projectImages[selectedImageIndex]) {
         return (
             <ImageModal
-                imageSrc={selectedImage}
-                onClose={() => setSelectedImage(null)}
+                imageSrc={projectImages[selectedImageIndex].imageUrl}
+                onClose={() => setSelectedImageIndex(null)}
+                onNext={handleNextImage}
+                onPrevious={handlePreviousImage}
+                hasNext={projectImages.length > 1}
+                hasPrevious={projectImages.length > 1}
             />
         );
     }
 
-    if (!galleryData) {
+    if (loading) {
         return (
             <div className="h-full bg-background flex items-center justify-center">
                 <div className="text-center">
-                    <ImageIcon className="w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-20" />
-                    <p className="text-muted-foreground">Loading gallery...</p>
+                    <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+                    <p className="text-sm text-muted-foreground">Loading gallery...</p>
                 </div>
             </div>
         );
     }
 
-    return (
-        <div className="h-full bg-background flex flex-col">
-            {/* Header with Breadcrumb */}
-            <div className="border-b bg-muted/20 px-4 py-3">
-                <div className="flex items-center gap-2">
-                    {breadcrumb.length > 0 && (
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={goBack}
-                            className="gap-2"
+    if (!galleryData || !projectsData) return null;
+
+    // Project Detail View
+    if (selectedProject && currentProject) {
+        return (
+            <div className="h-full overflow-y-auto no-scrollbar bg-background">
+                {/* Header with Back Button */}
+                <div className="border-b bg-muted/20 px-6 py-4">
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={() => {
+                                setSelectedProject(null);
+                                setSelectedProjectPlatform(null);
+                            }}
+                            className="p-2 rounded-lg hover:bg-muted transition-colors"
                         >
-                            <ArrowLeft className="w-4 h-4" />
-                            Back
-                        </Button>
-                    )}
-                    <div className="flex items-center gap-2 flex-1">
-                        <ImageIcon className="w-5 h-5 text-primary" />
-                        <div className="flex items-center gap-1 text-sm">
-                            <span className="font-semibold">Gallery</span>
-                            {breadcrumb.map((item) => (
-                                <span key={item.id} className="flex items-center gap-1">
-                                    <span className="text-muted-foreground">/</span>
-                                    <span className="font-semibold">{item.name}</span>
-                                </span>
-                            ))}
+                            <ArrowLeft className="w-5 h-5" />
+                        </button>
+                        <FolderOpen className="w-6 h-6 text-primary" />
+                        <div>
+                            <h1 className="text-2xl font-bold">
+                                {currentProject.name}
+                                {selectedProjectPlatform && (
+                                    <span className="text-lg text-muted-foreground ml-2">- {selectedProjectPlatform}</span>
+                                )}
+                            </h1>
+                            <p className="text-sm text-muted-foreground">
+                                {projectImages.length} {projectImages.length === 1 ? 'image' : 'images'}
+                            </p>
                         </div>
                     </div>
-                    <span className="text-xs text-muted-foreground">
-                        {folders.length > 0 && `${folders.length} folders`}
-                        {folders.length > 0 && images.length > 0 && ', '}
-                        {images.length > 0 && `${images.length} images`}
-                    </span>
                 </div>
-            </div>
 
-            {/* Content */}
-            <div className="flex-1 overflow-y-auto p-6 no-scrollbar">
-                {/* Folders Section */}
-                {folders.length > 0 && (
-                    <div className="mb-8">
-                        <h2 className="text-sm font-semibold text-muted-foreground mb-4 flex items-center gap-2">
-                            <Folder className="w-4 h-4" />
-                            Folders ({folders.length})
-                        </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {folders.map((folder) => {
-                                const isProjectsFolder = folder.id === 'projects';
-
-                                return (
-                                    <button
-                                        key={folder.id}
-                                        onClick={() => openFolder(folder)}
-                                        className={`group relative aspect-video rounded-xl overflow-hidden border-2 transition-all cursor-pointer ${isProjectsFolder
-                                            ? 'border-primary/50 hover:border-primary bg-gradient-to-br from-primary/10 via-primary/5 to-background hover:shadow-2xl hover:shadow-primary/20'
-                                            : 'border-border hover:border-primary bg-muted hover:shadow-xl'
-                                            }`}
+                {/* Images Masonry Grid */}
+                <div className="p-4 sm:p-6">
+                    {projectImages.length > 0 ? (
+                        <div className={`columns-2 ${isMaximized ? 'sm:columns-3 lg:columns-4' : 'sm:columns-3'} gap-4 sm:gap-6 space-y-4 sm:space-y-6`}>
+                            {projectImages.map((image, index) => (
+                                <div key={image.id} className="break-inside-avoid">
+                                    <div
+                                        className="group relative rounded-xl overflow-hidden cursor-pointer transition-all bg-card border-2 border-border hover:border-primary hover:shadow-2xl"
+                                        onClick={() => setSelectedImageIndex(index)}
                                     >
-                                        {/* Cover Image */}
-                                        {folder.coverImage ? (
-                                            <img
-                                                src={folder.coverImage}
-                                                alt={folder.name}
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                                loading="lazy"
-                                                onError={(e) => {
-                                                    e.currentTarget.style.display = 'none';
-                                                }}
-                                            />
-                                        ) : (
-                                            <div className={`w-full h-full flex items-center justify-center ${isProjectsFolder
-                                                ? 'bg-gradient-to-br from-primary/20 via-primary/10 to-primary/5'
-                                                : 'bg-gradient-to-br from-primary/10 to-primary/5'
-                                                }`}>
-                                                <Folder className={`${isProjectsFolder ? 'w-24 h-24 text-primary/40' : 'w-20 h-20 text-primary/30'
-                                                    }`} />
-                                            </div>
-                                        )}
+                                        <img
+                                            src={image.imageUrl}
+                                            alt={`${image.platform} screenshot`}
+                                            className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500"
+                                            loading="lazy"
+                                        />
 
-                                        {/* Special Badge for Projects Folder */}
-                                        {isProjectsFolder && (
-                                            <div className="absolute top-3 right-3 bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-bold shadow-lg">
-                                                Featured
-                                            </div>
-                                        )}
+                                        {/* Platform Badge */}
+                                        <div className="absolute top-3 left-3 z-10">
+                                            <span className="px-3 py-1.5 rounded-full text-xs font-bold shadow-lg backdrop-blur-sm bg-black/70 text-white">
+                                                {image.platform}
+                                            </span>
+                                        </div>
 
-                                        {/* Overlay */}
-                                        <div className={`absolute inset-0 flex items-end p-5 ${isProjectsFolder
-                                            ? 'bg-gradient-to-t from-primary/90 via-primary/40 to-transparent'
-                                            : 'bg-gradient-to-t from-black/90 via-black/30 to-transparent'
-                                            }`}>
-                                            <div className="flex items-center gap-3 text-white">
-                                                <Folder className={`${isProjectsFolder ? 'w-6 h-6' : 'w-5 h-5'} flex-shrink-0`} />
-                                                <div className="flex items-baseline gap-2">
-                                                    <span className={`font-bold ${isProjectsFolder ? 'text-xl' : 'text-base'}`}>
-                                                        {folder.name}
-                                                    </span>
-                                                    <span className={`text-white/80 ${isProjectsFolder ? 'text-sm font-medium' : 'text-xs'}`}>
-                                                        ({folder.children?.length || 0})
-                                                    </span>
-                                                </div>
+                                        {/* Hover Overlay */}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
+                                            <div className="text-white">
+                                                <p className="font-bold text-sm">{image.platform}</p>
+                                                <p className="text-xs text-white/80">Click to view full size</p>
                                             </div>
                                         </div>
 
                                         {/* Hover Effect */}
-                                        <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none ${isProjectsFolder ? 'bg-primary/15' : 'bg-primary/10'
-                                            }`} />
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    </div>
-                )}
-
-                {/* Images Section */}
-                {images.length > 0 && (
-                    <div>
-                        <h2 className="text-sm font-semibold text-muted-foreground mb-4 flex items-center gap-2">
-                            <ImageIcon className="w-4 h-4" />
-                            Images ({images.length})
-                        </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {images.map((image) => (
-                                <div
-                                    key={image.id}
-                                    className="group relative aspect-video rounded-xl overflow-hidden cursor-pointer transition-all bg-muted border-2 border-border hover:border-primary hover:shadow-xl"
-                                    onClick={() => setSelectedImage(image.imageUrl!)}
-                                >
-                                    <img
-                                        src={image.imageUrl}
-                                        alt={image.name}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                        loading="lazy"
-                                    />
-
-                                    {/* Image Name Overlay on Hover */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-                                        <span className="text-white font-semibold text-sm">{image.name}</span>
+                                        <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                                     </div>
-
-                                    {/* Hover Effect */}
-                                    <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                                 </div>
                             ))}
                         </div>
-                    </div>
-                )}
+                    ) : (
+                        <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
+                            <ImageIcon className="w-16 h-16 mb-4 opacity-20" />
+                            <p className="text-lg font-semibold">No images in this project</p>
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
+    }
 
-                {/* Empty State */}
-                {folders.length === 0 && images.length === 0 && (
-                    <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
-                        <Folder className="w-16 h-16 mb-4 opacity-20" />
-                        <p className="text-lg font-semibold">Empty folder</p>
-                        <p className="text-sm">No items to display</p>
+    // Projects List View (Platform-based cards)
+    return (
+        <div className="h-full overflow-y-auto no-scrollbar bg-background">
+            {/* Header */}
+            <div className="border-b bg-muted/20 px-6 py-4">
+                <div className="flex items-center gap-3">
+                    <ImageIcon className="w-6 h-6 text-primary" />
+                    <div>
+                        <h1 className="text-2xl font-bold">Gallery</h1>
+                        <p className="text-sm text-muted-foreground">
+                            Browse project images by platform
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Platform Tabs */}
+            {availablePlatforms.length > 1 && (
+                <div className="border-b bg-muted/10 px-6 py-3">
+                    <div className="flex gap-2 overflow-x-auto no-scrollbar">
+                        {availablePlatforms.map((platform) => {
+                            const Icon = platformIcons[platform] || Briefcase;
+                            const isActive = selectedPlatform === platform;
+                            
+                            return (
+                                <button
+                                    key={platform}
+                                    onClick={() => setSelectedPlatform(platform)}
+                                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all whitespace-nowrap ${
+                                        isActive
+                                            ? "bg-primary text-primary-foreground shadow-md"
+                                            : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
+                                    }`}
+                                >
+                                    <Icon className="w-4 h-4" />
+                                    {platform}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
+
+            {/* Platform-based Project Cards Grid */}
+            <div className="p-4 sm:p-6">
+                {projectPlatformCards.length > 0 ? (
+                    <div className={`columns-2 ${isMaximized ? 'sm:columns-3 lg:columns-4' : 'sm:columns-3'} gap-4 sm:gap-6 space-y-4 sm:space-y-6`}>
+                        {projectPlatformCards.map((card, index) => {
+                            // Determine aspect ratio based on platform
+                            const aspectRatio = card.platform === "Mobile" ? "aspect-[9/16]" : "aspect-video";
+                            
+                            return (
+                            <div key={`${card.projectId}-${card.platform}-${index}`} className="break-inside-avoid">
+                                <button
+                                    onClick={() => {
+                                        setSelectedProject(card.projectId);
+                                        setSelectedProjectPlatform(card.platform);
+                                    }}
+                                    className="group relative bg-card border-2 rounded-xl overflow-hidden text-left transition-all duration-300 hover:shadow-xl hover:border-primary/50 hover:-translate-y-1 active:scale-[0.98] w-full"
+                                >
+                                    {/* Cover Image with dynamic aspect ratio */}
+                                    <div className={`relative w-full ${aspectRatio} bg-gradient-to-br from-primary/10 via-primary/5 to-background overflow-hidden`}>
+                                        {card.coverImage ? (
+                                            <img
+                                                src={card.coverImage}
+                                                alt={`${card.projectName} - ${card.platform}`}
+                                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                                loading="lazy"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center">
+                                                <FolderOpen className="w-12 h-12 text-primary/20" />
+                                            </div>
+                                        )}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+
+                                        {/* Platform Badge */}
+                                        <div className="absolute top-3 left-3">
+                                            <span className="px-3 py-1.5 rounded-full text-xs font-bold shadow-lg backdrop-blur-sm bg-primary/90 text-primary-foreground flex items-center gap-1.5">
+                                                {platformIcons[card.platform] && 
+                                                    (() => {
+                                                        const Icon = platformIcons[card.platform];
+                                                        return <Icon className="w-3 h-3" />;
+                                                    })()
+                                                }
+                                                {card.platform}
+                                            </span>
+                                        </div>
+
+                                        {/* Image Count Badge */}
+                                        <div className="absolute top-3 right-3">
+                                            <span className="px-3 py-1.5 rounded-full text-xs font-bold shadow-lg backdrop-blur-sm bg-black/70 text-white">
+                                                {card.imageCount} {card.imageCount === 1 ? 'image' : 'images'}
+                                            </span>
+                                        </div>
+
+                                        {/* Project Name Overlay */}
+                                        <div className="absolute bottom-0 left-0 right-0 p-4">
+                                            <h3 className="text-base font-semibold text-white line-clamp-2 group-hover:text-primary transition-colors">
+                                                {card.projectName}
+                                            </h3>
+                                        </div>
+                                    </div>
+
+                                    {/* Hover glow effect */}
+                                    <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                                </button>
+                            </div>
+                            );
+                        })}
+                    </div>
+                ) : (
+                    <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
+                        <ImageIcon className="w-16 h-16 mb-4 opacity-20" />
+                        <p className="text-lg font-semibold">No projects with images</p>
+                        <p className="text-sm">Upload project screenshots to see them here</p>
                     </div>
                 )}
             </div>

@@ -86,8 +86,8 @@ export default function Editor() {
             projects: [],
         },
         gallery: {
-            folders: [],
-            directImages: [],
+            coverImages: {},
+            platformImages: {},
         },
         notepad: {
             defaultNotes: [],
@@ -186,6 +186,31 @@ export default function Editor() {
                 updated.contact.location = prev.about.personal.location;
             }
 
+            // Sync Gallery with Projects - IMPORTANT!
+            const galleryData = {
+                coverImages: {} as { [projectId: string]: { [platform: string]: string } },
+                platformImages: {} as { [projectId: string]: { [platform: string]: string[] } }
+            };
+
+            prev.projects.projects.forEach((project) => {
+                // Copy cover images
+                if (project.coverImages && Object.keys(project.coverImages).length > 0) {
+                    galleryData.coverImages[project.id] = { ...project.coverImages };
+                }
+
+                // Copy platform images
+                if (project.platformImages && Object.keys(project.platformImages).length > 0) {
+                    galleryData.platformImages[project.id] = {};
+                    Object.entries(project.platformImages).forEach(([platform, images]: [string, any]) => {
+                        if (Array.isArray(images) && images.length > 0) {
+                            galleryData.platformImages[project.id][platform] = [...images];
+                        }
+                    });
+                }
+            });
+
+            updated.gallery = galleryData;
+
             // Sync to Terminal data
             updated.terminal = {
                 username: prev.about.personal.name.toLowerCase().replace(/\s+/g, "_") || "",
@@ -242,7 +267,7 @@ export default function Editor() {
 
             return updated;
         });
-    }, [data.about.personal, data.contact.email]);
+    }, [data.about.personal, data.contact.email, data.projects.projects]);
 
     const progress = calculateOverallCompletion(data);
     const CurrentStepComponent = STEPS[currentStep - 1].component;
@@ -251,6 +276,9 @@ export default function Editor() {
     const handleSave = async () => {
         try {
             setSaving(true);
+            console.log("💾 Saving data to Firebase...");
+            console.log("📊 Projects data:", data.projects);
+            console.log("🖼️ Gallery data:", data.gallery);
             await saveAllData(data);
             toast({
                 title: "Saved Successfully!",
