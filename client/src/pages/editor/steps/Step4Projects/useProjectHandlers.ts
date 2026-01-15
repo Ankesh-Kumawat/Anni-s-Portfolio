@@ -3,9 +3,21 @@ import { uploadToCloudinary, uploadMultipleToCloudinary } from "@/lib/cloudinary
 
 export function useProjectHandlers(data: EditorData, setData: React.Dispatch<React.SetStateAction<EditorData>>) {
     const syncGallery = (updatedProjects: any[]) => {
+        // Helper function to get the best cover image from coverImages object
+        const getCoverImage = (project: any): string => {
+            if (!project.coverImages || Object.keys(project.coverImages).length === 0) {
+                return "";
+            }
+            // Priority: Desktop > Mobile > any other platform
+            return project.coverImages["Desktop"] ||
+                project.coverImages["Mobile"] ||
+                Object.values(project.coverImages)[0] ||
+                "";
+        };
+
         // Get cover image for projects folder (first project's cover)
-        const projectsFolderCover = updatedProjects.length > 0 && updatedProjects[0].coverImage
-            ? updatedProjects[0].coverImage
+        const projectsFolderCover = updatedProjects.length > 0
+            ? getCoverImage(updatedProjects[0])
             : "";
 
         return {
@@ -19,7 +31,7 @@ export function useProjectHandlers(data: EditorData, setData: React.Dispatch<Rea
                                 id: p.id,
                                 name: p.name || "Untitled Project",
                                 type: "folder" as const,
-                                coverImage: p.coverImage || "",
+                                coverImage: getCoverImage(p),
                                 children: p.images.map((url: string, idx: number) => ({
                                     id: `${p.id}-img-${idx}`,
                                     name: `Screenshot ${idx + 1}`,
@@ -41,7 +53,7 @@ export function useProjectHandlers(data: EditorData, setData: React.Dispatch<Rea
                         id: p.id,
                         name: p.name || "Untitled Project",
                         type: "folder" as const,
-                        coverImage: p.coverImage || "",
+                        coverImage: getCoverImage(p),
                         children: p.images.map((url: string, idx: number) => ({
                             id: `${p.id}-img-${idx}`,
                             name: `Screenshot ${idx + 1}`,

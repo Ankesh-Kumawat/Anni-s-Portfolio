@@ -62,6 +62,7 @@ export interface EditorData {
                 solution: string;
                 learning: string;
             }>;
+            // @deprecated - Legacy field kept for backwards compatibility. Use coverImages instead.
             coverImage: string;
             coverImages: {
                 [platform: string]: string;
