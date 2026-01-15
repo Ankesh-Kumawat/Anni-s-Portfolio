@@ -94,7 +94,7 @@ export default function Step5Notepad({ data, setData }: StepProps) {
                 <div>
                     <p className="text-base font-bold text-foreground">Optional Section - Pre-loaded Notes</p>
                     <p className="text-sm text-muted-foreground mt-1">
-                        Add notes that will appear by default in your portfolio's notepad app. Supports Markdown formatting.
+                        Add notes that will appear by default in your portfolio's notepad app. Supports Markdown formatting with rich preview.
                     </p>
                 </div>
             </div>

@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Pin, FileText, Check, Trash2, Eye, EyeOff } from "lucide-react";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface NotesListProps {
     sortedNotes: Array<{
@@ -150,10 +152,22 @@ export default function NotesList({
                                     </div>
 
                                     {isPreview ? (
-                                        <div className="min-h-[300px] p-4 bg-card rounded-lg border-2 border prose prose-sm max-w-none">
-                                            <pre className="whitespace-pre-wrap text-sm text-foreground font-sans">
+                                        <div className="min-h-[300px] p-4 bg-card rounded-lg border-2 border prose prose-sm max-w-none prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground">
+                                            <ReactMarkdown
+                                                remarkPlugins={[remarkGfm]}
+                                                components={{
+                                                    a: ({ node, ...props }) => (
+                                                        <a
+                                                            {...props}
+                                                            className="text-primary hover:underline"
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                        />
+                                                    )
+                                                }}
+                                            >
                                                 {note.content || "No content to preview"}
-                                            </pre>
+                                            </ReactMarkdown>
                                         </div>
                                     ) : (
                                         <Textarea
