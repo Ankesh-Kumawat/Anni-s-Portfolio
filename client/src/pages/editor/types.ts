@@ -178,6 +178,12 @@ export interface EditorData {
             duration: string;
         }>;
     };
+    youtube: {
+        apiKey: string;
+        channelId: string;
+        channelName: string;
+        channelLogo: string;
+    };
 }
 
 export interface StepProps {

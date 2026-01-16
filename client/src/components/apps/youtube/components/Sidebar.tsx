@@ -1,21 +1,44 @@
 import { Home, Grid, Video, Library } from "lucide-react";
 
-export function Sidebar() {
+interface SidebarProps {
+    activeTab: "home" | "shorts";
+    onTabChange: (tab: "home" | "shorts") => void;
+    videosCount: number;
+    shortsCount: number;
+}
+
+export function Sidebar({ activeTab, onTabChange, videosCount, shortsCount }: SidebarProps) {
     return (
         <div className="w-20 hidden md:flex flex-col items-center py-4 gap-8 shrink-0">
-            <div className="flex flex-col items-center gap-1 cursor-pointer hover:bg-muted p-2 rounded-lg w-16">
+            <button 
+                onClick={() => onTabChange("home")}
+                className={`flex flex-col items-center gap-1 p-2 rounded-lg w-16 transition-colors ${
+                    activeTab === "home" ? "bg-muted" : "hover:bg-muted"
+                }`}
+            >
                 <Home className="w-6 h-6" />
                 <span className="text-[10px]">Home</span>
-            </div>
-            <div className="flex flex-col items-center gap-1 cursor-pointer hover:bg-muted p-2 rounded-lg w-16">
+                {videosCount > 0 && (
+                    <span className="text-[9px] text-muted-foreground">({videosCount})</span>
+                )}
+            </button>
+            <button 
+                onClick={() => onTabChange("shorts")}
+                className={`flex flex-col items-center gap-1 p-2 rounded-lg w-16 transition-colors ${
+                    activeTab === "shorts" ? "bg-muted" : "hover:bg-muted"
+                }`}
+            >
                 <Grid className="w-6 h-6" />
                 <span className="text-[10px]">Shorts</span>
-            </div>
-            <div className="flex flex-col items-center gap-1 cursor-pointer hover:bg-muted p-2 rounded-lg w-16">
+                {shortsCount > 0 && (
+                    <span className="text-[9px] text-muted-foreground">({shortsCount})</span>
+                )}
+            </button>
+            <div className="flex flex-col items-center gap-1 cursor-pointer hover:bg-muted p-2 rounded-lg w-16 opacity-50">
                 <Video className="w-6 h-6" />
                 <span className="text-[10px]">Subs</span>
             </div>
-            <div className="flex flex-col items-center gap-1 cursor-pointer hover:bg-muted p-2 rounded-lg w-16">
+            <div className="flex flex-col items-center gap-1 cursor-pointer hover:bg-muted p-2 rounded-lg w-16 opacity-50">
                 <Library className="w-6 h-6" />
                 <span className="text-[10px]">Library</span>
             </div>

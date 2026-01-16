@@ -23,7 +23,8 @@ const COLLECTIONS = {
   DATABASE: "database",
   SETTINGS: "settings",
   BROWSER: "browser",
-  MUSIC: "music"
+  MUSIC: "music",
+  YOUTUBE: "youtube"
 };
 
 // Generic CRUD operations
@@ -103,6 +104,10 @@ export async function getMusicData() {
   return await getDocument(COLLECTIONS.MUSIC);
 }
 
+export async function getYouTubeData() {
+  return await getDocument(COLLECTIONS.YOUTUBE);
+}
+
 // Specific data setters
 export async function saveAboutData(data: any) {
   await setDocument(COLLECTIONS.ABOUT, data);
@@ -148,6 +153,10 @@ export async function saveMusicData(data: any) {
   await setDocument(COLLECTIONS.MUSIC, data);
 }
 
+export async function saveYouTubeData(data: any) {
+  await setDocument(COLLECTIONS.YOUTUBE, data);
+}
+
 // Save all data at once
 export async function saveAllData(data: any) {
   const promises = [
@@ -161,7 +170,8 @@ export async function saveAllData(data: any) {
     saveDatabaseData(data.database),
     saveSettingsData(data.settings),
     saveBrowserData(data.browser),
-    saveMusicData(data.music)
+    saveMusicData(data.music),
+    saveYouTubeData(data.youtube)
   ];
   
   await Promise.all(promises);
@@ -180,7 +190,8 @@ export async function getAllData() {
     database,
     settings,
     browser,
-    music
+    music,
+    youtube
   ] = await Promise.all([
     getAboutData(),
     getProjectsData(),
@@ -192,7 +203,8 @@ export async function getAllData() {
     getDatabaseData(),
     getSettingsData(),
     getBrowserData(),
-    getMusicData()
+    getMusicData(),
+    getYouTubeData()
   ]);
 
   return {
@@ -206,7 +218,8 @@ export async function getAllData() {
     database,
     settings,
     browser,
-    music
+    music,
+    youtube
   };
 }
 
