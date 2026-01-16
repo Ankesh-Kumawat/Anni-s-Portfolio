@@ -168,6 +168,16 @@ export interface EditorData {
             color?: string;
         }>;
     };
+    music: {
+        songs: Array<{
+            id: string;
+            title: string;
+            artist: string;
+            audioUrl: string;
+            coverUrl: string;
+            duration: string;
+        }>;
+    };
 }
 
 export interface StepProps {

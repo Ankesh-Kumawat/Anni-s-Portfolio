@@ -46,7 +46,7 @@ export function DevTunesWidget({
                     {/* DevTunes Badge */}
                     <div className="absolute top-2 left-2 bg-primary/90 backdrop-blur-sm rounded-lg px-2 py-1 flex items-center gap-1.5 shadow-lg">
                         <Music2 className="w-3 h-3 text-primary-foreground" />
-                        <span className="text-[9px] font-bold text-primary-foreground">DevTunes</span>
+                        <span className="text-[9px] font-bold text-primary-foreground">X-Audio</span>
                     </div>
                 </div>
 

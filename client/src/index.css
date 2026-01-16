@@ -461,6 +461,20 @@
     left: 100%;
     padding-left: 2rem;
   }
+
+  /* Shimmer animation for upload progress */
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
 }
 
 /* ===============================

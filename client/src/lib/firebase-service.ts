@@ -22,7 +22,8 @@ const COLLECTIONS = {
   TERMINAL: "terminal",
   DATABASE: "database",
   SETTINGS: "settings",
-  BROWSER: "browser"
+  BROWSER: "browser",
+  MUSIC: "music"
 };
 
 // Generic CRUD operations
@@ -98,6 +99,10 @@ export async function getBrowserData() {
   return await getDocument(COLLECTIONS.BROWSER);
 }
 
+export async function getMusicData() {
+  return await getDocument(COLLECTIONS.MUSIC);
+}
+
 // Specific data setters
 export async function saveAboutData(data: any) {
   await setDocument(COLLECTIONS.ABOUT, data);
@@ -139,6 +144,10 @@ export async function saveBrowserData(data: any) {
   await setDocument(COLLECTIONS.BROWSER, data);
 }
 
+export async function saveMusicData(data: any) {
+  await setDocument(COLLECTIONS.MUSIC, data);
+}
+
 // Save all data at once
 export async function saveAllData(data: any) {
   const promises = [
@@ -151,7 +160,8 @@ export async function saveAllData(data: any) {
     saveTerminalData(data.terminal),
     saveDatabaseData(data.database),
     saveSettingsData(data.settings),
-    saveBrowserData(data.browser)
+    saveBrowserData(data.browser),
+    saveMusicData(data.music)
   ];
   
   await Promise.all(promises);
@@ -169,7 +179,8 @@ export async function getAllData() {
     terminal,
     database,
     settings,
-    browser
+    browser,
+    music
   ] = await Promise.all([
     getAboutData(),
     getProjectsData(),
@@ -180,7 +191,8 @@ export async function getAllData() {
     getTerminalData(),
     getDatabaseData(),
     getSettingsData(),
-    getBrowserData()
+    getBrowserData(),
+    getMusicData()
   ]);
 
   return {
@@ -193,7 +205,8 @@ export async function getAllData() {
     terminal,
     database,
     settings,
-    browser
+    browser,
+    music
   };
 }
 

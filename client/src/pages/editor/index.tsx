@@ -9,6 +9,7 @@ import Step4Projects from "./steps/Step4Projects";
 import Step5Notepad from "./steps/Step5Notepad";
 import Step6Advanced from "./steps/Step6Advanced";
 import Step7Review from "./steps/Step7Review";
+import Step8Music from "./steps/Step8Music";
 import type { EditorData } from "./types";
 import { saveAllData, getAllData } from "@/lib/firebase-service";
 import { useAuth } from "@/lib/auth-context";
@@ -49,7 +50,8 @@ const STEPS = [
     { id: 4, title: "Projects & Gallery", component: Step4Projects },
     { id: 5, title: "Notepad", component: Step5Notepad },
     { id: 6, title: "Advanced", component: Step6Advanced },
-    { id: 7, title: "Review & Download", component: Step7Review },
+    { id: 7, title: "Music Library", component: Step8Music },
+    { id: 8, title: "Review & Download", component: Step7Review },
 ];
 
 export default function Editor() {
@@ -129,6 +131,9 @@ export default function Editor() {
             history: [],
             quickLinks: [],
         },
+        music: {
+            songs: [],
+        },
     });
 
     // Load data from Firebase on mount
@@ -150,6 +155,7 @@ export default function Editor() {
                         database: firebaseData.database as typeof prev.database || prev.database,
                         settings: firebaseData.settings as typeof prev.settings || prev.settings,
                         browser: firebaseData.browser as typeof prev.browser || prev.browser,
+                        music: firebaseData.music as typeof prev.music || prev.music,
                     }));
                     toast({
                         title: "Data Loaded",

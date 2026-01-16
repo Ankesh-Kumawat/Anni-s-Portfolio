@@ -10,7 +10,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 
-export default function DevTunes() {
+export default function XAudio() {
     const [currentSong, setCurrentSong] = useState<Song | null>(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const spotifyContext = useSpotify();
@@ -296,7 +296,7 @@ export default function DevTunes() {
                 {/* Header */}
                 <div className="flex items-center gap-3 px-6 py-4 border-b">
                     <Music2 className="w-5 h-5 text-primary" />
-                    <h1 className="text-base font-semibold">DevTunes</h1>
+                    <h1 className="text-base font-semibold">X-Audio</h1>
                 </div>
 
                 {/* Song List */}
@@ -413,7 +413,7 @@ export default function DevTunes() {
             {/* Header */}
             <div className="flex items-center gap-3 px-6 py-4 border-b">
                 <Music2 className="w-5 h-5 text-primary" />
-                <h1 className="text-lg font-semibold">DevTunes</h1>
+                <h1 className="text-lg font-semibold">X-Audio</h1>
             </div>
 
             <div className="flex-1 flex overflow-hidden">
@@ -444,7 +444,7 @@ export default function DevTunes() {
                                         <p className="text-sm font-medium truncate">{song.title}</p>
                                         <div className="flex items-center gap-1.5 mt-0.5">
                                             <Music2 className="w-3 h-3 text-primary" />
-                                            <span className="text-[10px] font-semibold text-primary">DevTunes</span>
+                                            <span className="text-[10px] font-semibold text-primary">X-Audio</span>
                                         </div>
                                     </div>
                                     <span className="text-xs text-muted-foreground flex-shrink-0">{song.duration}</span>

@@ -1,11 +1,10 @@
 import { Song, Playlist } from "./types";
-import { generateSongsFromFolder } from "./utils/metadata";
+import { getMusicData } from "@/lib/firebase-service";
 
-// Auto-generated songs from /public/music/ folder with metadata extraction
-// This will be populated on app load
+// Songs loaded from Firebase
 export let songs: Song[] = [];
 
-// Initialize songs with metadata (progressive loading)
+// Initialize songs from Firebase
 let songsInitialized = false;
 export async function initializeSongs(
     onProgress?: (songs: Song[], loadedCount: number, totalCount: number) => void
@@ -15,18 +14,23 @@ export async function initializeSongs(
     }
 
     try {
-        songs = await generateSongsFromFolder((loadedSongs, loadedCount, totalCount) => {
-            songs = loadedSongs;
+        const musicData = await getMusicData();
+        
+        if (musicData && musicData.songs && Array.isArray(musicData.songs)) {
+            songs = musicData.songs;
+            songsInitialized = true;
+            
             if (onProgress) {
-                onProgress(loadedSongs, loadedCount, totalCount);
+                onProgress(songs, songs.length, songs.length);
             }
-            if (loadedCount === totalCount) {
-                songsInitialized = true;
-                console.log(`✅ Loaded ${songs.length} songs with metadata`);
-            }
-        });
+            
+            console.log(`✅ Loaded ${songs.length} songs from Firebase`);
+        } else {
+            console.log("No songs found in Firebase");
+            songs = [];
+        }
     } catch (error) {
-        console.error("Failed to load songs:", error);
+        console.error("Failed to load songs from Firebase:", error);
         songs = [];
     }
 
