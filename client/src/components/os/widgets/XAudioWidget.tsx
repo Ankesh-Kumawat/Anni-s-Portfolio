@@ -1,6 +1,6 @@
 import { Play, Pause, SkipBack, SkipForward, Music2 } from "lucide-react";
 
-interface DevTunesWidgetProps {
+interface XAudioWidgetProps {
     currentSong: {
         title: string;
         artist: string;
@@ -13,14 +13,14 @@ interface DevTunesWidgetProps {
     onOpenApp: () => void;
 }
 
-export function DevTunesWidget({
+export function XAudioWidget({
     currentSong,
     isPlaying,
     onTogglePlay,
     onNext,
     onPrevious,
     onOpenApp,
-}: DevTunesWidgetProps) {
+}: XAudioWidgetProps) {
     return (
         <div
             className="bg-background/95 backdrop-blur-xl border rounded-2xl p-3 shadow-2xl transition-all duration-300 group h-[140px] overflow-hidden cursor-pointer hover:shadow-xl"
@@ -43,7 +43,7 @@ export function DevTunesWidget({
                             </div>
                         </div>
                     )}
-                    {/* DevTunes Badge */}
+                    {/* X-Audio Badge */}
                     <div className="absolute top-2 left-2 bg-primary/90 backdrop-blur-sm rounded-lg px-2 py-1 flex items-center gap-1.5 shadow-lg">
                         <Music2 className="w-3 h-3 text-primary-foreground" />
                         <span className="text-[9px] font-bold text-primary-foreground">X-Audio</span>

@@ -28,7 +28,7 @@ A fully interactive portfolio website that simulates a complete operating system
 7. **Notepad** - Text editor with save functionality
 8. **Gallery** - Image gallery with drag-drop organization
 9. **Contact** - Contact form with email integration
-10. **DevTunes** - Music player (Spotify-like)
+10. **X-Audio** - Music player with Firebase integration
 11. **YouTube** - Video player
 12. **Database** - Database viewer
 

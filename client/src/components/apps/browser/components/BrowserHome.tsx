@@ -124,7 +124,7 @@ const OS_APPS: Array<{ id: string; name: string; icon: LucideIcon; color: string
     { id: "gallery", name: "Gallery", icon: Image, color: "text-pink-500" },
     { id: "db", name: "Database", icon: DatabaseIcon, color: "text-blue-400" },
     { id: "settings", name: "Settings", icon: SettingsIcon, color: "text-slate-600" },
-    { id: "spotify", name: "DevTunes", icon: Music, color: "text-green-600" },
+    { id: "spotify", name: "X-Audio", icon: Music, color: "text-green-600" },
     { id: "youtube", name: "YouTube", icon: Video, color: "text-red-600" },
 ];
 

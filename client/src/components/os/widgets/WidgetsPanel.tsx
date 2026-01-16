@@ -1,4 +1,4 @@
-import { DevTunesWidget } from "./DevTunesWidget";
+import { XAudioWidget } from "./XAudioWidget";
 import { SplitFlapClock } from "./SplitFlapClock";
 import { SystemStatus } from "./SystemStatus";
 import { useOS } from "@/lib/os-context";
@@ -28,9 +28,9 @@ export function WidgetsPanel({ spotifyData }: WidgetsPanelProps) {
             {/* System Status Widget */}
             <SystemStatus />
 
-            {/* DevTunes Widget - Only show when song is playing or paused */}
+            {/* X-Audio Widget - Only show when song is playing or paused */}
             {spotifyData?.currentSong && (
-                <DevTunesWidget
+                <XAudioWidget
                     currentSong={spotifyData.currentSong}
                     isPlaying={spotifyData.isPlaying}
                     onTogglePlay={spotifyData.onTogglePlay}

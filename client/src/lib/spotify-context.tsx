@@ -43,7 +43,7 @@ export function SpotifyProvider({ children }: { children: ReactNode }) {
         }
     };
 
-    // Expose refs for DevTunes app to register callbacks
+    // Expose refs for X-Audio app to register callbacks
     const contextValue = {
         currentSong,
         isPlaying,

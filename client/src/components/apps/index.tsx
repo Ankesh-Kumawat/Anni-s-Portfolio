@@ -92,7 +92,7 @@ export const APPS: AppConfig[] = [
   },
   {
     id: "spotify" as any,
-    title: "DevTunes",
+    title: "X-Audio",
     icon: <Music className="w-full h-full text-green-600" />,
     component: <Spotify />,
     width: 1000,
