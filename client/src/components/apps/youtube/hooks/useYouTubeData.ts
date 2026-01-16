@@ -10,21 +10,37 @@ export interface YouTubeVideo {
     publishedAt: string;
     channelTitle: string;
     description: string;
+    likeCount?: string;
+    commentCount?: string;
 }
 
 export interface YouTubeChannel {
+    id: string;
     name: string;
     logo: string;
+    banner: string;
     subscribers: string;
     videoCount: string;
+    description: string;
+    customUrl: string;
+}
+
+export interface YouTubePlaylist {
+    id: string;
+    title: string;
+    thumbnail: string;
+    videoCount: number;
 }
 
 export function useYouTubeData() {
     const [videos, setVideos] = useState<YouTubeVideo[]>([]);
     const [shorts, setShorts] = useState<YouTubeVideo[]>([]);
+    const [playlists, setPlaylists] = useState<YouTubePlaylist[]>([]);
     const [channel, setChannel] = useState<YouTubeChannel | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [apiKey, setApiKey] = useState("");
+    const [channelId, setChannelId] = useState("");
 
     useEffect(() => {
         loadYouTubeData();
@@ -35,7 +51,6 @@ export function useYouTubeData() {
             setLoading(true);
             setError(null);
 
-            // Get YouTube config from Firebase
             const config = await getYouTubeData();
 
             if (!config || !config.apiKey || !config.channelId) {
@@ -44,9 +59,12 @@ export function useYouTubeData() {
                 return;
             }
 
-            // Fetch channel info
+            setApiKey(config.apiKey);
+            setChannelId(config.channelId);
+
+            // Fetch channel info with banner
             const channelResponse = await fetch(
-                `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=${config.channelId}&key=${config.apiKey}`
+                `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics,brandingSettings&id=${config.channelId}&key=${config.apiKey}`
             );
             const channelData = await channelResponse.json();
 
@@ -58,74 +76,27 @@ export function useYouTubeData() {
 
             if (channelData.items && channelData.items.length > 0) {
                 const ch = channelData.items[0];
-                setChannel({
-                    name: ch.snippet.title,
-                    logo: ch.snippet.thumbnails.default.url,
-                    subscribers: formatNumber(ch.statistics.subscriberCount),
-                    videoCount: ch.statistics.videoCount
-                });
-            }
-
-            // Fetch videos from channel
-            const uploadsResponse = await fetch(
-                `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${config.channelId}&maxResults=50&order=date&type=video&key=${config.apiKey}`
-            );
-            const uploadsData = await uploadsResponse.json();
-
-            if (uploadsData.error) {
-                setError(uploadsData.error.message);
-                setLoading(false);
-                return;
-            }
-
-            if (uploadsData.items) {
-                // Get video IDs to fetch durations
-                const videoIds = uploadsData.items.map((item: any) => item.id.videoId).join(',');
+                const channelLogo = ch.snippet.thumbnails.high?.url || 
+                                   ch.snippet.thumbnails.medium?.url || 
+                                   ch.snippet.thumbnails.default?.url || "";
                 
-                const videosResponse = await fetch(
-                    `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,statistics&id=${videoIds}&key=${config.apiKey}`
-                );
-                const videosData = await videosResponse.json();
-
-                const videosMap = new Map();
-                if (videosData.items) {
-                    videosData.items.forEach((video: any) => {
-                        videosMap.set(video.id, {
-                            duration: formatDuration(video.contentDetails.duration),
-                            views: formatNumber(video.statistics.viewCount)
-                        });
-                    });
-                }
-
-                // Separate shorts and regular videos
-                const allVideos: YouTubeVideo[] = uploadsData.items.map((item: any) => {
-                    const videoDetails = videosMap.get(item.id.videoId) || { duration: "0:00", views: "0" };
-                    return {
-                        id: item.id.videoId,
-                        title: item.snippet.title,
-                        thumbnail: item.snippet.thumbnails.high?.url || item.snippet.thumbnails.medium.url,
-                        duration: videoDetails.duration,
-                        views: videoDetails.views,
-                        publishedAt: formatTimeAgo(item.snippet.publishedAt),
-                        channelTitle: item.snippet.channelTitle,
-                        description: item.snippet.description
-                    };
+                setChannel({
+                    id: ch.id,
+                    name: ch.snippet.title,
+                    logo: channelLogo,
+                    banner: ch.brandingSettings?.image?.bannerExternalUrl || "",
+                    subscribers: formatNumber(ch.statistics.subscriberCount),
+                    videoCount: ch.statistics.videoCount,
+                    description: ch.snippet.description,
+                    customUrl: ch.snippet.customUrl || `@${ch.snippet.title.replace(/\s+/g, '')}`
                 });
-
-                // Filter shorts (videos under 60 seconds)
-                const shortsList = allVideos.filter(v => {
-                    const [mins, secs] = v.duration.split(':').map(Number);
-                    return mins === 0 && secs <= 60;
-                });
-
-                const regularVideos = allVideos.filter(v => {
-                    const [mins, secs] = v.duration.split(':').map(Number);
-                    return mins > 0 || secs > 60;
-                });
-
-                setShorts(shortsList);
-                setVideos(regularVideos);
             }
+
+            // Fetch ALL videos (multiple pages)
+            await fetchAllVideos(config.apiKey, config.channelId);
+
+            // Fetch playlists
+            await fetchPlaylists(config.apiKey, config.channelId);
 
             setLoading(false);
         } catch (err) {
@@ -135,7 +106,139 @@ export function useYouTubeData() {
         }
     };
 
-    return { videos, shorts, channel, loading, error, refresh: loadYouTubeData };
+    const fetchAllVideos = async (apiKey: string, channelId: string) => {
+        let allVideos: YouTubeVideo[] = [];
+        let nextPageToken = "";
+        let pageCount = 0;
+        const maxPages = 10; // Fetch up to 500 videos (50 per page)
+
+        do {
+            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&maxResults=50&order=date&type=video&pageToken=${nextPageToken}&key=${apiKey}`;
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (data.error || !data.items) break;
+
+            const videoIds = data.items.map((item: any) => item.id.videoId).join(',');
+            
+            const videosResponse = await fetch(
+                `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,statistics,snippet&id=${videoIds}&key=${apiKey}`
+            );
+            const videosData = await videosResponse.json();
+
+            if (videosData.items) {
+                const videos = videosData.items.map((video: any) => ({
+                    id: video.id,
+                    title: video.snippet.title,
+                    thumbnail: video.snippet.thumbnails.high?.url || video.snippet.thumbnails.medium.url,
+                    duration: formatDuration(video.contentDetails.duration),
+                    views: formatNumber(video.statistics.viewCount),
+                    publishedAt: formatTimeAgo(video.snippet.publishedAt),
+                    channelTitle: video.snippet.channelTitle,
+                    description: video.snippet.description,
+                    likeCount: formatNumber(video.statistics.likeCount || 0),
+                    commentCount: formatNumber(video.statistics.commentCount || 0)
+                }));
+
+                allVideos = [...allVideos, ...videos];
+            }
+
+            nextPageToken = data.nextPageToken || "";
+            pageCount++;
+        } while (nextPageToken && pageCount < maxPages);
+
+        // Separate shorts and regular videos
+        const shortsList = allVideos.filter(v => {
+            const parts = v.duration.split(':');
+            if (parts.length === 2) {
+                const [mins, secs] = parts.map(Number);
+                return mins === 0 && secs <= 60;
+            }
+            return false;
+        });
+
+        const regularVideos = allVideos.filter(v => {
+            const parts = v.duration.split(':');
+            if (parts.length === 2) {
+                const [mins, secs] = parts.map(Number);
+                return mins > 0 || secs > 60;
+            }
+            return true;
+        });
+
+        setShorts(shortsList);
+        setVideos(regularVideos);
+    };
+
+    const fetchPlaylists = async (apiKey: string, channelId: string) => {
+        try {
+            const response = await fetch(
+                `https://www.googleapis.com/youtube/v3/playlists?part=snippet,contentDetails&channelId=${channelId}&maxResults=50&key=${apiKey}`
+            );
+            const data = await response.json();
+
+            if (data.items) {
+                const playlists = data.items.map((playlist: any) => ({
+                    id: playlist.id,
+                    title: playlist.snippet.title,
+                    thumbnail: playlist.snippet.thumbnails.high?.url || playlist.snippet.thumbnails.medium.url,
+                    videoCount: playlist.contentDetails.itemCount
+                }));
+                setPlaylists(playlists);
+            }
+        } catch (err) {
+            console.error("Error fetching playlists:", err);
+        }
+    };
+
+    const searchVideos = async (query: string): Promise<YouTubeVideo[]> => {
+        if (!apiKey || !channelId || !query) return [];
+
+        try {
+            const response = await fetch(
+                `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&q=${encodeURIComponent(query)}&maxResults=20&type=video&key=${apiKey}`
+            );
+            const data = await response.json();
+
+            if (data.items) {
+                const videoIds = data.items.map((item: any) => item.id.videoId).join(',');
+                const videosResponse = await fetch(
+                    `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,statistics,snippet&id=${videoIds}&key=${apiKey}`
+                );
+                const videosData = await videosResponse.json();
+
+                if (videosData.items) {
+                    return videosData.items.map((video: any) => ({
+                        id: video.id,
+                        title: video.snippet.title,
+                        thumbnail: video.snippet.thumbnails.high?.url || video.snippet.thumbnails.medium.url,
+                        duration: formatDuration(video.contentDetails.duration),
+                        views: formatNumber(video.statistics.viewCount),
+                        publishedAt: formatTimeAgo(video.snippet.publishedAt),
+                        channelTitle: video.snippet.channelTitle,
+                        description: video.snippet.description,
+                        likeCount: formatNumber(video.statistics.likeCount || 0),
+                        commentCount: formatNumber(video.statistics.commentCount || 0)
+                    }));
+                }
+            }
+        } catch (err) {
+            console.error("Error searching videos:", err);
+        }
+
+        return [];
+    };
+
+    return { 
+        videos, 
+        shorts, 
+        playlists,
+        channel, 
+        loading, 
+        error, 
+        refresh: loadYouTubeData,
+        searchVideos
+    };
 }
 
 // Helper functions
@@ -155,11 +258,12 @@ function formatDuration(isoDuration: string): string {
 
 function formatNumber(num: string | number): string {
     const n = typeof num === 'string' ? parseInt(num) : num;
+    if (isNaN(n)) return '0';
     if (n >= 1000000) {
-        return (n / 1000000).toFixed(1) + 'M';
+        return (n / 1000000).toFixed(1).replace('.0', '') + 'M';
     }
     if (n >= 1000) {
-        return (n / 1000).toFixed(1) + 'K';
+        return (n / 1000).toFixed(1).replace('.0', '') + 'K';
     }
     return n.toString();
 }

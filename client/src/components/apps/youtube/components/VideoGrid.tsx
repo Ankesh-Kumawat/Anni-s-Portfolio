@@ -3,18 +3,21 @@ import { YouTubeVideo } from "../hooks/useYouTubeData";
 interface VideoGridProps {
     videos: YouTubeVideo[];
     isShorts?: boolean;
+    onVideoSelect: (video: YouTubeVideo) => void;
+    searchQuery?: string;
 }
 
-export function VideoGrid({ videos, isShorts = false }: VideoGridProps) {
-    const openVideo = (videoId: string) => {
-        window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
-    };
-
+export function VideoGrid({ videos, isShorts = false, onVideoSelect, searchQuery }: VideoGridProps) {
     if (videos.length === 0) {
         return (
             <div className="flex-1 overflow-y-auto p-4 md:p-6 no-scrollbar flex items-center justify-center">
                 <div className="text-center">
-                    <p className="text-muted-foreground">No {isShorts ? 'shorts' : 'videos'} found</p>
+                    <p className="text-muted-foreground">
+                        {searchQuery 
+                            ? `No results found for "${searchQuery}"`
+                            : `No ${isShorts ? 'shorts' : 'videos'} found`
+                        }
+                    </p>
                 </div>
             </div>
         );
@@ -22,6 +25,9 @@ export function VideoGrid({ videos, isShorts = false }: VideoGridProps) {
 
     return (
         <div className="flex-1 overflow-y-auto p-4 md:p-6 no-scrollbar">
+            {searchQuery && (
+                <h2 className="text-xl font-bold mb-4">Search results for "{searchQuery}"</h2>
+            )}
             <div className={`grid gap-x-4 gap-y-8 pb-20 ${
                 isShorts 
                     ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6' 
@@ -31,7 +37,7 @@ export function VideoGrid({ videos, isShorts = false }: VideoGridProps) {
                     <div 
                         key={video.id} 
                         className="flex flex-col gap-3 cursor-pointer group"
-                        onClick={() => openVideo(video.id)}
+                        onClick={() => onVideoSelect(video)}
                     >
                         <div className={`${
                             isShorts ? 'aspect-[9/16]' : 'aspect-video'
