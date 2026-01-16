@@ -26,11 +26,14 @@ export default function YouTube() {
     const handleSearch = async (query: string) => {
         setSearchQuery(query);
         if (query.trim()) {
+            console.log("Searching for:", query);
             const results = await searchVideos(query);
+            console.log("Search results:", results.length);
             setSearchResults(results);
             setViewMode("home");
         } else {
             setSearchResults([]);
+            setViewMode("home");
         }
     };
 
@@ -105,7 +108,9 @@ export default function YouTube() {
                 channel={channel} 
                 onSearch={handleSearch}
                 onProfileClick={handleProfileClick}
+                onBack={handleHomeClick}
                 searchQuery={searchQuery}
+                showBackButton={viewMode === "video" || viewMode === "profile"}
             />
 
             {viewMode === "video" && selectedVideo ? (
@@ -135,7 +140,8 @@ export default function YouTube() {
                         onProfileClick={handleProfileClick}
                     />
                     <VideoGrid 
-                        videos={displayVideos} 
+                        videos={displayVideos}
+                        channel={channel}
                         isShorts={viewMode === "shorts"}
                         onVideoSelect={handleVideoSelect}
                         searchQuery={searchQuery}

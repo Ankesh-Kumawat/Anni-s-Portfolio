@@ -475,6 +475,20 @@
   .animate-shimmer {
     animation: shimmer 2s infinite;
   }
+
+  /* Marquee animation for YouTube video titles */
+  @keyframes marquee-slow {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-marquee-slow {
+    animation: marquee-slow 8s linear infinite;
+  }
 }
 
 /* ===============================
