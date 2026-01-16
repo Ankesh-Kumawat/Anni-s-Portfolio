@@ -8,6 +8,7 @@ import { Taskbar } from "./Taskbar";
 import { SystemTray } from "./SystemTray";
 import { WidgetsPanel } from "./widgets/WidgetsPanel";
 import { BootScreen } from "./BootScreen";
+import { WallpaperBackground } from "./WallpaperBackground";
 import { APPS } from "../apps";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -65,6 +66,9 @@ export function Desktop() {
     <div
       className="fixed inset-0 overflow-hidden bg-background select-none touch-none flex flex-col"
     >
+      {/* Wallpaper Background */}
+      <WallpaperBackground />
+      
       {/* Subtle Dot Grid Background Pattern */}
       <div className="absolute inset-0 opacity-[0.4]"
         style={{

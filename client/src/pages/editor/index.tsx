@@ -11,6 +11,7 @@ import Step6Advanced from "./steps/Step6Advanced";
 import Step7Review from "./steps/Step7Review";
 import Step8Music from "./steps/Step8Music";
 import Step9YouTube from "./steps/Step9YouTube";
+import Step10Preferences from "./steps/Step10Preferences";
 import type { EditorData } from "./types";
 import { saveAllData, getAllData } from "@/lib/firebase-service";
 import { useAuth } from "@/lib/auth-context";
@@ -53,7 +54,8 @@ const STEPS = [
     { id: 6, title: "Advanced", component: Step6Advanced },
     { id: 7, title: "Music Library", component: Step8Music },
     { id: 8, title: "YouTube Channel", component: Step9YouTube },
-    { id: 9, title: "Review & Download", component: Step7Review },
+    { id: 9, title: "Preferences", component: Step10Preferences },
+    { id: 10, title: "Review & Download", component: Step7Review },
 ];
 
 export default function Editor() {
@@ -142,6 +144,27 @@ export default function Editor() {
             channelName: "",
             channelLogo: "",
         },
+        preferences: {
+            wallpaper: {
+                desktop: {
+                    type: "gradient",
+                    url: "",
+                    blur: 0,
+                    opacity: 100,
+                    gradient: "from-slate-900 via-purple-900 to-slate-900",
+                    color: "#1e293b",
+                },
+                mobile: {
+                    type: "gradient",
+                    url: "",
+                    blur: 0,
+                    opacity: 100,
+                    gradient: "from-slate-900 via-purple-900 to-slate-900",
+                    color: "#1e293b",
+                },
+            },
+            theme: "dark",
+        },
     });
 
     // Load data from Firebase on mount
@@ -164,6 +187,7 @@ export default function Editor() {
                         settings: firebaseData.settings as typeof prev.settings || prev.settings,
                         browser: firebaseData.browser as typeof prev.browser || prev.browser,
                         music: firebaseData.music as typeof prev.music || prev.music,
+                        preferences: firebaseData.preferences as typeof prev.preferences || prev.preferences,
                     }));
                     toast({
                         title: "Data Loaded",
