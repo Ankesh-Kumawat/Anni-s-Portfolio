@@ -148,6 +148,26 @@ export interface EditorData {
             name: string;
         }>;
     };
+    browser: {
+        bookmarks: Array<{
+            id: string;
+            name: string;
+            url: string;
+            icon?: string;
+            category?: string;
+        }>;
+        history: Array<{
+            url: string;
+            title: string;
+            timestamp: number;
+        }>;
+        quickLinks: Array<{
+            name: string;
+            url: string;
+            icon?: string;
+            color?: string;
+        }>;
+    };
 }
 
 export interface StepProps {

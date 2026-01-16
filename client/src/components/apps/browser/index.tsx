@@ -1,7 +1,29 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { BrowserToolbar } from "./components/BrowserToolbar";
 import { BrowserHome } from "./components/BrowserHome";
 import { useOS } from "@/lib/os-context";
+import { useFirestoreData } from "@/hooks/useFirestoreData";
+
+interface BrowserData {
+    bookmarks: Array<{
+        id: string;
+        name: string;
+        url: string;
+        icon?: string;
+        category?: string;
+    }>;
+    history: Array<{
+        url: string;
+        title: string;
+        timestamp: number;
+    }>;
+    quickLinks: Array<{
+        name: string;
+        url: string;
+        icon?: string;
+        color?: string;
+    }>;
+}
 
 export default function Browser() {
     const [url, setUrl] = useState("");
@@ -13,6 +35,7 @@ export default function Browser() {
     const [historyIndex, setHistoryIndex] = useState(-1);
     const iframeRef = useRef<HTMLIFrameElement>(null);
     const { launchApp } = useOS();
+    const { data: browserData, loading: dataLoading } = useFirestoreData<BrowserData>("browser");
 
     const handleNavigate = (newUrl: string) => {
         if (!newUrl.startsWith("http://") && !newUrl.startsWith("https://")) {
@@ -119,6 +142,8 @@ export default function Browser() {
                     <BrowserHome
                         onNavigate={handleNavigate}
                         onOpenApp={handleOpenApp}
+                        browserData={browserData}
+                        dataLoading={dataLoading}
                     />
                 ) : (
                     <>

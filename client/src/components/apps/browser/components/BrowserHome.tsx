@@ -1,32 +1,117 @@
-import React from "react";
-import { Globe, ExternalLink, User, Briefcase, Mail, Terminal as TerminalIcon, Code, FileText, Image, Database as DatabaseIcon, Settings as SettingsIcon, Music, Video, Palette, Github, Linkedin, Instagram, Twitter, Youtube, BookOpen, PenTool } from "lucide-react";
+import React, { useState } from "react";
+import { Globe, ExternalLink, User, Briefcase, Mail, Terminal as TerminalIcon, Code, FileText, Image, Database as DatabaseIcon, Settings as SettingsIcon, Music, Video, Bookmark, Clock, Zap, Loader2, Phone, Users, Radio } from "lucide-react";
 import { LucideIcon } from "lucide-react";
+import {
+    FaGithub, FaLinkedin, FaTwitter, FaInstagram, FaFacebook, FaYoutube,
+    FaDribbble, FaBehance, FaMedium, FaDev, FaStackOverflow, FaCodepen,
+    FaFigma, FaDiscord, FaTwitch, FaTiktok, FaReddit, FaProductHunt,
+    FaTelegram, FaWhatsapp, FaSnapchat, FaSpotify, FaPinterest, FaSlack,
+    FaGlobe, FaEnvelope
+} from "react-icons/fa";
+import { SiDevdotto } from "react-icons/si";
+import { useFirestoreData } from "@/hooks/useFirestoreData";
+
+interface BrowserData {
+    bookmarks: Array<{
+        id: string;
+        name: string;
+        url: string;
+        icon?: string;
+        category?: string;
+    }>;
+    history: Array<{
+        url: string;
+        title: string;
+        timestamp: number;
+    }>;
+    quickLinks: Array<{
+        name: string;
+        url: string;
+        icon?: string;
+        color?: string;
+    }>;
+}
+
+interface SocialData {
+    links: Array<{
+        name: string;
+        url: string;
+        platform: string;
+        whatsapp?: {
+            contactNumber?: string;
+            groupLink?: string;
+            channelLink?: string;
+        };
+    }>;
+}
 
 interface BrowserHomeProps {
     onNavigate: (url: string) => void;
     onOpenApp?: (appId: string) => void;
+    browserData?: BrowserData | null;
+    dataLoading?: boolean;
 }
 
-const iconMap: Record<string, LucideIcon> = {
-    portfolio: Palette,
-    github: Github,
-    linkedin: Linkedin,
-    instagram: Instagram,
-    twitter: Twitter,
-    youtube: Youtube,
-    devto: BookOpen,
-    medium: PenTool,
+const platformIcons: Record<string, any> = {
+    github: FaGithub,
+    linkedin: FaLinkedin,
+    twitter: FaTwitter,
+    instagram: FaInstagram,
+    facebook: FaFacebook,
+    youtube: FaYoutube,
+    dribbble: FaDribbble,
+    behance: FaBehance,
+    medium: FaMedium,
+    devto: FaDev,
+    dev: SiDevdotto,
+    stackoverflow: FaStackOverflow,
+    codepen: FaCodepen,
+    figma: FaFigma,
+    discord: FaDiscord,
+    twitch: FaTwitch,
+    tiktok: FaTiktok,
+    reddit: FaReddit,
+    producthunt: FaProductHunt,
+    telegram: FaTelegram,
+    whatsapp: FaWhatsapp,
+    snapchat: FaSnapchat,
+    spotify: FaSpotify,
+    pinterest: FaPinterest,
+    slack: FaSlack,
+    portfolio: FaGlobe,
+    website: FaGlobe,
+    email: FaEnvelope,
 };
 
-const colorMap: Record<string, string> = {
-    portfolio: "text-purple-500",
-    github: "text-gray-800",
+const platformColors: Record<string, string> = {
+    github: "text-gray-800 dark:text-gray-200",
     linkedin: "text-blue-600",
-    instagram: "text-pink-500",
     twitter: "text-sky-500",
+    instagram: "text-pink-500",
+    facebook: "text-blue-700",
     youtube: "text-red-600",
-    devto: "text-gray-700",
-    medium: "text-gray-900",
+    dribbble: "text-pink-400",
+    behance: "text-blue-500",
+    medium: "text-gray-900 dark:text-gray-100",
+    devto: "text-gray-700 dark:text-gray-300",
+    dev: "text-gray-700 dark:text-gray-300",
+    stackoverflow: "text-orange-500",
+    codepen: "text-gray-900 dark:text-gray-100",
+    figma: "text-purple-500",
+    discord: "text-indigo-500",
+    twitch: "text-purple-600",
+    tiktok: "text-gray-900 dark:text-gray-100",
+    reddit: "text-orange-600",
+    producthunt: "text-orange-500",
+    telegram: "text-blue-500",
+    whatsapp: "text-green-500",
+    snapchat: "text-yellow-400",
+    spotify: "text-green-600",
+    pinterest: "text-red-600",
+    slack: "text-purple-600",
+    portfolio: "text-purple-500",
+    website: "text-blue-500",
+    email: "text-red-500",
 };
 
 const OS_APPS: Array<{ id: string; name: string; icon: LucideIcon; color: string }> = [
@@ -43,15 +128,22 @@ const OS_APPS: Array<{ id: string; name: string; icon: LucideIcon; color: string
     { id: "youtube", name: "YouTube", icon: Video, color: "text-red-600" },
 ];
 
-export function BrowserHome({ onNavigate, onOpenApp }: BrowserHomeProps) {
-    const [socialLinks, setSocialLinks] = React.useState<Array<{ name: string; url: string; platform: string }>>([]);
+export function BrowserHome({ onNavigate, onOpenApp, browserData, dataLoading }: BrowserHomeProps) {
+    const { data: socialData, loading: socialLoading } = useFirestoreData<SocialData>("social");
+    const [whatsappMenuOpen, setWhatsappMenuOpen] = useState<string | null>(null);
 
-    React.useEffect(() => {
-        fetch(`/data/social.json?t=${Date.now()}`, { cache: 'no-store' })
-            .then(res => res.json())
-            .then(data => setSocialLinks(data.links))
-            .catch(console.error);
-    }, []);
+    if (dataLoading || socialLoading) {
+        return (
+            <div className="h-full flex items-center justify-center bg-gradient-to-br from-background via-background to-muted/20">
+                <div className="text-center">
+                    <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-3" />
+                    <p className="text-sm text-muted-foreground">Loading browser data...</p>
+                </div>
+            </div>
+        );
+    }
+
+    const socialLinks = socialData?.links || [];
 
     return (
         <div className="h-full overflow-y-auto no-scrollbar bg-gradient-to-br from-background via-background to-muted/20">
@@ -70,6 +162,32 @@ export function BrowserHome({ onNavigate, onOpenApp }: BrowserHomeProps) {
                         </p>
                     </div>
                 </div>
+
+                {/* Quick Links from Firebase */}
+                {browserData?.quickLinks && browserData.quickLinks.length > 0 && (
+                    <div className="mb-12">
+                        <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                            <Zap className="w-5 h-5 text-yellow-500" />
+                            Quick Links
+                        </h2>
+                        <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-9 gap-3">
+                            {browserData.quickLinks.map((link, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => onNavigate(link.url)}
+                                    className="group flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-accent/50 transition-colors cursor-pointer active:scale-95 duration-100"
+                                >
+                                    <div className="w-14 h-14 p-3 bg-background border shadow-sm rounded-xl group-hover:shadow-md transition-all duration-200 flex items-center justify-center">
+                                        <Globe className={`w-full h-full ${link.color || 'text-blue-500'}`} />
+                                    </div>
+                                    <span className="text-xs font-medium text-foreground/80 group-hover:text-foreground text-center line-clamp-2 select-none leading-tight">
+                                        {link.name}
+                                    </span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
 
                 {/* OS Apps */}
                 {onOpenApp && (
@@ -100,6 +218,61 @@ export function BrowserHome({ onNavigate, onOpenApp }: BrowserHomeProps) {
                     </div>
                 )}
 
+                {/* Bookmarks from Firebase */}
+                {browserData?.bookmarks && browserData.bookmarks.length > 0 && (
+                    <div className="mb-12">
+                        <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                            <Bookmark className="w-5 h-5 text-amber-500" />
+                            Bookmarks
+                        </h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                            {browserData.bookmarks.map((bookmark) => (
+                                <button
+                                    key={bookmark.id}
+                                    onClick={() => onNavigate(bookmark.url)}
+                                    className="group flex items-center gap-3 p-3 rounded-xl bg-background border hover:border-primary/50 hover:shadow-md transition-all cursor-pointer active:scale-[0.98] duration-100"
+                                >
+                                    <div className="w-10 h-10 p-2 bg-muted rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <Globe className="w-full h-full text-primary" />
+                                    </div>
+                                    <div className="flex-1 text-left min-w-0">
+                                        <p className="text-sm font-medium truncate">{bookmark.name}</p>
+                                        <p className="text-xs text-muted-foreground truncate">{bookmark.url}</p>
+                                    </div>
+                                    <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Recent History from Firebase */}
+                {browserData?.history && browserData.history.length > 0 && (
+                    <div className="mb-12">
+                        <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                            <Clock className="w-5 h-5 text-blue-500" />
+                            Recent History
+                        </h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                            {browserData.history.slice(0, 6).map((item, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => onNavigate(item.url)}
+                                    className="group flex items-center gap-3 p-3 rounded-xl bg-background border hover:border-primary/50 hover:shadow-md transition-all cursor-pointer active:scale-[0.98] duration-100"
+                                >
+                                    <div className="w-10 h-10 p-2 bg-muted rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <Clock className="w-full h-full text-blue-500" />
+                                    </div>
+                                    <div className="flex-1 text-left min-w-0">
+                                        <p className="text-sm font-medium truncate">{item.title}</p>
+                                        <p className="text-xs text-muted-foreground truncate">{item.url}</p>
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
                 {/* Social Media & Links */}
                 <div className="mb-12">
                     <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
@@ -108,8 +281,109 @@ export function BrowserHome({ onNavigate, onOpenApp }: BrowserHomeProps) {
                     </h2>
                     <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-9 gap-3">
                         {socialLinks.map((link) => {
-                            const IconComponent = iconMap[link.platform] || Globe;
-                            const color = colorMap[link.platform] || "text-gray-500";
+                            const IconComponent = platformIcons[link.platform.toLowerCase()] || FaGlobe;
+                            const color = platformColors[link.platform.toLowerCase()] || "text-gray-500";
+                            
+                            // Special handling for WhatsApp - Show popup with options
+                            if (link.platform.toLowerCase() === 'whatsapp' && link.whatsapp) {
+                                const { contactNumber, groupLink, channelLink } = link.whatsapp;
+                                const hasMultipleOptions = [contactNumber, groupLink, channelLink].filter(Boolean).length > 1;
+                                
+                                return (
+                                    <div key={link.url} className="relative">
+                                        <button
+                                            onClick={() => setWhatsappMenuOpen(whatsappMenuOpen === link.name ? null : link.name)}
+                                            className="group flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-accent/50 transition-colors cursor-pointer active:scale-95 duration-100 w-full"
+                                        >
+                                            <div className="w-14 h-14 p-3 bg-background border shadow-sm rounded-xl group-hover:shadow-md transition-all duration-200 flex items-center justify-center relative">
+                                                <IconComponent className={`w-full h-full ${color}`} />
+                                                {hasMultipleOptions && (
+                                                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-[10px] flex items-center justify-center font-bold text-white">
+                                                        {[contactNumber, groupLink, channelLink].filter(Boolean).length}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <span className="text-xs font-medium text-foreground/80 group-hover:text-foreground text-center line-clamp-2 select-none leading-tight">
+                                                {link.name}
+                                            </span>
+                                        </button>
+                                        
+                                        {/* WhatsApp Options Popup */}
+                                        {whatsappMenuOpen === link.name && (
+                                            <>
+                                                {/* Backdrop */}
+                                                <div 
+                                                    className="fixed inset-0 z-40"
+                                                    onClick={() => setWhatsappMenuOpen(null)}
+                                                />
+                                                
+                                                {/* Popup Menu */}
+                                                <div className="absolute left-0 top-full mt-2 z-50 bg-card border-2 border-primary rounded-xl shadow-2xl p-3 min-w-[220px] animate-in fade-in slide-in-from-top-2 duration-200">
+                                                    <div className="text-xs font-bold text-primary mb-2 px-2">WhatsApp Options</div>
+                                                    <div className="space-y-1">
+                                                        {contactNumber && (
+                                                            <a
+                                                                href={`https://wa.me/${contactNumber.replace(/[^0-9]/g, '')}`}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/10 transition-colors"
+                                                                onClick={() => setWhatsappMenuOpen(null)}
+                                                            >
+                                                                <div className="w-8 h-8 rounded-lg bg-green-500 flex items-center justify-center shrink-0 relative">
+                                                                    <Phone className="w-4 h-4 text-white" />
+                                                                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-white rounded-full text-[8px] flex items-center justify-center font-bold text-green-600 border border-green-500">1</span>
+                                                                </div>
+                                                                <div className="flex-1 min-w-0">
+                                                                    <div className="text-xs font-semibold text-foreground">Contact</div>
+                                                                    <div className="text-[10px] text-muted-foreground">Direct message</div>
+                                                                </div>
+                                                            </a>
+                                                        )}
+                                                        {groupLink && (
+                                                            <a
+                                                                href={groupLink}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/10 transition-colors"
+                                                                onClick={() => setWhatsappMenuOpen(null)}
+                                                            >
+                                                                <div className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center shrink-0 relative">
+                                                                    <Users className="w-4 h-4 text-white" />
+                                                                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-white rounded-full text-[8px] flex items-center justify-center font-bold text-blue-600 border border-blue-500">G</span>
+                                                                </div>
+                                                                <div className="flex-1 min-w-0">
+                                                                    <div className="text-xs font-semibold text-foreground">Group</div>
+                                                                    <div className="text-[10px] text-muted-foreground">Join community</div>
+                                                                </div>
+                                                            </a>
+                                                        )}
+                                                        {channelLink && (
+                                                            <a
+                                                                href={channelLink}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/10 transition-colors"
+                                                                onClick={() => setWhatsappMenuOpen(null)}
+                                                            >
+                                                                <div className="w-8 h-8 rounded-lg bg-purple-500 flex items-center justify-center shrink-0 relative">
+                                                                    <Radio className="w-4 h-4 text-white" />
+                                                                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-white rounded-full text-[8px] flex items-center justify-center font-bold text-purple-600 border border-purple-500">C</span>
+                                                                </div>
+                                                                <div className="flex-1 min-w-0">
+                                                                    <div className="text-xs font-semibold text-foreground">Channel</div>
+                                                                    <div className="text-[10px] text-muted-foreground">Follow updates</div>
+                                                                </div>
+                                                            </a>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
+                                );
+                            }
+                            
+                            // Regular social links
                             return (
                                 <button
                                     key={link.url}

@@ -21,7 +21,8 @@ const COLLECTIONS = {
   NOTEPAD: "notepad",
   TERMINAL: "terminal",
   DATABASE: "database",
-  SETTINGS: "settings"
+  SETTINGS: "settings",
+  BROWSER: "browser"
 };
 
 // Generic CRUD operations
@@ -93,6 +94,10 @@ export async function getSettingsData() {
   return await getDocument(COLLECTIONS.SETTINGS);
 }
 
+export async function getBrowserData() {
+  return await getDocument(COLLECTIONS.BROWSER);
+}
+
 // Specific data setters
 export async function saveAboutData(data: any) {
   await setDocument(COLLECTIONS.ABOUT, data);
@@ -130,6 +135,10 @@ export async function saveSettingsData(data: any) {
   await setDocument(COLLECTIONS.SETTINGS, data);
 }
 
+export async function saveBrowserData(data: any) {
+  await setDocument(COLLECTIONS.BROWSER, data);
+}
+
 // Save all data at once
 export async function saveAllData(data: any) {
   const promises = [
@@ -141,7 +150,8 @@ export async function saveAllData(data: any) {
     saveNotepadData(data.notepad),
     saveTerminalData(data.terminal),
     saveDatabaseData(data.database),
-    saveSettingsData(data.settings)
+    saveSettingsData(data.settings),
+    saveBrowserData(data.browser)
   ];
   
   await Promise.all(promises);
@@ -158,7 +168,8 @@ export async function getAllData() {
     notepad,
     terminal,
     database,
-    settings
+    settings,
+    browser
   ] = await Promise.all([
     getAboutData(),
     getProjectsData(),
@@ -168,7 +179,8 @@ export async function getAllData() {
     getNotepadData(),
     getTerminalData(),
     getDatabaseData(),
-    getSettingsData()
+    getSettingsData(),
+    getBrowserData()
   ]);
 
   return {
@@ -180,7 +192,8 @@ export async function getAllData() {
     notepad,
     terminal,
     database,
-    settings
+    settings,
+    browser
   };
 }
 

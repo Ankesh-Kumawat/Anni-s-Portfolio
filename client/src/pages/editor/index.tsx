@@ -124,6 +124,11 @@ export default function Editor() {
             images: [],
             music: [],
         },
+        browser: {
+            bookmarks: [],
+            history: [],
+            quickLinks: [],
+        },
     });
 
     // Load data from Firebase on mount
@@ -144,6 +149,7 @@ export default function Editor() {
                         terminal: firebaseData.terminal as typeof prev.terminal || prev.terminal,
                         database: firebaseData.database as typeof prev.database || prev.database,
                         settings: firebaseData.settings as typeof prev.settings || prev.settings,
+                        browser: firebaseData.browser as typeof prev.browser || prev.browser,
                     }));
                     toast({
                         title: "Data Loaded",
