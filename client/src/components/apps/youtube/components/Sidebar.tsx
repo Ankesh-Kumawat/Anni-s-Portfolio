@@ -1,4 +1,4 @@
-import { Home, Grid, Video, Library, User } from "lucide-react";
+import { Home, Grid, User } from "lucide-react";
 
 interface SidebarProps {
     activeTab: "home" | "shorts";
@@ -42,14 +42,6 @@ export function Sidebar({ activeTab, onTabChange, videosCount, shortsCount, onPr
                 <User className="w-6 h-6" />
                 <span className="text-[10px]">Channel</span>
             </button>
-            <div className="flex flex-col items-center gap-1 cursor-pointer hover:bg-muted p-2 rounded-lg w-16 opacity-50">
-                <Video className="w-6 h-6" />
-                <span className="text-[10px]">Subs</span>
-            </div>
-            <div className="flex flex-col items-center gap-1 cursor-pointer hover:bg-muted p-2 rounded-lg w-16 opacity-50">
-                <Library className="w-6 h-6" />
-                <span className="text-[10px]">Library</span>
-            </div>
         </div>
     );
 }

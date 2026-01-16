@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Menu, ArrowLeft, X } from "lucide-react";
+import { Search, ArrowLeft, X } from "lucide-react";
 import { YouTubeChannel } from "../hooks/useYouTubeData";
 
 interface YouTubeHeaderProps {
@@ -38,21 +38,16 @@ export function YouTubeHeader({
 
     return (
         <div className="h-14 flex items-center justify-between px-4 border-b bg-background z-10 shrink-0">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
                 {showBackButton ? (
                     <button onClick={onBack} className="hover:bg-muted p-1.5 rounded-full transition-colors">
                         <ArrowLeft className="w-6 h-6" />
                     </button>
-                ) : (
-                    <Menu className="w-6 h-6 cursor-pointer" />
-                )}
-                <div className="flex items-center gap-1 cursor-pointer">
+                ) : null}
+                <div className="flex items-center cursor-pointer">
                     <div className="w-8 h-6 bg-red-600 rounded-lg flex items-center justify-center">
                         <div className="w-0 h-0 border-t-[3px] border-t-transparent border-l-[6px] border-l-white border-b-[3px] border-b-transparent ml-0.5" />
                     </div>
-                    <span className="font-bold tracking-tighter text-lg hidden sm:inline">
-                        {channel?.name || "YouTube"}
-                    </span>
                 </div>
             </div>
 

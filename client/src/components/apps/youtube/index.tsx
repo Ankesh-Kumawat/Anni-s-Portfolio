@@ -4,21 +4,30 @@ import { Sidebar } from "./components/Sidebar";
 import { VideoGrid } from "./components/VideoGrid";
 import { VideoPlayer } from "./components/VideoPlayer";
 import { ChannelProfile } from "./components/ChannelProfile";
-import { Home, Grid, Video, Library, Loader2, AlertCircle, User } from "lucide-react";
+import { ShortsPlayer } from "./components/ShortsPlayer";
+import { Home, Grid, Video, Loader2, AlertCircle, User } from "lucide-react";
 import { useYouTubeData, YouTubeVideo } from "./hooks/useYouTubeData";
 
-type ViewMode = "home" | "shorts" | "video" | "profile";
+type ViewMode = "home" | "shorts" | "video" | "profile" | "shortsPlayer";
 
 export default function YouTube() {
     const [viewMode, setViewMode] = useState<ViewMode>("home");
     const [selectedVideo, setSelectedVideo] = useState<YouTubeVideo | null>(null);
+    const [selectedShortIndex, setSelectedShortIndex] = useState(0);
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState<YouTubeVideo[]>([]);
     const { videos, shorts, playlists, channel, loading, error, searchVideos } = useYouTubeData();
 
     const handleVideoSelect = (video: YouTubeVideo) => {
-        setSelectedVideo(video);
-        setViewMode("video");
+        // Check if it's a short
+        const shortIndex = shorts.findIndex(s => s.id === video.id);
+        if (shortIndex !== -1) {
+            setSelectedShortIndex(shortIndex);
+            setViewMode("shortsPlayer");
+        } else {
+            setSelectedVideo(video);
+            setViewMode("video");
+        }
         setSearchQuery("");
         setSearchResults([]);
     };
@@ -55,6 +64,10 @@ export default function YouTube() {
         setSelectedVideo(null);
         setSearchQuery("");
         setSearchResults([]);
+    };
+
+    const handleCloseShortsPlayer = () => {
+        setViewMode("shorts");
     };
 
     if (loading) {
@@ -102,8 +115,22 @@ export default function YouTube() {
 
     const displayVideos = searchQuery ? searchResults : (viewMode === "shorts" ? shorts : videos);
 
+    // Shorts Player Full Screen
+    if (viewMode === "shortsPlayer") {
+        return (
+            <div className="relative h-full w-full overflow-hidden">
+                <ShortsPlayer
+                    shorts={shorts}
+                    initialIndex={selectedShortIndex}
+                    channel={channel}
+                    onClose={handleCloseShortsPlayer}
+                />
+            </div>
+        );
+    }
+
     return (
-        <div className="flex flex-col h-full bg-background overflow-hidden">
+        <div className="flex flex-col h-full bg-background overflow-hidden relative">
             <YouTubeHeader 
                 channel={channel} 
                 onSearch={handleSearch}
@@ -166,12 +193,19 @@ export default function YouTube() {
                 <div className="w-8 h-8 rounded-full border-2 border-primary flex items-center justify-center">
                     <div className="w-2 h-2 bg-primary rounded-full"></div>
                 </div>
-                <Video className="w-6 h-6 text-muted-foreground" />
                 <button 
                     onClick={handleProfileClick}
-                    className={viewMode === "profile" ? "text-foreground" : "text-muted-foreground"}
+                    className={`${viewMode === "profile" ? "ring-2 ring-primary" : ""} rounded-full`}
                 >
-                    <User className="w-6 h-6" />
+                    {channel ? (
+                        <img 
+                            src={channel.logo} 
+                            alt={channel.name}
+                            className="w-7 h-7 rounded-full"
+                        />
+                    ) : (
+                        <User className="w-6 h-6 text-muted-foreground" />
+                    )}
                 </button>
             </div>
         </div>
