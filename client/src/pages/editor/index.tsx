@@ -12,6 +12,7 @@ import Step7Review from "./steps/Step7Review";
 import Step8Music from "./steps/Step8Music";
 import Step9YouTube from "./steps/Step9YouTube";
 import Step10Preferences from "./steps/Step10Preferences";
+import Step11Apps from "./steps/Step11Apps";
 import type { EditorData } from "./types";
 import { saveAllData, getAllData } from "@/lib/firebase-service";
 import { useAuth } from "@/lib/auth-context";
@@ -55,7 +56,8 @@ const STEPS = [
     { id: 7, title: "Music Library", component: Step8Music },
     { id: 8, title: "YouTube Channel", component: Step9YouTube },
     { id: 9, title: "Preferences", component: Step10Preferences },
-    { id: 10, title: "Review & Download", component: Step7Review },
+    { id: 10, title: "Apps", component: Step11Apps },
+    { id: 11, title: "Review & Download", component: Step7Review },
 ];
 
 export default function Editor() {
@@ -159,6 +161,12 @@ export default function Editor() {
                     blur: 0,
                     opacity: 100,
                 },
+            },
+            iconPacks: [],
+            activeIconPack: "",
+            apps: {
+                globalNameColor: "#ffffff",
+                showLabels: true,
             },
             theme: "dark",
         },

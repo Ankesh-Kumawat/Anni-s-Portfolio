@@ -2,6 +2,7 @@ import { useState } from "react";
 import { SettingsSidebar } from "./components/SettingsSidebar";
 import { DisplaySettings } from "./components/DisplaySettings";
 import { WallpaperSettings } from "./components/WallpaperSettings";
+import { AppsSettings } from "./components/AppsSettings";
 import { TaskbarSettings } from "./components/TaskbarSettings";
 import { SoundSettings } from "./components/SoundSettings";
 import { AccountSettings } from "./components/AccountSettings";
@@ -18,6 +19,7 @@ export default function Settings() {
                 <div className="w-full max-w-5xl space-y-6 lg:space-y-8">
                     {activeTab === "display" && <DisplaySettings />}
                     {activeTab === "wallpaper" && <WallpaperSettings />}
+                    {activeTab === "apps" && <AppsSettings />}
                     {activeTab === "taskbar" && <TaskbarSettings />}
                     {activeTab === "sound" && <SoundSettings />}
                     {activeTab === "account" && <AccountSettings />}

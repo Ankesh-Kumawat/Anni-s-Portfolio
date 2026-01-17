@@ -206,6 +206,19 @@ export interface EditorData {
                 opacity: number;
             };
         };
+        iconPacks: Array<{
+            id: string;
+            name: string;
+            icons: {
+                [appId: string]: string; // appId -> icon URL
+            };
+            uploadedAt: string;
+        }>;
+        activeIconPack: string; // icon pack id
+        apps: {
+            globalNameColor: string;
+            showLabels: boolean;
+        };
         theme: "dark" | "light" | "soft-dark" | "forest-green" | "ocean-blue" | "sunset-orange" | "lavender-dream" | "cream-chocolate" | "rose-gold" | "mint-fresh" | "peachy-keen" | "sky-blue";
     };
 }
