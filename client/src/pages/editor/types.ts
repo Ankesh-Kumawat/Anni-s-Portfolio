@@ -185,22 +185,25 @@ export interface EditorData {
         channelLogo: string;
     };
     preferences: {
-        wallpaper: {
+        wallpapers: Array<{
+            id: string;
+            type: "image" | "video";
+            url: string;
+            device: "desktop" | "mobile";
+            uploadedAt: string;
+        }>;
+        activeWallpaper: {
+            desktop: string; // wallpaper id
+            mobile: string; // wallpaper id
+        };
+        wallpaperEffects: {
             desktop: {
-                type: "image" | "video" | "gradient" | "color";
-                url: string;
                 blur: number;
                 opacity: number;
-                gradient: string;
-                color: string;
             };
             mobile: {
-                type: "image" | "video" | "gradient" | "color";
-                url: string;
                 blur: number;
                 opacity: number;
-                gradient: string;
-                color: string;
             };
         };
         theme: "dark" | "light" | "soft-dark" | "forest-green" | "ocean-blue" | "sunset-orange" | "lavender-dream" | "cream-chocolate" | "rose-gold" | "mint-fresh" | "peachy-keen" | "sky-blue";

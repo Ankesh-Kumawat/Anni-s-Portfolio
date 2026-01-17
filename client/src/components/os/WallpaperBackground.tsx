@@ -5,17 +5,27 @@ import { useIsMobile } from "@/hooks/use-mobile";
 export function WallpaperBackground() {
   const isMobile = useIsMobile();
   const [wallpaper, setWallpaper] = useState<any>(null);
+  const [effects, setEffects] = useState<any>({ blur: 0, opacity: 100 });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadWallpaper() {
       try {
         const preferences = await getPreferencesData();
-        if (preferences?.wallpaper) {
-          const deviceWallpaper = isMobile 
-            ? preferences.wallpaper.mobile 
-            : preferences.wallpaper.desktop;
-          setWallpaper(deviceWallpaper);
+        if (preferences) {
+          const device = isMobile ? "mobile" : "desktop";
+          const wallpaperId = preferences.activeWallpaper?.[device];
+          
+          if (wallpaperId && preferences.wallpapers) {
+            const selectedWallpaper = preferences.wallpapers.find((w: any) => w.id === wallpaperId);
+            if (selectedWallpaper) {
+              setWallpaper(selectedWallpaper);
+            }
+          }
+          
+          if (preferences.wallpaperEffects?.[device]) {
+            setEffects(preferences.wallpaperEffects[device]);
+          }
         }
       } catch (error) {
         console.error("Error loading wallpaper:", error);
@@ -30,40 +40,9 @@ export function WallpaperBackground() {
     return null;
   }
 
-  const getBackgroundStyle = () => {
-    const baseStyle: React.CSSProperties = {
-      filter: `blur(${wallpaper.blur}px)`,
-      opacity: wallpaper.opacity / 100,
-    };
-
-    switch (wallpaper.type) {
-      case "image":
-        return {
-          ...baseStyle,
-          backgroundImage: `url(${wallpaper.url})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-        };
-      
-      case "video":
-        return baseStyle;
-      
-      case "gradient":
-        return {
-          ...baseStyle,
-          background: `linear-gradient(to bottom right, var(--tw-gradient-stops))`,
-        };
-      
-      case "color":
-        return {
-          ...baseStyle,
-          backgroundColor: wallpaper.color,
-        };
-      
-      default:
-        return baseStyle;
-    }
+  const style: React.CSSProperties = {
+    filter: `blur(${effects.blur}px)`,
+    opacity: effects.opacity / 100,
   };
 
   return (
@@ -75,25 +54,17 @@ export function WallpaperBackground() {
           muted
           playsInline
           className="absolute inset-0 w-full h-full object-cover"
-          style={{
-            filter: `blur(${wallpaper.blur}px)`,
-            opacity: wallpaper.opacity / 100,
-          }}
+          style={style}
         >
           <source src={wallpaper.url} type="video/mp4" />
         </video>
-      ) : wallpaper.type === "gradient" ? (
-        <div
-          className={`absolute inset-0 bg-gradient-to-br ${wallpaper.gradient}`}
-          style={{
-            filter: `blur(${wallpaper.blur}px)`,
-            opacity: wallpaper.opacity / 100,
-          }}
-        />
       ) : (
         <div
-          className="absolute inset-0"
-          style={getBackgroundStyle()}
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            ...style,
+            backgroundImage: `url(${wallpaper.url})`,
+          }}
         />
       )}
     </>

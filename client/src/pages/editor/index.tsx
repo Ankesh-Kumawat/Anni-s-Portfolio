@@ -145,22 +145,19 @@ export default function Editor() {
             channelLogo: "",
         },
         preferences: {
-            wallpaper: {
+            wallpapers: [],
+            activeWallpaper: {
+                desktop: "",
+                mobile: "",
+            },
+            wallpaperEffects: {
                 desktop: {
-                    type: "gradient",
-                    url: "",
                     blur: 0,
                     opacity: 100,
-                    gradient: "from-slate-900 via-purple-900 to-slate-900",
-                    color: "#1e293b",
                 },
                 mobile: {
-                    type: "gradient",
-                    url: "",
                     blur: 0,
                     opacity: 100,
-                    gradient: "from-slate-900 via-purple-900 to-slate-900",
-                    color: "#1e293b",
                 },
             },
             theme: "dark",
