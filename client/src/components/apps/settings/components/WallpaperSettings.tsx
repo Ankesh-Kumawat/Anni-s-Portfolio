@@ -87,6 +87,11 @@ export function WallpaperSettings() {
         updateWallpaper(activeDevice, "url", wallpaper.url);
     };
 
+    const removeWallpaper = () => {
+        updateWallpaper(activeDevice, "type", "image");
+        updateWallpaper(activeDevice, "url", "");
+    };
+
     const handleSave = async () => {
         try {
             setSaving(true);
@@ -179,6 +184,32 @@ export function WallpaperSettings() {
                     <div className="p-6 rounded-xl border bg-card space-y-4">
                         <Label className="text-base">Available Wallpapers</Label>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            {/* No Wallpaper Option */}
+                            <button
+                                onClick={removeWallpaper}
+                                className={`relative aspect-video rounded-lg overflow-hidden border-2 transition-all group ${
+                                    !currentWallpaper.url
+                                        ? "border-primary ring-2 ring-primary"
+                                        : "border-border hover:border-primary/50"
+                                }`}
+                            >
+                                <div className="w-full h-full bg-gradient-to-br from-muted via-muted/50 to-muted flex items-center justify-center">
+                                    <div className="text-center">
+                                        <div className="w-12 h-12 mx-auto mb-2 rounded-full bg-background flex items-center justify-center">
+                                            <span className="text-2xl">🚫</span>
+                                        </div>
+                                        <p className="text-sm font-medium">No Wallpaper</p>
+                                    </div>
+                                </div>
+                                {!currentWallpaper.url && (
+                                    <div className="absolute inset-0 bg-primary/10 flex items-center justify-center">
+                                        <div className="bg-primary text-primary-foreground rounded-full p-2">
+                                            <Check className="w-5 h-5" />
+                                        </div>
+                                    </div>
+                                )}
+                            </button>
+                            
                             {availableWallpapers.map((wallpaper, index) => (
                                 <button
                                     key={index}
@@ -221,9 +252,36 @@ export function WallpaperSettings() {
 
                 {/* No Wallpapers Message */}
                 {availableWallpapers.length === 0 && (
-                    <div className="p-6 rounded-xl border bg-card text-center space-y-2">
-                        <p className="text-muted-foreground">No wallpapers uploaded yet.</p>
-                        <p className="text-sm text-muted-foreground">Upload wallpapers from the Editor to use them here.</p>
+                    <div className="p-6 rounded-xl border bg-card space-y-4">
+                        <Label className="text-base">Available Wallpapers</Label>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            {/* No Wallpaper Option */}
+                            <button
+                                onClick={removeWallpaper}
+                                className={`relative aspect-video rounded-lg overflow-hidden border-2 transition-all group ${
+                                    !currentWallpaper.url
+                                        ? "border-primary ring-2 ring-primary"
+                                        : "border-border hover:border-primary/50"
+                                }`}
+                            >
+                                <div className="w-full h-full bg-gradient-to-br from-muted via-muted/50 to-muted flex items-center justify-center">
+                                    <div className="text-center">
+                                        <div className="w-12 h-12 mx-auto mb-2 rounded-full bg-background flex items-center justify-center">
+                                            <span className="text-2xl">🚫</span>
+                                        </div>
+                                        <p className="text-sm font-medium">No Wallpaper</p>
+                                    </div>
+                                </div>
+                                {!currentWallpaper.url && (
+                                    <div className="absolute inset-0 bg-primary/10 flex items-center justify-center">
+                                        <div className="bg-primary text-primary-foreground rounded-full p-2">
+                                            <Check className="w-5 h-5" />
+                                        </div>
+                                    </div>
+                                )}
+                            </button>
+                        </div>
+                        <p className="text-sm text-muted-foreground text-center mt-4">Upload wallpapers from the Editor to add more options.</p>
                     </div>
                 )}
 
