@@ -176,35 +176,79 @@ export default function YouTube() {
                 </div>
             )}
 
-            {/* Mobile Bottom Nav */}
-            <div className="md:hidden h-12 bg-background border-t flex items-center justify-around z-20 shrink-0">
+            {/* Mobile Bottom Nav - Ultra Modern & Unique */}
+            <div className="md:hidden h-16 bg-gradient-to-t from-background via-background to-background/80 backdrop-blur-xl border-t border-border/50 flex items-center justify-around z-20 shrink-0 px-4 relative">
+                {/* Active indicator background glow */}
+                <div className={`absolute bottom-2 h-12 rounded-2xl bg-gradient-to-r from-red-500/20 via-red-600/20 to-red-500/20 blur-xl transition-all duration-500 ${
+                    viewMode === "home" ? "left-4 w-24" : 
+                    viewMode === "shorts" ? "left-1/2 -translate-x-1/2 w-24" : 
+                    "right-4 w-28"
+                }`} />
+                
                 <button 
                     onClick={handleHomeClick}
-                    className={viewMode === "home" ? "text-foreground" : "text-muted-foreground"}
+                    className={`relative flex items-center gap-2.5 px-4 py-2.5 rounded-2xl transition-all duration-300 ${
+                        viewMode === "home" 
+                            ? "bg-gradient-to-br from-red-500 via-red-600 to-red-700 text-white shadow-xl shadow-red-500/40 scale-110 -translate-y-1" 
+                            : "text-muted-foreground hover:bg-muted/50 hover:scale-105"
+                    }`}
                 >
-                    <Home className="w-6 h-6" />
+                    <Home className={`${viewMode === "home" ? "w-5 h-5" : "w-5 h-5"} transition-all`} />
+                    {viewMode === "home" && (
+                        <span className="text-sm font-bold tracking-wide animate-in fade-in slide-in-from-left-3 duration-300">
+                            Home
+                        </span>
+                    )}
+                    {viewMode === "home" && (
+                        <div className="absolute inset-0 rounded-2xl bg-white/20 animate-pulse" />
+                    )}
                 </button>
+                
                 <button 
                     onClick={handleShortsClick}
-                    className={viewMode === "shorts" ? "text-foreground" : "text-muted-foreground"}
+                    className={`relative flex items-center gap-2.5 px-4 py-2.5 rounded-2xl transition-all duration-300 ${
+                        viewMode === "shorts" 
+                            ? "bg-gradient-to-br from-red-500 via-red-600 to-red-700 text-white shadow-xl shadow-red-500/40 scale-110 -translate-y-1" 
+                            : "text-muted-foreground hover:bg-muted/50 hover:scale-105"
+                    }`}
                 >
-                    <Grid className="w-6 h-6" />
+                    <Video className={`${viewMode === "shorts" ? "w-5 h-5" : "w-5 h-5"} transition-all`} />
+                    {viewMode === "shorts" && (
+                        <span className="text-sm font-bold tracking-wide animate-in fade-in slide-in-from-left-3 duration-300">
+                            Shorts
+                        </span>
+                    )}
+                    {viewMode === "shorts" && (
+                        <div className="absolute inset-0 rounded-2xl bg-white/20 animate-pulse" />
+                    )}
                 </button>
-                <div className="w-8 h-8 rounded-full border-2 border-primary flex items-center justify-center">
-                    <div className="w-2 h-2 bg-primary rounded-full"></div>
-                </div>
+                
                 <button 
                     onClick={handleProfileClick}
-                    className={`${viewMode === "profile" ? "ring-2 ring-primary" : ""} rounded-full`}
+                    className={`relative flex items-center gap-2.5 px-4 py-2.5 rounded-2xl transition-all duration-300 ${
+                        viewMode === "profile" 
+                            ? "bg-gradient-to-br from-red-500 via-red-600 to-red-700 text-white shadow-xl shadow-red-500/40 scale-110 -translate-y-1" 
+                            : "text-muted-foreground hover:bg-muted/50 hover:scale-105"
+                    }`}
                 >
                     {channel ? (
                         <img 
                             src={channel.logo} 
                             alt={channel.name}
-                            className="w-7 h-7 rounded-full"
+                            className={`w-5 h-5 rounded-full transition-all ${
+                                viewMode === "profile" ? "ring-2 ring-white shadow-lg" : ""
+                            }`}
                         />
                     ) : (
-                        <User className="w-6 h-6 text-muted-foreground" />
+                        <User className={`${viewMode === "profile" ? "w-5 h-5" : "w-5 h-5"} transition-all`} />
+                    )}
+                    {viewMode === "profile" && (
+                        <span className="text-sm font-bold tracking-wide animate-in fade-in slide-in-from-left-3 duration-300">
+                            Channel
+                        </span>
+                    )}
+                    {viewMode === "profile" && (
+                        <div className="absolute inset-0 rounded-2xl bg-white/20 animate-pulse" />
                     )}
                 </button>
             </div>
