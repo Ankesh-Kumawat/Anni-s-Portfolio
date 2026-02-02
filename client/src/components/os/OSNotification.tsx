@@ -67,21 +67,30 @@ export function OSNotification({ notification, onClose }: OSNotificationProps) {
             {/* Animated gradient background */}
             <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-purple-500/5 to-orange-500/5 animate-pulse" />
 
-            {/* Particle effect overlay when dissolving - Many particles */}
+            {/* Particle effect overlay when dissolving - Telegram style */}
             {isDissolving && (
                 <div className="particles-container">
-                    {Array.from({ length: 40 }).map((_, i) => (
-                        <div
-                            key={i}
-                            className="particle"
-                            style={{
-                                top: `${Math.random() * 100}%`,
-                                left: `${Math.random() * 100}%`,
-                                animationDelay: `${Math.random() * 0.3}s`,
-                                animationDuration: `${0.8 + Math.random() * 0.4}s`,
-                            }}
-                        />
-                    ))}
+                    {Array.from({ length: 60 }).map((_, i) => {
+                        const angle = (Math.PI * 2 * i) / 60;
+                        const distance = 80 + Math.random() * 120;
+                        const tx = Math.cos(angle) * distance;
+                        const ty = Math.sin(angle) * distance;
+                        
+                        return (
+                            <div
+                                key={i}
+                                className="particle"
+                                style={{
+                                    top: '50%',
+                                    left: '50%',
+                                    '--tx': `${tx}px`,
+                                    '--ty': `${ty}px`,
+                                    animationDelay: `${Math.random() * 0.2}s`,
+                                    animationDuration: `${0.6 + Math.random() * 0.3}s`,
+                                } as React.CSSProperties}
+                            />
+                        );
+                    })}
                 </div>
             )}
 
@@ -158,48 +167,48 @@ export function OSNotification({ notification, onClose }: OSNotificationProps) {
 
                 .particle {
                     position: absolute;
-                    width: 4px;
-                    height: 4px;
-                    background: radial-gradient(circle, rgba(249, 115, 22, 1), rgba(251, 146, 60, 0.6), transparent);
+                    width: 3px;
+                    height: 3px;
+                    background: radial-gradient(circle, 
+                        rgba(249, 115, 22, 1) 0%, 
+                        rgba(251, 146, 60, 0.8) 30%, 
+                        rgba(251, 191, 36, 0.4) 60%,
+                        transparent 100%
+                    );
                     border-radius: 50%;
                     pointer-events: none;
                     will-change: transform, opacity;
-                    animation: particle-explode cubic-bezier(0.4, 0, 0.2, 1) forwards;
+                    animation: particle-explode cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+                    box-shadow: 0 0 4px rgba(249, 115, 22, 0.6);
                 }
 
                 @keyframes particle-explode {
                     0% {
                         opacity: 1;
-                        transform: translate(0, 0) scale(1) rotate(0deg);
+                        transform: translate(-50%, -50%) translate(0, 0) scale(1);
                     }
-                    20% {
+                    15% {
                         opacity: 1;
-                        transform: translate(
-                            calc(var(--tx) * 0.3),
-                            calc(var(--ty) * 0.3)
-                        ) scale(1.2) rotate(90deg);
+                        transform: translate(-50%, -50%) 
+                            translate(calc(var(--tx) * 0.2), calc(var(--ty) * 0.2)) 
+                            scale(1.5);
                     }
                     100% {
                         opacity: 0;
-                        transform: translate(var(--tx), var(--ty)) scale(0) rotate(360deg);
+                        transform: translate(-50%, -50%) 
+                            translate(var(--tx), var(--ty)) 
+                            scale(0);
                     }
                 }
 
-                .particle:nth-child(4n) {
-                    --tx: ${Math.random() * 200 - 100}px;
-                    --ty: ${Math.random() * -150 - 50}px;
-                }
-                .particle:nth-child(4n+1) {
-                    --tx: ${Math.random() * 200 - 100}px;
-                    --ty: ${Math.random() * -150 - 50}px;
-                }
-                .particle:nth-child(4n+2) {
-                    --tx: ${Math.random() * 200 - 100}px;
-                    --ty: ${Math.random() * -150 - 50}px;
-                }
-                .particle:nth-child(4n+3) {
-                    --tx: ${Math.random() * 200 - 100}px;
-                    --ty: ${Math.random() * -150 - 50}px;
+                .particle:nth-child(odd) {
+                    background: radial-gradient(circle, 
+                        rgba(168, 85, 247, 1) 0%, 
+                        rgba(192, 132, 252, 0.8) 30%, 
+                        rgba(216, 180, 254, 0.4) 60%,
+                        transparent 100%
+                    );
+                    box-shadow: 0 0 4px rgba(168, 85, 247, 0.6);
                 }
             `}</style>
         </div>
