@@ -48,6 +48,7 @@ export default defineConfig({
       strict: true,
       deny: ["**/.*"],
     },
+    // 🔥 NO CACHE HEADERS
     headers: {
       'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
       'Pragma': 'no-cache',

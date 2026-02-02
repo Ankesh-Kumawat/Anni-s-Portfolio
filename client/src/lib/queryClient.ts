@@ -45,10 +45,12 @@ export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       queryFn: getQueryFn({ on401: "throw" }),
-      refetchInterval: false,
-      refetchOnWindowFocus: false,
-      staleTime: Infinity,
-      retry: false,
+      // 🔥 STRICT NO-CACHE CONFIG - Always fetch fresh data
+      staleTime: 0, // Data is immediately stale
+      gcTime: 0, // No garbage collection time
+      refetchOnMount: "always", // Always refetch on mount
+      refetchOnWindowFocus: true, // Refetch when tab focused
+      retry: 1, // Only retry once on failure
     },
     mutations: {
       retry: false,
