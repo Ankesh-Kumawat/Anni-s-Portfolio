@@ -53,10 +53,10 @@ export function ContactForm({ onClose }: ContactFormProps) {
                     message: data.message || "Message sent successfully!"
                 });
 
-                // Show OS notification in System Status widget
+                // Show OS notification
                 addNotification(
-                    "✉️ Email Sent Successfully!",
-                    `Message from ${formData.name} has been delivered to your inbox.`
+                    "✉️ Message Sent!",
+                    `Thanks ${formData.name}! I'll get back to you soon.`
                 );
 
                 setFormData({ name: "", email: "", subject: "", message: "" });
@@ -74,15 +74,15 @@ export function ContactForm({ onClose }: ContactFormProps) {
                 });
 
                 addNotification(
-                    "❌ Email Failed",
-                    data.message || "Failed to send message. Please try again."
+                    "❌ Failed to Send",
+                    data.message || "Something went wrong. Please try again."
                 );
             }
         } catch (error: any) {
             let errorMessage = "Network error. Please try again later.";
             
             if (error.name === 'AbortError') {
-                errorMessage = "Request timeout. The server took too long to respond.";
+                errorMessage = "Request timeout. Please try again.";
             }
             
             setSubmitStatus({
@@ -91,7 +91,7 @@ export function ContactForm({ onClose }: ContactFormProps) {
             });
 
             addNotification(
-                "❌ Error",
+                "❌ Connection Error",
                 errorMessage
             );
         } finally {
