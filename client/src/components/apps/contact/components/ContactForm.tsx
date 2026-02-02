@@ -30,13 +30,20 @@ export function ContactForm({ onClose }: ContactFormProps) {
         setSubmitStatus({ type: null, message: "" });
 
         try {
+            // Add timeout to prevent infinite loading
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 25000); // 25 second timeout
+
             const response = await fetch("/api/contact", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(formData),
+                signal: controller.signal,
             });
+
+            clearTimeout(timeoutId);
 
             const data = await response.json();
 
@@ -71,15 +78,21 @@ export function ContactForm({ onClose }: ContactFormProps) {
                     data.message || "Failed to send message. Please try again."
                 );
             }
-        } catch (error) {
+        } catch (error: any) {
+            let errorMessage = "Network error. Please try again later.";
+            
+            if (error.name === 'AbortError') {
+                errorMessage = "Request timeout. The server took too long to respond.";
+            }
+            
             setSubmitStatus({
                 type: "error",
-                message: "Network error. Please try again later."
+                message: errorMessage
             });
 
             addNotification(
-                "❌ Network Error",
-                "Please check your connection and try again."
+                "❌ Error",
+                errorMessage
             );
         } finally {
             setIsSubmitting(false);
