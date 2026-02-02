@@ -402,10 +402,10 @@ export default function Editor() {
         // Download functionality removed - all data is saved to Firebase
     };
 
-    // Mobile blocker temporarily disabled for testing
-    // if (isMobile) {
-    //     return <MobileBlocker />;
-    // }
+    // Mobile blocker - Editor is desktop only
+    if (isMobile) {
+        return <MobileBlocker />;
+    }
 
     // Show loading state
     if (loading) {
