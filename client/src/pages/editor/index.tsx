@@ -192,6 +192,7 @@ export default function Editor() {
                         settings: firebaseData.settings as typeof prev.settings || prev.settings,
                         browser: firebaseData.browser as typeof prev.browser || prev.browser,
                         music: firebaseData.music as typeof prev.music || prev.music,
+                        youtube: firebaseData.youtube as typeof prev.youtube || prev.youtube,
                         preferences: firebaseData.preferences as typeof prev.preferences || prev.preferences,
                     }));
                     toast({
