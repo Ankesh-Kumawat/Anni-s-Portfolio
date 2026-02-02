@@ -53,25 +53,27 @@ export function AccountSettings() {
             </div>
 
             {/* Profile Card */}
-            <div className="p-6 rounded-xl border bg-card">
-                <div className="flex items-start gap-6">
-                    <Avatar className="w-24 h-24">
+            <div className="p-4 md:p-6 rounded-xl border bg-card">
+                <div className="flex items-start gap-3 md:gap-6">
+                    <Avatar className="w-16 h-16 md:w-24 md:h-24 flex-shrink-0">
                         <AvatarImage src={data.avatar} />
                         <AvatarFallback>AK</AvatarFallback>
                     </Avatar>
-                    <div className="flex-1 space-y-3">
+                    <div className="flex-1 min-w-0 space-y-3">
                         <div>
-                            <h3 className="text-2xl font-semibold">{data.name}</h3>
-                            <p className="text-muted-foreground mt-1">{data.role}</p>
+                            <h3 className="text-lg md:text-2xl font-semibold truncate">{data.name}</h3>
+                            <p className="text-xs md:text-sm text-muted-foreground mt-1 line-clamp-2">{data.role}</p>
                         </div>
-                        <div className="flex gap-2">
-                            <Button variant="default" size="sm" className="gap-2 cursor-pointer" onClick={handleDownloadResume}>
-                                <Download className="w-4 h-4" />
-                                Download Resume
+                        <div className="flex flex-col sm:flex-row gap-2">
+                            <Button variant="default" size="sm" className="gap-2 cursor-pointer text-xs md:text-sm" onClick={handleDownloadResume}>
+                                <Download className="w-3 h-3 md:w-4 md:h-4" />
+                                <span className="hidden sm:inline">Download Resume</span>
+                                <span className="sm:hidden">Resume</span>
                             </Button>
-                            <Button variant="outline" size="sm" className="gap-2 cursor-pointer" onClick={handleViewProjects}>
-                                <Briefcase className="w-4 h-4" />
-                                View Projects
+                            <Button variant="outline" size="sm" className="gap-2 cursor-pointer text-xs md:text-sm" onClick={handleViewProjects}>
+                                <Briefcase className="w-3 h-3 md:w-4 md:h-4" />
+                                <span className="hidden sm:inline">View Projects</span>
+                                <span className="sm:hidden">Projects</span>
                             </Button>
                         </div>
                     </div>
