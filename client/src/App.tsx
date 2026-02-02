@@ -16,6 +16,7 @@ import NotFound from "@/pages/not-found";
 import Editor from "@/pages/editor";
 import AdminLogin from "@/pages/admin-login";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { Analytics } from "@vercel/analytics/react";
 
 function App() {
   return (
@@ -42,6 +43,8 @@ function App() {
                         </Route>
                         <Route component={NotFound} />
                       </Switch>
+                      {/* 📊 Vercel Analytics */}
+                      <Analytics />
                     </OSProvider>
                   </TaskbarProvider>
                 </SpotifyProvider>
