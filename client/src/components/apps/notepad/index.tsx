@@ -23,12 +23,10 @@ export default function Notepad() {
     const [viewMode, setViewMode] = useState<ViewMode>('grid');
     const [searchQuery, setSearchQuery] = useState("");
     const [isEditing, setIsEditing] = useState(false);
-    const [dataLoaded, setDataLoaded] = useState(false);
 
-    // Load default notes from Firestore and merge with localStorage
+    // Load notes from Firestore only (no localStorage)
     useEffect(() => {
-        // Only run once when loading is complete
-        if (loading || dataLoaded) return;
+        if (loading) return;
 
         console.log('Notepad Data from Firestore:', notepadData);
         console.log('Firestore Error:', error);
@@ -36,69 +34,19 @@ export default function Notepad() {
         if (notepadData?.defaultNotes && Array.isArray(notepadData.defaultNotes)) {
             console.log('Loading notes from Firestore:', notepadData.defaultNotes);
             
-            // PRIORITY: Firestore data over localStorage
             const firestoreNotes = notepadData.defaultNotes.map((n: any) => ({
                 ...n,
                 createdAt: new Date(n.createdAt || Date.now()),
                 updatedAt: new Date(n.updatedAt || Date.now())
             }));
 
-            // Load localStorage notes
-            const saved = localStorage.getItem('notepad-notes');
-            let localNotes: Note[] = [];
-            
-            if (saved) {
-                try {
-                    const parsed = JSON.parse(saved);
-                    localNotes = parsed.map((n: any) => ({
-                        ...n,
-                        createdAt: new Date(n.createdAt),
-                        updatedAt: new Date(n.updatedAt)
-                    }));
-                } catch (e) {
-                    console.error('Error parsing saved notes:', e);
-                }
-            }
-
-            // Merge: Keep user-created notes (not in Firestore) + Firestore notes
-            const firestoreIds = new Set(firestoreNotes.map(n => n.id));
-            const userCreatedNotes = localNotes.filter(n => !firestoreIds.has(n.id));
-            
-            const mergedNotes = [...firestoreNotes, ...userCreatedNotes];
-            console.log('Merged notes:', mergedNotes.length, 'notes');
-            setNotes(mergedNotes);
+            console.log('Total notes loaded:', firestoreNotes.length);
+            setNotes(firestoreNotes);
         } else {
-            // If no Firestore data, load from localStorage
-            console.log('No Firestore data, loading from localStorage');
-            const saved = localStorage.getItem('notepad-notes');
-            
-            if (saved) {
-                try {
-                    const parsed = JSON.parse(saved);
-                    setNotes(parsed.map((n: any) => ({
-                        ...n,
-                        createdAt: new Date(n.createdAt),
-                        updatedAt: new Date(n.updatedAt)
-                    })));
-                } catch (e) {
-                    console.error('Error parsing saved notes:', e);
-                    setNotes([]);
-                }
-            } else {
-                console.warn('No notes found in Firestore or localStorage');
-                setNotes([]);
-            }
+            console.warn('No notes found in Firestore');
+            setNotes([]);
         }
-
-        setDataLoaded(true);
-    }, [notepadData, loading, error, dataLoaded]);
-
-    // Save notes to localStorage
-    useEffect(() => {
-        if (notes.length > 0) {
-            localStorage.setItem('notepad-notes', JSON.stringify(notes));
-        }
-    }, [notes]);
+    }, [notepadData, loading, error]);
 
     const createNewNote = () => {
         const newNote: Note = {
