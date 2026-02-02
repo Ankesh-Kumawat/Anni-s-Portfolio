@@ -43,8 +43,8 @@ function App() {
                         </Route>
                         <Route component={NotFound} />
                       </Switch>
-                      {/* 📊 Vercel Analytics */}
-                      <Analytics />
+                      {/* 📊 Vercel Analytics - Production only */}
+                      {process.env.NODE_ENV === 'production' && <Analytics />}
                     </OSProvider>
                   </TaskbarProvider>
                 </SpotifyProvider>
