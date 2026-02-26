@@ -107,6 +107,11 @@ export interface EditorData {
             technical: string[];
             soft: string[];
         };
+        skillLevels: Array<{
+            name: string;
+            level: number;
+            color: string;
+        }>;
     };
     database: {
         user: {

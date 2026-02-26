@@ -106,6 +106,7 @@ export default function Editor() {
             about: "",
             contact: { email: "", location: "" },
             skills: { technical: [], soft: [] },
+            skillLevels: [],
         },
         database: {
             user: {
@@ -274,6 +275,7 @@ export default function Editor() {
                     technical: prev.about.skills || [],
                     soft: [],
                 },
+                skillLevels: prev.terminal.skillLevels || [],
             };
 
             // Sync to Database data

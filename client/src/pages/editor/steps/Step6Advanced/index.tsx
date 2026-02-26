@@ -6,7 +6,7 @@ import SettingsApp from "./SettingsApp";
 import AdvancedStats from "./AdvancedStats";
 import { calculateStep6Completion } from "../../lib/completionCalculator";
 
-export default function Step6Advanced({ data }: StepProps) {
+export default function Step6Advanced({ data, setData }: StepProps) {
     return (
         <div className="max-w-[1400px] mx-auto">
             {/* Header Section */}
@@ -45,7 +45,7 @@ export default function Step6Advanced({ data }: StepProps) {
             <div className="grid grid-cols-[1fr_380px] gap-8">
                 {/* Left Column - Settings */}
                 <div className="space-y-6">
-                    <TerminalSettings data={data} />
+                    <TerminalSettings data={data} setData={setData} />
                     <DatabaseSettings data={data} />
                     <SettingsApp data={data} />
                 </div>

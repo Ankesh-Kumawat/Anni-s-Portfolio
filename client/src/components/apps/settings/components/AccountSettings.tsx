@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Github, Linkedin, Twitter, Mail, Download, Code2, Briefcase } from "lucide-react";
 import { useOS } from "@/lib/os-context";
 import { useFirestoreData } from "@/hooks/useFirestoreData";
+import { getSkillColor } from "@/lib/skill-colors";
 
 interface SettingsData {
     account: {
@@ -12,7 +13,7 @@ interface SettingsData {
     };
 }
 
-const skills = [
+const fallbackSkills = [
     { name: "Flutter", level: 90 },
     { name: "React", level: 75 },
     { name: "TypeScript", level: 80 },
@@ -28,9 +29,11 @@ const socialLinks = [
 
 export function AccountSettings() {
     const { data: settingsData } = useFirestoreData<SettingsData>("settings");
+    const { data: terminalData } = useFirestoreData<any>("terminal");
     const { launchApp } = useOS();
 
     const data = settingsData?.account;
+    const currentSkills = terminalData?.skillLevels?.length > 0 ? terminalData.skillLevels : fallbackSkills;
 
     const handleDownloadResume = () => {
         const link = document.createElement('a');
@@ -87,20 +90,23 @@ export function AccountSettings() {
                     <h4 className="font-semibold">Technical Skills</h4>
                 </div>
                 <div className="space-y-3">
-                    {skills.map((skill) => (
-                        <div key={skill.name}>
-                            <div className="flex justify-between text-sm mb-1">
-                                <span className="font-medium">{skill.name}</span>
-                                <span className="text-muted-foreground">{skill.level}%</span>
+                    {currentSkills.map((skill: any) => {
+                        const color = skill.color || getSkillColor(skill.name);
+                        return (
+                            <div key={skill.name}>
+                                <div className="flex justify-between text-sm mb-1">
+                                    <span className="font-medium" style={{ color }}>{skill.name}</span>
+                                    <span className="text-muted-foreground">{skill.level}%</span>
+                                </div>
+                                <div className="h-2 bg-muted rounded-full overflow-hidden">
+                                    <div
+                                        className="h-full transition-all duration-500"
+                                        style={{ width: `${skill.level}%`, backgroundColor: color }}
+                                    />
+                                </div>
                             </div>
-                            <div className="h-2 bg-muted rounded-full overflow-hidden">
-                                <div
-                                    className="h-full bg-primary transition-all duration-500"
-                                    style={{ width: `${skill.level}%` }}
-                                />
-                            </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             </div>
 

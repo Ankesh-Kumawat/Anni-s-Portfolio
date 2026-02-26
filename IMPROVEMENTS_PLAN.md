@@ -20,6 +20,7 @@ Kam se kam poora portfolio explore kare bina close kiye.
 | 5 | **About Portfolio OS Dialog** — macOS-style system info dialog with tech stack badges | Done |
 | 6 | **Boot Screen Upgrade** — Multi-phase: BIOS text scroll, dual spinner, logo reveal, fadeout | Done |
 | 7 | **Keyboard Shortcuts** — Alt+T/P/A/S/B/C for apps, Alt+W close, Alt+M minimize | Done |
+| 8 | **Terminal Upgrade & Customization** — Neofetch UI, DB-sync skills command, visual progress bars, interactive editor settings | Done |
 
 ---
 
@@ -80,22 +81,9 @@ Kam se kam poora portfolio explore kare bina close kiye.
 
 **Effort:** High | **Impact:** Very High
 
----
 
-### 5. TERMINAL APP — Make it Impressive (terminal/)
-**Current:** Interactive terminal with commands.
 
-**Kya karenge:**
-- Fun commands: matrix, joke, weather, neofetch
-- whoami, projects, skills, social commands
-- Auto-suggestions as user types
-- Command output with typing animation
-
-**Effort:** Medium | **Impact:** Very High
-
----
-
-### 6. WALLPAPER SYSTEM — Dynamic Backgrounds (WallpaperBackground.tsx)
+### 5. WALLPAPER SYSTEM — Dynamic Backgrounds (WallpaperBackground.tsx)
 
 **Kya karenge:**
 - Multiple wallpaper options
@@ -107,7 +95,7 @@ Kam se kam poora portfolio explore kare bina close kiye.
 
 ---
 
-### 7. X-AUDIO WIDGET — Enhanced Mini Player (XAudioWidget.tsx)
+### 6. X-AUDIO WIDGET — Enhanced Mini Player (XAudioWidget.tsx)
 
 **Kya karenge:**
 - Waveform visualization when playing
@@ -118,7 +106,7 @@ Kam se kam poora portfolio explore kare bina close kiye.
 
 ---
 
-### 8. CONTACT APP — Engaging Form (contact/)
+### 7. CONTACT APP — Engaging Form (contact/)
 
 **Kya karenge:**
 - Floating labels with smooth focus animations
@@ -129,7 +117,7 @@ Kam se kam poora portfolio explore kare bina close kiye.
 
 ---
 
-### 9. LOADING / TRANSITION POLISH
+### 8. LOADING / TRANSITION POLISH
 
 **Kya karenge:**
 - Skeleton loaders inside apps while data loads
@@ -140,7 +128,7 @@ Kam se kam poora portfolio explore kare bina close kiye.
 
 ---
 
-### 10. SEO + SOCIAL PREVIEW (index.html + meta)
+### 9. SEO + SOCIAL PREVIEW (index.html + meta)
 
 **Kya karenge:**
 - Open Graph meta tags
@@ -152,7 +140,7 @@ Kam se kam poora portfolio explore kare bina close kiye.
 
 ---
 
-### 11. EASTER EGGS — Delightful Surprises
+### 10. EASTER EGGS — Delightful Surprises
 
 **Kya karenge:**
 - Konami code for fun animation
