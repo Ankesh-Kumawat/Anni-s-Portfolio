@@ -223,6 +223,7 @@ export function Desktop() {
                       key={windowState.id}
                       id={windowState.id}
                       title={app.title}
+                      icon={app.icon}
                       defaultWidth={app.width}
                       defaultHeight={app.height}
                       zIndex={windowState.zIndex}

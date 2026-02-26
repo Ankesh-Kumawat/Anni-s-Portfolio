@@ -258,27 +258,23 @@ export function Taskbar({ apps, hasOpenWindows = false }: TaskbarProps) {
                     </div>
                   )}
 
-                  <Tooltip>
-                    <TooltipTrigger asChild>
+                  <div className="relative group">
                       <button
                         onClick={() => handleAppClick(app)}
-                        onMouseEnter={() => {
-                          // Clear any existing timeout
+                      onMouseEnter={() => {
                           if (hoverTimeout) {
                             clearTimeout(hoverTimeout);
                           }
-                          // Set hover immediately
                           setHoveredApp(app.id);
                         }}
-                        onMouseLeave={() => {
-                          // Delay hiding preview by 300ms
+                      onMouseLeave={() => {
                           const timeout = setTimeout(() => {
                             setHoveredApp(null);
                           }, 300);
                           setHoverTimeout(timeout);
                         }}
                         className={cn(
-                          "relative w-14 h-14 flex items-center justify-center rounded-lg transition-all duration-200 group",
+                          "relative w-14 h-14 flex items-center justify-center rounded-lg transition-all duration-200",
                           isActive ? "bg-accent text-accent-foreground" : "hover:bg-muted text-muted-foreground hover:text-foreground"
                         )}
                       >
@@ -289,11 +285,31 @@ export function Taskbar({ apps, hasOpenWindows = false }: TaskbarProps) {
                           <span className="absolute bottom-1 w-1 h-1 rounded-full bg-primary" />
                         )}
                       </button>
-                    </TooltipTrigger>
-                    <TooltipContent side="top" className="mb-2">
-                      <p>{app.title}</p>
-                    </TooltipContent>
-                  </Tooltip>
+
+                    {/* Tooltip — only when app is NOT open */}
+                    {!isOpen && (
+                      <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-3 opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-200 z-50">
+                        <div
+                          className="relative whitespace-nowrap px-3 py-1.5 rounded-lg text-[11px] font-medium text-white/90 shadow-xl"
+                          style={{
+                            background: "rgba(15,20,35,0.95)",
+                            border: "1px solid rgba(255,255,255,0.1)",
+                            backdropFilter: "blur(12px)",
+                          }}
+                        >
+                          {app.title}
+                          <div
+                            className="absolute top-full left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 -mt-1"
+                            style={{
+                              background: "rgba(15,20,35,0.95)",
+                              borderRight: "1px solid rgba(255,255,255,0.1)",
+                              borderBottom: "1px solid rgba(255,255,255,0.1)",
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               );
             })}
