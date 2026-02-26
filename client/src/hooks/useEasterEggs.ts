@@ -4,6 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 export function useEasterEggs() {
     const { toast } = useToast();
     const [konamiSequence, setKonamiSequence] = useState<string[]>([]);
+    const [textSequence, setTextSequence] = useState<string>("");
     
     // Konami Code: ↑ ↑ ↓ ↓ ← → ← → B A
     const KONAMI_CODE = [
@@ -14,7 +15,8 @@ export function useEasterEggs() {
 
     useEffect(() => {
         const handleKeyPress = (e: KeyboardEvent) => {
-            const key = e.key.toLowerCase();
+            // Get the key - for arrow keys use e.key directly, for letters use lowercase
+            const key = e.key;
             
             // Update Konami sequence
             const newSequence = [...konamiSequence, key].slice(-10);
@@ -25,11 +27,20 @@ export function useEasterEggs() {
                 triggerKonamiEasterEgg();
                 setKonamiSequence([]);
             }
+
+            // Simple text-based easter egg - type "konami"
+            const newText = (textSequence + key.toLowerCase()).slice(-6);
+            setTextSequence(newText);
+            
+            if (newText === "konami") {
+                triggerKonamiEasterEgg();
+                setTextSequence("");
+            }
         };
 
         window.addEventListener("keydown", handleKeyPress);
         return () => window.removeEventListener("keydown", handleKeyPress);
-    }, [konamiSequence]);
+    }, [konamiSequence, textSequence]);
 
     const triggerKonamiEasterEgg = () => {
         // Create confetti effect
