@@ -4,9 +4,9 @@ import {
     FaDribbble, FaBehance, FaMedium, FaStackOverflow, FaCodepen,
     FaFigma, FaDiscord, FaTwitch, FaTiktok, FaReddit, FaProductHunt,
     FaTelegram, FaWhatsapp, FaSnapchat, FaSpotify, FaPinterest, FaSlack,
-    FaGlobe, FaEnvelope
+    FaGlobe, FaEnvelope, FaBriefcase
 } from "react-icons/fa";
-import { SiDevdotto } from "react-icons/si";
+import { SiDevdotto, SiFiverr, SiUpwork, SiFreelancer } from "react-icons/si";
 import { useFirestoreData } from "@/hooks/useFirestoreData";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -64,6 +64,10 @@ const platformIcons: Record<string, any> = {
     spotify: FaSpotify,
     pinterest: FaPinterest,
     slack: FaSlack,
+    fiverr: SiFiverr,
+    upwork: SiUpwork,
+    freelancer: SiFreelancer,
+    toptal: FaBriefcase,
     website: FaGlobe,
     email: FaEnvelope,
 };
@@ -93,6 +97,10 @@ const platformColors: Record<string, string> = {
     spotify: "bg-[#1DB954]",
     pinterest: "bg-[#E60023]",
     slack: "bg-[#4A154B]",
+    fiverr: "bg-[#1DBF73]",
+    upwork: "bg-[#6FDA44]",
+    freelancer: "bg-[#29B2FE]",
+    toptal: "bg-[#3863A0]",
     website: "bg-[#3B82F6]",
     email: "bg-[#6B7280]",
 };

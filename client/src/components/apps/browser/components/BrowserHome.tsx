@@ -6,9 +6,9 @@ import {
     FaDribbble, FaBehance, FaMedium, FaDev, FaStackOverflow, FaCodepen,
     FaFigma, FaDiscord, FaTwitch, FaTiktok, FaReddit, FaProductHunt,
     FaTelegram, FaWhatsapp, FaSnapchat, FaSpotify, FaPinterest, FaSlack,
-    FaGlobe, FaEnvelope
+    FaGlobe, FaEnvelope, FaBriefcase
 } from "react-icons/fa";
-import { SiDevdotto } from "react-icons/si";
+import { SiDevdotto, SiFiverr, SiUpwork, SiFreelancer } from "react-icons/si";
 import { useFirestoreData } from "@/hooks/useFirestoreData";
 
 interface BrowserData {
@@ -78,6 +78,10 @@ const platformIcons: Record<string, any> = {
     spotify: FaSpotify,
     pinterest: FaPinterest,
     slack: FaSlack,
+    fiverr: SiFiverr,
+    upwork: SiUpwork,
+    freelancer: SiFreelancer,
+    toptal: FaBriefcase,
     portfolio: FaGlobe,
     website: FaGlobe,
     email: FaEnvelope,
@@ -109,6 +113,10 @@ const platformColors: Record<string, string> = {
     spotify: "text-green-600",
     pinterest: "text-red-600",
     slack: "text-purple-600",
+    fiverr: "text-green-500",
+    upwork: "text-green-600",
+    freelancer: "text-blue-500",
+    toptal: "text-blue-700",
     portfolio: "text-purple-500",
     website: "text-blue-500",
     email: "text-red-500",
