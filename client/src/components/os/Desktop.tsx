@@ -13,10 +13,40 @@ import { APPS } from "../apps";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 export function Desktop() {
-  const { openWindows } = useOS();
+  const { openWindows, addNotification } = useOS();
   const isMobile = useIsMobile();
   const spotifyContext = useSpotify();
   const [isBooting, setIsBooting] = useState(false);
+
+  // Welcome notification for first-time visitors
+  useEffect(() => {
+    const hasVisited = localStorage.getItem("portfolio-os-welcomed");
+    if (hasVisited) return;
+
+    // Mark as visited immediately so it never shows again
+    localStorage.setItem("portfolio-os-welcomed", "true");
+
+    // First notification — Welcome
+    const welcomeTimer = setTimeout(() => {
+      addNotification(
+        "Welcome to Portfolio OS!",
+        "Hey there! I'm Anni. Explore my portfolio by clicking any app on the desktop. Enjoy!"
+      );
+    }, 2500);
+
+    // Second notification — Terminal tip
+    const tipTimer = setTimeout(() => {
+      addNotification(
+        "Pro Tip",
+        "Try opening the Terminal and type 'help' to discover all commands!"
+      );
+    }, 8000);
+
+    return () => {
+      clearTimeout(welcomeTimer);
+      clearTimeout(tipTimer);
+    };
+  }, []);
 
   // Log screen size on mount and resize
   useEffect(() => {

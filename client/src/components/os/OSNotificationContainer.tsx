@@ -8,8 +8,10 @@ export function OSNotificationContainer() {
         markNotificationRead(id);
     };
 
+    if (notifications.length === 0) return null;
+
     return (
-        <div className="fixed top-20 right-6 z-[9999] flex flex-col items-end pointer-events-none">
+        <div className="fixed top-14 right-4 md:right-6 z-[9999] flex flex-col items-end pointer-events-none">
             <div className="pointer-events-auto">
                 {notifications.map((notification) => (
                     <OSNotification
