@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useOS } from "@/lib/os-context";
 import { useSpotify } from "@/lib/spotify-context";
 import { Window } from "./Window";
@@ -9,14 +9,60 @@ import { SystemTray } from "./SystemTray";
 import { WidgetsPanel } from "./widgets/WidgetsPanel";
 import { BootScreen } from "./BootScreen";
 import { WallpaperBackground } from "./WallpaperBackground";
+import { DesktopContextMenu } from "./DesktopContextMenu";
+import { AboutOSDialog } from "./AboutOSDialog";
 import { APPS } from "../apps";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 export function Desktop() {
-  const { openWindows, addNotification } = useOS();
+  const { openWindows, addNotification, launchApp, closeWindow, minimizeWindow, activeWindowId } = useOS();
   const isMobile = useIsMobile();
   const spotifyContext = useSpotify();
   const [isBooting, setIsBooting] = useState(false);
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null);
+  const [showAboutOS, setShowAboutOS] = useState(false);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger when typing in inputs
+      const tag = (e.target as HTMLElement).tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || (e.target as HTMLElement).isContentEditable) return;
+
+      if (e.altKey) {
+        switch (e.key.toLowerCase()) {
+          case "t": e.preventDefault(); launchApp("terminal"); break;
+          case "p": e.preventDefault(); launchApp("projects"); break;
+          case "a": e.preventDefault(); launchApp("about"); break;
+          case "s": e.preventDefault(); launchApp("settings"); break;
+          case "b": e.preventDefault(); launchApp("browser"); break;
+          case "c": e.preventDefault(); launchApp("contact"); break;
+          case "w":
+            e.preventDefault();
+            if (activeWindowId) closeWindow(activeWindowId);
+            break;
+          case "m":
+            e.preventDefault();
+            if (activeWindowId) minimizeWindow(activeWindowId);
+            break;
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [launchApp, closeWindow, minimizeWindow, activeWindowId]);
+
+  // Right-click context menu handler
+  const handleContextMenu = useCallback((e: React.MouseEvent) => {
+    // Only show on desktop background area, not on icons/windows/widgets
+    const target = e.target as HTMLElement;
+    const isDesktopBg = target.closest('[data-desktop-bg]') !== null;
+    if (!isDesktopBg) return;
+
+    e.preventDefault();
+    setContextMenu({ x: e.clientX, y: e.clientY });
+  }, []);
 
   // Welcome notification for first-time visitors
   useEffect(() => {
@@ -95,10 +141,26 @@ export function Desktop() {
   return (
     <div
       className="fixed inset-0 overflow-hidden bg-background select-none touch-none flex flex-col"
+      onContextMenu={!isMobile ? handleContextMenu : undefined}
     >
       {/* Wallpaper Background */}
       <WallpaperBackground />
-      
+
+      {/* Right-Click Context Menu */}
+      {contextMenu && (
+        <DesktopContextMenu
+          x={contextMenu.x}
+          y={contextMenu.y}
+          onClose={() => setContextMenu(null)}
+          onAboutOS={() => setShowAboutOS(true)}
+        />
+      )}
+
+      {/* About OS Dialog */}
+      {showAboutOS && (
+        <AboutOSDialog onClose={() => setShowAboutOS(false)} />
+      )}
+
       {/* Subtle Dot Grid Background Pattern */}
       <div className="absolute inset-0 opacity-[0.4]"
         style={{
@@ -126,7 +188,7 @@ export function Desktop() {
           </div>
 
           {/* Main Desktop Area - Fills remaining space */}
-          <div className="relative flex-1 w-full overflow-hidden">
+          <div className="relative flex-1 w-full overflow-hidden" data-desktop-bg>
 
             {/* Desktop Grid - Responsive Layout */}
             <div className="absolute inset-0 p-6 pt-8 grid grid-cols-4 md:grid-flow-col md:grid-rows-[repeat(auto-fill,minmax(110px,1fr))] gap-x-4 gap-y-6 content-start items-start w-full md:w-fit pointer-events-none [&>*]:pointer-events-auto overflow-y-auto md:overflow-visible h-full pb-20">
