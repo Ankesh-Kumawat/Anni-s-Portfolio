@@ -496,6 +496,86 @@ export function handleCommand(cmd: string, launchApp: (AppId: AppId) => void): s
         case "clear":
             return "";
 
+        case "sudo":
+            if (args === "hire-me" || args === "hire me") {
+                return (
+                    <div className="space-y-3">
+                        <div className="text-green-400 font-bold animate-pulse">
+                            🚀 ACCESS GRANTED
+                        </div>
+                        <div className="text-zinc-300">
+                            Impressive! You know your way around a terminal.
+                        </div>
+                        <div className="text-cyan-400">
+                            → Let's talk: Check the Contact app!
+                        </div>
+                        <div className="text-zinc-500 text-xs mt-2">
+                            (Seriously though, I'd love to hear from you)
+                        </div>
+                    </div>
+                );
+            } else if (args.startsWith("rm")) {
+                return (
+                    <div className="space-y-2">
+                        <div className="text-red-400 font-bold">⚠️ CRITICAL ERROR</div>
+                        <div className="text-zinc-300">Nice try! But this portfolio is delete-proof 😎</div>
+                        <div className="text-zinc-500 text-xs">
+                            (Don't worry, nothing was harmed in the making of this joke)
+                        </div>
+                    </div>
+                );
+            }
+            return (
+                <div className="text-red-400">
+                    sudo: {args}: command not found
+                </div>
+            );
+
+        case "rm":
+            if (args.includes("-rf") || args.includes("/")) {
+                return (
+                    <div className="space-y-2">
+                        <div className="text-yellow-400">⚠️ WARNING: Dangerous command detected!</div>
+                        <div className="text-zinc-300">
+                            Deleting system files... Just kidding! 😄
+                        </div>
+                        <div className="text-zinc-500 text-xs">
+                            This is a safe space. No files were harmed.
+                        </div>
+                    </div>
+                );
+            }
+            return <div className="text-red-400">rm: missing operand</div>;
+
+        case "hack":
+        case "hacker":
+            return (
+                <div className="space-y-2">
+                    <div className="text-green-400 font-mono">
+                        [████████████████████] 100%
+                    </div>
+                    <div className="text-green-400">
+                        Hacking mainframe... Access denied!
+                    </div>
+                    <div className="text-zinc-500 text-xs">
+                        (This isn't Mr. Robot, but nice try 😉)
+                    </div>
+                </div>
+            );
+
+        case "coffee":
+            return (
+                <div className="space-y-2">
+                    <div className="text-amber-600">☕</div>
+                    <div className="text-zinc-300">
+                        Brewing coffee... Done!
+                    </div>
+                    <div className="text-zinc-500 text-xs">
+                        (Virtual coffee tastes just as good)
+                    </div>
+                </div>
+            );
+
         case "":
             return "";
 

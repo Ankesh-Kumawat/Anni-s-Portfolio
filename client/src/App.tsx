@@ -17,8 +17,12 @@ import Editor from "@/pages/editor";
 import AdminLogin from "@/pages/admin-login";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Analytics } from "@vercel/analytics/react";
+import { useEasterEggs } from "@/hooks/useEasterEggs";
 
 function App() {
+  // Initialize easter eggs
+  useEasterEggs();
+  
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>

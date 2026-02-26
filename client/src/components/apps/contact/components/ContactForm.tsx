@@ -138,68 +138,102 @@ export function ContactForm({ onClose }: ContactFormProps) {
 
                 <form className="space-y-5 md:space-y-6" onSubmit={handleSubmit}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
-                        <div className="space-y-2">
-                            <Label htmlFor="name" className="text-sm md:text-base">Name *</Label>
+                        <div className="relative">
                             <Input
                                 id="name"
                                 value={formData.name}
                                 onChange={handleChange}
-                                placeholder="Your name"
-                                className="h-11 md:h-12 text-sm md:text-base"
+                                placeholder=" "
+                                className="h-11 md:h-12 text-sm md:text-base peer"
                                 required
                                 disabled={isSubmitting}
                             />
+                            <Label 
+                                htmlFor="name" 
+                                className="absolute left-3 top-1/2 -translate-y-1/2 text-sm md:text-base text-muted-foreground transition-all duration-200 pointer-events-none peer-focus:top-0 peer-focus:left-2 peer-focus:text-xs peer-focus:bg-background peer-focus:px-1 peer-focus:text-primary peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:left-2 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:bg-background peer-[:not(:placeholder-shown)]:px-1"
+                            >
+                                Name *
+                            </Label>
                         </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="email" className="text-sm md:text-base">Email *</Label>
+                        <div className="relative">
                             <Input
                                 id="email"
                                 type="email"
                                 value={formData.email}
                                 onChange={handleChange}
-                                placeholder="your@email.com"
-                                className="h-11 md:h-12 text-sm md:text-base"
+                                placeholder=" "
+                                className="h-11 md:h-12 text-sm md:text-base peer"
                                 required
                                 disabled={isSubmitting}
                             />
+                            <Label 
+                                htmlFor="email" 
+                                className="absolute left-3 top-1/2 -translate-y-1/2 text-sm md:text-base text-muted-foreground transition-all duration-200 pointer-events-none peer-focus:top-0 peer-focus:left-2 peer-focus:text-xs peer-focus:bg-background peer-focus:px-1 peer-focus:text-primary peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:left-2 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:bg-background peer-[:not(:placeholder-shown)]:px-1"
+                            >
+                                Email *
+                            </Label>
                         </div>
                     </div>
 
-                    <div className="space-y-2">
-                        <Label htmlFor="subject" className="text-sm md:text-base">Subject *</Label>
+                    <div className="relative">
                         <Input
                             id="subject"
                             value={formData.subject}
                             onChange={handleChange}
-                            placeholder="What's this about?"
-                            className="h-11 md:h-12 text-sm md:text-base"
+                            placeholder=" "
+                            className="h-11 md:h-12 text-sm md:text-base peer"
                             required
                             disabled={isSubmitting}
                         />
+                        <Label 
+                            htmlFor="subject" 
+                            className="absolute left-3 top-1/2 -translate-y-1/2 text-sm md:text-base text-muted-foreground transition-all duration-200 pointer-events-none peer-focus:top-0 peer-focus:left-2 peer-focus:text-xs peer-focus:bg-background peer-focus:px-1 peer-focus:text-primary peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:left-2 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:bg-background peer-[:not(:placeholder-shown)]:px-1"
+                        >
+                            Subject *
+                        </Label>
                     </div>
 
-                    <div className="space-y-2">
-                        <Label htmlFor="message" className="text-sm md:text-base">Message *</Label>
+                    <div className="relative">
                         <Textarea
                             id="message"
                             value={formData.message}
                             onChange={handleChange}
-                            placeholder="Tell me about your project, ideas, or just say hi..."
-                            className="min-h-[150px] md:min-h-[180px] lg:min-h-[200px] text-sm md:text-base resize-none no-scrollbar"
+                            placeholder=" "
+                            className="min-h-[150px] md:min-h-[180px] lg:min-h-[200px] text-sm md:text-base resize-none no-scrollbar peer pt-4"
                             required
                             disabled={isSubmitting}
                         />
+                        <Label 
+                            htmlFor="message" 
+                            className="absolute left-3 top-4 text-sm md:text-base text-muted-foreground transition-all duration-200 pointer-events-none peer-focus:top-0 peer-focus:left-2 peer-focus:text-xs peer-focus:bg-background peer-focus:px-1 peer-focus:text-primary peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:left-2 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:bg-background peer-[:not(:placeholder-shown)]:px-1"
+                        >
+                            Message *
+                        </Label>
                     </div>
 
                     <Button
                         type="submit"
-                        className="w-full md:w-auto md:px-12 h-12 md:h-14 text-base md:text-lg font-semibold"
+                        className="w-full md:w-auto md:px-12 h-12 md:h-14 text-base md:text-lg font-semibold group relative overflow-hidden"
                         size="lg"
                         disabled={isSubmitting}
                     >
-                        <Send className="w-5 h-5 mr-2" />
-                        {isSubmitting ? "Sending..." : "Send Message"}
+                        {isSubmitting ? (
+                            <>
+                                <div className="w-5 h-5 mr-2 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                Sending...
+                            </>
+                        ) : submitStatus.type === "success" ? (
+                            <>
+                                <CheckCircle2 className="w-5 h-5 mr-2 animate-in zoom-in duration-300" />
+                                Sent!
+                            </>
+                        ) : (
+                            <>
+                                <Send className="w-5 h-5 mr-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-200" />
+                                Send Message
+                            </>
+                        )}
                     </Button>
                 </form>
 
