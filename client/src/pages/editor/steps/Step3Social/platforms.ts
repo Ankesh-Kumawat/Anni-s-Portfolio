@@ -1,11 +1,11 @@
 import {
     FaGithub, FaLinkedin, FaTwitter, FaInstagram, FaFacebook, FaYoutube,
-    FaDribbble, FaBehance, FaMedium, FaDev, FaStackOverflow, FaCodepen,
+    FaDribbble, FaBehance, FaMedium, FaStackOverflow, FaCodepen,
     FaFigma, FaDiscord, FaTwitch, FaTiktok, FaReddit, FaProductHunt,
     FaTelegram, FaWhatsapp, FaSnapchat, FaSpotify, FaPinterest, FaSlack,
-    FaGlobe, FaEnvelope
+    FaGlobe, FaEnvelope, FaBriefcase
 } from "react-icons/fa";
-import { SiDevdotto } from "react-icons/si";
+import { SiDevdotto, SiFiverr, SiUpwork, SiFreelancer } from "react-icons/si";
 
 export const POPULAR_PLATFORMS = [
     { value: "github", label: "GitHub", icon: FaGithub, color: "bg-[#181717]", placeholder: "https://github.com/username" },
@@ -32,6 +32,10 @@ export const POPULAR_PLATFORMS = [
     { value: "spotify", label: "Spotify", icon: FaSpotify, color: "bg-[#1DB954]", placeholder: "https://open.spotify.com/user/..." },
     { value: "pinterest", label: "Pinterest", icon: FaPinterest, color: "bg-[#E60023]", placeholder: "https://pinterest.com/username" },
     { value: "slack", label: "Slack", icon: FaSlack, color: "bg-[#4A154B]", placeholder: "https://slack.com/..." },
+    { value: "fiverr", label: "Fiverr", icon: SiFiverr, color: "bg-[#1DBF73]", placeholder: "https://fiverr.com/username" },
+    { value: "upwork", label: "Upwork", icon: SiUpwork, color: "bg-[#6FDA44]", placeholder: "https://upwork.com/freelancers/~..." },
+    { value: "freelancer", label: "Freelancer", icon: SiFreelancer, color: "bg-[#29B2FE]", placeholder: "https://freelancer.com/u/username" },
+    { value: "toptal", label: "Toptal", icon: FaBriefcase, color: "bg-[#3863A0]", placeholder: "https://toptal.com/resume/..." },
     { value: "website", label: "Website", icon: FaGlobe, color: "bg-[#3B82F6]", placeholder: "https://yourwebsite.com" },
     { value: "email", label: "Email", icon: FaEnvelope, color: "bg-[#6B7280]", placeholder: "mailto:your@email.com" },
 ];
