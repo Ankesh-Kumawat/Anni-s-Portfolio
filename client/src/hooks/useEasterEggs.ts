@@ -43,171 +43,190 @@ export function useEasterEggs() {
     }, [konamiSequence, textSequence]);
 
     const triggerKonamiEasterEgg = () => {
-        // Screen shake effect
-        document.body.style.animation = "shake 0.5s";
-        setTimeout(() => {
-            document.body.style.animation = "";
-        }, 500);
+        // Create canvas for smooth animations
+        const canvas = document.createElement('canvas');
+        canvas.style.position = 'fixed';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.width = '100vw';
+        canvas.style.height = '100vh';
+        canvas.style.pointerEvents = 'none';
+        canvas.style.zIndex = '9999';
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        document.body.appendChild(canvas);
 
-        // Add shake keyframes if not exists
-        if (!document.getElementById("shake-keyframes")) {
-            const style = document.createElement("style");
-            style.id = "shake-keyframes";
-            style.textContent = `
-                @keyframes shake {
-                    0%, 100% { transform: translateX(0); }
-                    10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
-                    20%, 40%, 60%, 80% { transform: translateX(10px); }
-                }
-                @keyframes firework {
-                    0% { transform: translate(0, 0) scale(0); opacity: 1; }
-                    50% { opacity: 1; }
-                    100% { transform: translate(var(--tx), var(--ty)) scale(1); opacity: 0; }
-                }
-            `;
-            document.head.appendChild(style);
-        }
+        const ctx = canvas.getContext('2d')!;
+        const particles: Array<{
+            x: number;
+            y: number;
+            vx: number;
+            vy: number;
+            life: number;
+            maxLife: number;
+            color: string;
+            size: number;
+            alpha: number;
+        }> = [];
 
-        // Create multiple firework bursts
-        const colors = ["#3b82f6", "#8b5cf6", "#ec4899", "#f59e0b", "#10b981", "#ef4444", "#06b6d4"];
-        const burstCount = 8;
-        const particlesPerBurst = 30;
+        const colors = ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#ef4444', '#06b6d4', '#f97316'];
 
-        for (let burst = 0; burst < burstCount; burst++) {
-            setTimeout(() => {
-                const centerX = Math.random() * window.innerWidth;
-                const centerY = Math.random() * (window.innerHeight * 0.6);
-
-                // Create burst center flash
-                const flash = document.createElement("div");
-                flash.style.position = "fixed";
-                flash.style.left = centerX + "px";
-                flash.style.top = centerY + "px";
-                flash.style.width = "20px";
-                flash.style.height = "20px";
-                flash.style.borderRadius = "50%";
-                flash.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                flash.style.boxShadow = "0 0 30px 10px currentColor";
-                flash.style.pointerEvents = "none";
-                flash.style.zIndex = "9999";
-                document.body.appendChild(flash);
-
-                setTimeout(() => flash.remove(), 300);
-
-                // Create particles
-                for (let i = 0; i < particlesPerBurst; i++) {
-                    setTimeout(() => {
-                        const particle = document.createElement("div");
-                        const angle = (Math.PI * 2 * i) / particlesPerBurst;
-                        const velocity = 100 + Math.random() * 150;
-                        const tx = Math.cos(angle) * velocity;
-                        const ty = Math.sin(angle) * velocity;
-
-                        particle.style.position = "fixed";
-                        particle.style.left = centerX + "px";
-                        particle.style.top = centerY + "px";
-                        particle.style.width = (4 + Math.random() * 6) + "px";
-                        particle.style.height = (4 + Math.random() * 6) + "px";
-                        particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                        particle.style.borderRadius = Math.random() > 0.5 ? "50%" : "0";
-                        particle.style.pointerEvents = "none";
-                        particle.style.zIndex = "9999";
-                        particle.style.boxShadow = "0 0 10px currentColor";
-                        particle.style.setProperty("--tx", tx + "px");
-                        particle.style.setProperty("--ty", ty + "px");
-
-                        document.body.appendChild(particle);
-
-                        const animation = particle.animate([
-                            {
-                                transform: "translate(0, 0) scale(0) rotate(0deg)",
-                                opacity: 1
-                            },
-                            {
-                                transform: `translate(${tx}px, ${ty}px) scale(1) rotate(${Math.random() * 720}deg)`,
-                                opacity: 0
-                            }
-                        ], {
-                            duration: 1000 + Math.random() * 500,
-                            easing: "cubic-bezier(0.25, 0.46, 0.45, 0.94)"
-                        });
-
-                        animation.onfinish = () => particle.remove();
-                    }, i * 5);
-                }
-            }, burst * 300);
-        }
-
-        // Add floating text effects
-        const messages = ["🎮 KONAMI!", "💥 BOOM!", "🎉 EPIC!", "⚡ LEGENDARY!"];
-        messages.forEach((msg, idx) => {
-            setTimeout(() => {
-                const text = document.createElement("div");
-                text.textContent = msg;
-                text.style.position = "fixed";
-                text.style.left = "50%";
-                text.style.top = "50%";
-                text.style.transform = "translate(-50%, -50%)";
-                text.style.fontSize = "4rem";
-                text.style.fontWeight = "bold";
-                text.style.color = colors[idx % colors.length];
-                text.style.textShadow = "0 0 20px currentColor, 0 0 40px currentColor";
-                text.style.pointerEvents = "none";
-                text.style.zIndex = "10000";
-                text.style.fontFamily = "Inter, sans-serif";
-                document.body.appendChild(text);
-
-                const textAnim = text.animate([
-                    {
-                        transform: "translate(-50%, -50%) scale(0) rotate(-180deg)",
-                        opacity: 0
-                    },
-                    {
-                        transform: "translate(-50%, -50%) scale(1.5) rotate(0deg)",
-                        opacity: 1,
-                        offset: 0.3
-                    },
-                    {
-                        transform: "translate(-50%, -50%) scale(1) rotate(0deg)",
-                        opacity: 1,
-                        offset: 0.7
-                    },
-                    {
-                        transform: "translate(-50%, -200%) scale(0.5) rotate(180deg)",
-                        opacity: 0
-                    }
-                ], {
-                    duration: 1500,
-                    easing: "cubic-bezier(0.68, -0.55, 0.265, 1.55)"
+        // Create firework bursts
+        const createBurst = (x: number, y: number) => {
+            const particleCount = 50;
+            for (let i = 0; i < particleCount; i++) {
+                const angle = (Math.PI * 2 * i) / particleCount;
+                const speed = 2 + Math.random() * 4;
+                particles.push({
+                    x,
+                    y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    life: 1,
+                    maxLife: 60 + Math.random() * 40,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    size: 3 + Math.random() * 4,
+                    alpha: 1
                 });
+            }
+        };
 
-                textAnim.onfinish = () => text.remove();
-            }, idx * 400);
+        // Create multiple bursts
+        let burstCount = 0;
+        const maxBursts = 12;
+        const burstInterval = setInterval(() => {
+            if (burstCount >= maxBursts) {
+                clearInterval(burstInterval);
+                return;
+            }
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height * 0.7;
+            createBurst(x, y);
+            burstCount++;
+        }, 200);
+
+        // Animation loop
+        let frame = 0;
+        const animate = () => {
+            frame++;
+            
+            // Fade out canvas
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Update and draw particles
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                
+                // Update position
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.1; // gravity
+                p.vx *= 0.99; // friction
+                p.life++;
+                
+                // Update alpha
+                p.alpha = 1 - (p.life / p.maxLife);
+                
+                // Remove dead particles
+                if (p.life >= p.maxLife) {
+                    particles.splice(i, 1);
+                    continue;
+                }
+                
+                // Draw particle with glow
+                ctx.save();
+                ctx.globalAlpha = p.alpha;
+                
+                // Outer glow
+                const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 3);
+                gradient.addColorStop(0, p.color);
+                gradient.addColorStop(1, 'transparent');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(p.x - p.size * 3, p.y - p.size * 3, p.size * 6, p.size * 6);
+                
+                // Inner particle
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.restore();
+            }
+
+            // Continue animation
+            if (particles.length > 0 || burstCount < maxBursts) {
+                requestAnimationFrame(animate);
+            } else {
+                setTimeout(() => {
+                    canvas.remove();
+                }, 1000);
+            }
+        };
+
+        animate();
+
+        // Animated text overlay
+        const textOverlay = document.createElement('div');
+        textOverlay.style.position = 'fixed';
+        textOverlay.style.top = '50%';
+        textOverlay.style.left = '50%';
+        textOverlay.style.transform = 'translate(-50%, -50%)';
+        textOverlay.style.fontSize = '6rem';
+        textOverlay.style.fontWeight = '900';
+        textOverlay.style.background = 'linear-gradient(45deg, #3b82f6, #8b5cf6, #ec4899, #f59e0b)';
+        textOverlay.style.backgroundSize = '300% 300%';
+        textOverlay.style.backgroundClip = 'text';
+        textOverlay.style.webkitBackgroundClip = 'text';
+        textOverlay.style.color = 'transparent';
+        textOverlay.style.textShadow = '0 0 40px rgba(59, 130, 246, 0.5)';
+        textOverlay.style.pointerEvents = 'none';
+        textOverlay.style.zIndex = '10000';
+        textOverlay.style.fontFamily = 'Inter, sans-serif';
+        textOverlay.style.letterSpacing = '0.1em';
+        textOverlay.textContent = 'KONAMI!';
+        document.body.appendChild(textOverlay);
+
+        // Animate gradient
+        let gradientPos = 0;
+        const gradientInterval = setInterval(() => {
+            gradientPos += 5;
+            textOverlay.style.backgroundPosition = `${gradientPos}% 50%`;
+        }, 50);
+
+        // Animate text
+        const textAnim = textOverlay.animate([
+            {
+                transform: 'translate(-50%, -50%) scale(0) rotate(-180deg)',
+                opacity: 0
+            },
+            {
+                transform: 'translate(-50%, -50%) scale(1.2) rotate(0deg)',
+                opacity: 1,
+                offset: 0.3
+            },
+            {
+                transform: 'translate(-50%, -50%) scale(1) rotate(0deg)',
+                opacity: 1,
+                offset: 0.7
+            },
+            {
+                transform: 'translate(-50%, -50%) scale(0) rotate(180deg)',
+                opacity: 0
+            }
+        ], {
+            duration: 2500,
+            easing: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)'
         });
 
-        // Play sound effect (optional - using Web Audio API)
-        try {
-            const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-
-            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-            oscillator.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.5);
-            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.5);
-        } catch (e) {
-            // Audio not supported, skip
-        }
+        textAnim.onfinish = () => {
+            clearInterval(gradientInterval);
+            textOverlay.remove();
+        };
 
         toast({
             title: "🎮 KONAMI CODE ACTIVATED!",
-            description: "You unlocked the ultimate easter egg! You're a legend! 🔥",
+            description: "Epic! You're a true legend! 🔥",
             duration: 5000,
         });
     };
