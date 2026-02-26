@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { MapPin, Phone, Users, Radio } from "lucide-react";
+import { MapPin, Phone, Users, Radio, Download } from "lucide-react";
 import {
     FaGithub, FaLinkedin, FaTwitter, FaInstagram, FaFacebook, FaYoutube,
     FaDribbble, FaBehance, FaMedium, FaDev, FaStackOverflow, FaCodepen,
@@ -118,9 +118,9 @@ export function ProfileSidebar() {
     return (
         <div className="w-full md:w-48 xl:w-[380px] bg-gradient-to-b from-muted/30 to-background p-6 md:p-4 xl:p-8 border-b md:border-b-0 md:border-r flex flex-col items-center text-center gap-6 md:gap-4 xl:gap-8 shrink-0 md:overflow-y-auto no-scrollbar">
             {/* Avatar with gradient ring */}
-            <div className="relative mt-4 md:mt-2 xl:mt-4">
-                <div className="absolute inset-0 bg-gradient-to-r from-primary to-purple-500 rounded-full blur-md opacity-50"></div>
-                <Avatar className="relative w-32 h-32 md:w-24 md:h-24 xl:w-36 xl:h-36 border-4 border-background shadow-2xl">
+            <div className="relative mt-4 md:mt-2 xl:mt-4 group cursor-pointer">
+                <div className="absolute -inset-1 bg-gradient-to-r from-primary via-purple-500 to-primary rounded-full blur-md opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-in animate-spin-slow"></div>
+                <Avatar className="relative w-32 h-32 md:w-24 md:h-24 xl:w-36 xl:h-36 border-4 border-background shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]">
                     <AvatarImage src={aboutData.personal.avatar} className="object-cover" />
                     <AvatarFallback className="text-2xl md:text-3xl font-bold">
                         {aboutData.personal.name.split(' ').map(n => n[0]).join('')}
@@ -129,16 +129,38 @@ export function ProfileSidebar() {
             </div>
 
             {/* Name and Title */}
-            <div className="space-y-3 md:space-y-2 xl:space-y-3 w-full">
-                <h1 className="text-xl md:text-sm xl:text-2xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text">
+            <div className="space-y-4 md:space-y-3 xl:space-y-4 w-full">
+                <h1 className="text-xl md:text-sm xl:text-2xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
                     {aboutData.personal.name}
                 </h1>
-                <p className="text-sm md:text-xs xl:text-base text-muted-foreground font-medium leading-relaxed px-2">
-                    {aboutData.personal.title}
-                </p>
-                <div className="flex items-center justify-center gap-2 text-muted-foreground text-sm md:text-xs xl:text-sm">
-                    <MapPin className="w-4 h-4 md:w-3 md:h-3 xl:w-4 xl:h-4 text-primary" />
-                    <span className="text-xs md:text-[10px] xl:text-sm">{aboutData.personal.location}</span>
+                <div className="flex justify-center w-full min-h-[1.5rem] px-1 md:px-2">
+                    <p className="text-sm md:text-xs xl:text-base text-primary font-medium leading-tight text-center line-clamp-2">
+                        {aboutData.personal.title}
+                    </p>
+                </div>
+                <div className="flex items-center justify-center gap-2 text-muted-foreground text-sm md:text-xs xl:text-sm drop-shadow-sm">
+                    <MapPin className="w-4 h-4 md:w-3 md:h-3 xl:w-4 xl:h-4 text-primary animate-bounce" />
+                    <span className="text-xs md:text-[10px] xl:text-sm font-medium">{aboutData.personal.location}</span>
+                </div>
+
+                {/* Premium Download Resume Button */}
+                <div className="pt-2 flex justify-center w-full">
+                    <div className="relative group/btn cursor-pointer inline-block">
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary via-purple-500 to-indigo-500 rounded-lg blur opacity-60 group-hover/btn:opacity-100 transition duration-300"></div>
+                        <Button
+                            variant="default"
+                            className="relative flex items-center gap-2 bg-background/90 hover:bg-background text-foreground border border-white/10 rounded-lg px-6 md:px-4 py-5 md:py-4 xl:px-6 xl:py-5 font-semibold active:scale-95 transition-all shadow-[0_0_15px_rgba(0,0,0,0.5)]"
+                            onClick={() => {
+                                const link = document.createElement('a');
+                                link.href = '/assets/resume/resume.pdf';
+                                link.download = 'Resume.pdf';
+                                link.click();
+                            }}
+                        >
+                            <Download className="w-4 h-4 text-primary group-hover/btn:-translate-y-1 transition-transform" />
+                            <span>Download Resume</span>
+                        </Button>
+                    </div>
                 </div>
             </div>
 
@@ -281,14 +303,15 @@ export function ProfileSidebar() {
             )}
             <style>{`
                 @keyframes fadeInUp {
-                    from {
-                        opacity: 0;
-                        transform: translateY(10px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
+                    from { opacity: 0; transform: translateY(10px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                @keyframes spin-slow {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+                .animate-spin-slow {
+                    animation: spin-slow 8s linear infinite;
                 }
             `}</style>
         </div>

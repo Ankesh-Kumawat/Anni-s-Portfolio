@@ -89,6 +89,16 @@ export default function Step1Personal({ data, setData }: StepProps) {
         }));
     };
 
+    const handleCareerStartDateChange = (value: string) => {
+        setData((prev) => ({
+            ...prev,
+            about: {
+                ...prev.about,
+                personal: { ...prev.about.personal, careerStartDate: value },
+            },
+        }));
+    };
+
     return (
         <div className="max-w-[1400px] mx-auto">
             {/* Header Section */}
@@ -128,9 +138,11 @@ export default function Step1Personal({ data, setData }: StepProps) {
                         title={data.about.personal.title}
                         location={data.about.personal.location}
                         bio={data.about.personal.bio}
+                        careerStartDate={data.about.personal.careerStartDate}
                         onNameChange={handleNameChange}
                         onTitleChange={handleTitleChange}
                         onLocationChange={handleLocationChange}
+                        onCareerStartDateChange={handleCareerStartDateChange}
                         onBioChange={handleBioChange}
                         onSave={saveField}
                         savingField={savingField}

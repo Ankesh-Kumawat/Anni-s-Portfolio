@@ -3,15 +3,18 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { User, Briefcase, MapPin, FileText, Save, Loader2 } from "lucide-react";
+import { DatePicker } from "@/components/ui/date-picker";
 
 interface BasicInfoProps {
     name: string;
     title: string;
     location: string;
     bio: string;
+    careerStartDate?: string;
     onNameChange: (value: string) => void;
     onTitleChange: (value: string) => void;
     onLocationChange: (value: string) => void;
+    onCareerStartDateChange: (value: string) => void;
     onBioChange: (value: string) => void;
     onSave: (field: string) => void;
     savingField: string | null;
@@ -22,13 +25,17 @@ export default function BasicInfo({
     title,
     location,
     bio,
+    careerStartDate,
     onNameChange,
     onTitleChange,
     onLocationChange,
+    onCareerStartDateChange,
     onBioChange,
     onSave,
     savingField
 }: BasicInfoProps) {
+    const parsedCareerStart = careerStartDate ? new Date(careerStartDate) : undefined;
+
     return (
         <div className="bg-card rounded-xl p-6 border shadow-sm">
             <div className="flex items-center gap-2 mb-4">
@@ -119,6 +126,45 @@ export default function BasicInfo({
                             className="gap-1 h-9 px-3"
                         >
                             {savingField === "Location" ? (
+                                <Loader2 className="w-3 h-3 animate-spin" />
+                            ) : (
+                                <Save className="w-3 h-3" />
+                            )}
+                        </Button>
+                    </div>
+                </div>
+
+                <div className="space-y-1.5">
+                    <Label htmlFor="careerStartDate" className="text-xs font-semibold flex items-center gap-1.5">
+                        <Briefcase className="w-3 h-3" />
+                        Career Start Date (Overrides calc experience)
+                    </Label>
+                    <div className="flex gap-2">
+                        <div className="flex-1">
+                            <DatePicker
+                                date={parsedCareerStart}
+                                setDate={(d) => {
+                                    if (d) {
+                                        // Store as YYYY-MM-DD string to avoid timezone issues
+                                        const year = d.getFullYear();
+                                        const month = String(d.getMonth() + 1).padStart(2, '0');
+                                        const day = String(d.getDate()).padStart(2, '0');
+                                        onCareerStartDateChange(`${year}-${month}-${day}`);
+                                    } else {
+                                        onCareerStartDateChange("");
+                                    }
+                                }}
+                                className="h-9 w-full"
+                                placeholder="Select start date"
+                            />
+                        </div>
+                        <Button
+                            onClick={() => onSave("Career Start Date")}
+                            disabled={savingField === "Career Start Date" || !careerStartDate}
+                            size="sm"
+                            className="gap-1 h-9 px-3"
+                        >
+                            {savingField === "Career Start Date" ? (
                                 <Loader2 className="w-3 h-3 animate-spin" />
                             ) : (
                                 <Save className="w-3 h-3" />

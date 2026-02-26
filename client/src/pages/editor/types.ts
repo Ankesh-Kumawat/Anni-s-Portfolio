@@ -6,6 +6,7 @@ export interface EditorData {
             location: string;
             avatar: string;
             bio: string;
+            careerStartDate?: string;
         };
         skills: string[];
         experience: Array<{
