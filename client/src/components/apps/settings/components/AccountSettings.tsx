@@ -37,8 +37,8 @@ export function AccountSettings() {
 
     const handleDownloadResume = () => {
         const link = document.createElement('a');
-        link.href = '/assets/resume/resume.pdf';
-        link.download = 'Ankesh_Kumawat_Resume.pdf';
+        link.href = '/assets/resume/resume.html';
+        link.download = 'Ankesh_Kumawat_Resume.html';
         link.click();
     };
 

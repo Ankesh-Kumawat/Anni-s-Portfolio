@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Users, Radio, Download } from "lucide-react";
@@ -152,8 +153,8 @@ export function ProfileSidebar() {
                             className="relative flex items-center gap-2 bg-background/90 hover:bg-background text-foreground border border-white/10 rounded-lg px-6 md:px-4 py-5 md:py-4 xl:px-6 xl:py-5 font-semibold active:scale-95 transition-all shadow-[0_0_15px_rgba(0,0,0,0.5)]"
                             onClick={() => {
                                 const link = document.createElement('a');
-                                link.href = '/assets/resume/resume.pdf';
-                                link.download = 'Resume.pdf';
+                                link.href = '/assets/resume/resume.html';
+                                link.download = 'Ankesh_Kumawat_Resume.html';
                                 link.click();
                             }}
                         >
@@ -201,35 +202,52 @@ export function ProfileSidebar() {
                                             )}
                                         </button>
                                         
-                                        {/* WhatsApp Options Popup */}
-                                        {whatsappMenuOpen === link.name && (
-                                            <>
+                                        {/* WhatsApp Options Popup - Full Screen Overlay with Portal */}
+                                        {whatsappMenuOpen === link.name && createPortal(
+                                            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
                                                 {/* Backdrop */}
                                                 <div 
-                                                    className="fixed inset-0 z-40"
+                                                    className="absolute inset-0 bg-black/60 backdrop-blur-md"
                                                     onClick={() => setWhatsappMenuOpen(null)}
                                                 />
                                                 
-                                                {/* Popup Menu */}
-                                                <div className="absolute left-0 top-full mt-2 z-50 bg-card border-2 border-primary rounded-xl shadow-2xl p-3 min-w-[200px] animate-in fade-in slide-in-from-top-2 duration-200">
-                                                    <div className="text-xs font-bold text-primary mb-2 px-2">WhatsApp Options</div>
-                                                    <div className="space-y-1">
+                                                {/* Popup Menu - Centered */}
+                                                <div className="relative z-10 bg-card border-2 border-primary rounded-2xl shadow-2xl p-6 w-full max-w-[450px] animate-in fade-in zoom-in-95 duration-300">
+                                                    <div className="flex items-center justify-between mb-6">
+                                                        <div className="flex items-center gap-3">
+                                                            <div className="w-12 h-12 rounded-xl bg-green-500 flex items-center justify-center shadow-lg">
+                                                                <Icon className="w-7 h-7 text-white" />
+                                                            </div>
+                                                            <div>
+                                                                <h3 className="text-xl font-bold text-foreground">WhatsApp</h3>
+                                                                <p className="text-sm text-muted-foreground">Choose how to connect</p>
+                                                            </div>
+                                                        </div>
+                                                        <button
+                                                            onClick={() => setWhatsappMenuOpen(null)}
+                                                            className="w-10 h-10 rounded-xl hover:bg-muted flex items-center justify-center transition-colors"
+                                                        >
+                                                            <span className="text-2xl text-muted-foreground">×</span>
+                                                        </button>
+                                                    </div>
+                                                    
+                                                    <div className="space-y-3">
                                                         {contactNumber && (
                                                             <a
                                                                 href={`https://wa.me/${contactNumber.replace(/[^0-9]/g, '')}`}
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
-                                                                className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/10 transition-colors"
+                                                                className="flex items-center gap-4 p-4 rounded-xl bg-muted/30 hover:bg-muted/60 transition-all hover:scale-[1.02] border-2 border-transparent hover:border-green-500/30 group"
                                                                 onClick={() => setWhatsappMenuOpen(null)}
                                                             >
-                                                                <div className="w-8 h-8 rounded-lg bg-green-500 flex items-center justify-center shrink-0 relative">
-                                                                    <Phone className="w-4 h-4 text-white" />
-                                                                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-white rounded-full text-[8px] flex items-center justify-center font-bold text-green-600 border border-green-500">1</span>
+                                                                <div className="w-14 h-14 rounded-xl bg-green-500 flex items-center justify-center shrink-0 shadow-lg group-hover:scale-110 transition-transform">
+                                                                    <Phone className="w-7 h-7 text-white" />
                                                                 </div>
                                                                 <div className="flex-1 min-w-0">
-                                                                    <div className="text-xs font-semibold text-foreground">Contact</div>
-                                                                    <div className="text-[10px] text-muted-foreground truncate">{contactNumber}</div>
+                                                                    <div className="text-base font-bold text-foreground">Personal Chat</div>
+                                                                    <div className="text-sm text-muted-foreground truncate">{contactNumber}</div>
                                                                 </div>
+                                                                <div className="text-2xl text-primary group-hover:translate-x-1 transition-transform">→</div>
                                                             </a>
                                                         )}
                                                         {groupLink && (
@@ -237,17 +255,17 @@ export function ProfileSidebar() {
                                                                 href={groupLink}
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
-                                                                className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/10 transition-colors"
+                                                                className="flex items-center gap-4 p-4 rounded-xl bg-muted/30 hover:bg-muted/60 transition-all hover:scale-[1.02] border-2 border-transparent hover:border-blue-500/30 group"
                                                                 onClick={() => setWhatsappMenuOpen(null)}
                                                             >
-                                                                <div className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center shrink-0 relative">
-                                                                    <Users className="w-4 h-4 text-white" />
-                                                                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-white rounded-full text-[8px] flex items-center justify-center font-bold text-blue-600 border border-blue-500">G</span>
+                                                                <div className="w-14 h-14 rounded-xl bg-blue-500 flex items-center justify-center shrink-0 shadow-lg group-hover:scale-110 transition-transform">
+                                                                    <Users className="w-7 h-7 text-white" />
                                                                 </div>
                                                                 <div className="flex-1 min-w-0">
-                                                                    <div className="text-xs font-semibold text-foreground">Group</div>
-                                                                    <div className="text-[10px] text-muted-foreground">Join WhatsApp Group</div>
+                                                                    <div className="text-base font-bold text-foreground">Join Group</div>
+                                                                    <div className="text-sm text-muted-foreground">Connect with community</div>
                                                                 </div>
+                                                                <div className="text-2xl text-primary group-hover:translate-x-1 transition-transform">→</div>
                                                             </a>
                                                         )}
                                                         {channelLink && (
@@ -255,22 +273,23 @@ export function ProfileSidebar() {
                                                                 href={channelLink}
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
-                                                                className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/10 transition-colors"
+                                                                className="flex items-center gap-4 p-4 rounded-xl bg-muted/30 hover:bg-muted/60 transition-all hover:scale-[1.02] border-2 border-transparent hover:border-purple-500/30 group"
                                                                 onClick={() => setWhatsappMenuOpen(null)}
                                                             >
-                                                                <div className="w-8 h-8 rounded-lg bg-purple-500 flex items-center justify-center shrink-0 relative">
-                                                                    <Radio className="w-4 h-4 text-white" />
-                                                                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-white rounded-full text-[8px] flex items-center justify-center font-bold text-purple-600 border border-purple-500">C</span>
+                                                                <div className="w-14 h-14 rounded-xl bg-purple-500 flex items-center justify-center shrink-0 shadow-lg group-hover:scale-110 transition-transform">
+                                                                    <Radio className="w-7 h-7 text-white" />
                                                                 </div>
                                                                 <div className="flex-1 min-w-0">
-                                                                    <div className="text-xs font-semibold text-foreground">Channel</div>
-                                                                    <div className="text-[10px] text-muted-foreground">Follow Channel</div>
+                                                                    <div className="text-base font-bold text-foreground">Follow Channel</div>
+                                                                    <div className="text-sm text-muted-foreground">Get updates & announcements</div>
                                                                 </div>
+                                                                <div className="text-2xl text-primary group-hover:translate-x-1 transition-transform">→</div>
                                                             </a>
                                                         )}
                                                     </div>
                                                 </div>
-                                            </>
+                                            </div>,
+                                            document.body
                                         )}
                                     </div>
                                 );

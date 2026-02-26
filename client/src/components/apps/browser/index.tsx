@@ -43,7 +43,7 @@ export default function Browser() {
         }
 
         // Only allow portfolio to load in iframe, open others externally
-        const isPortfolio = newUrl.includes("anni-portfolio-eight.vercel.app");
+        const isPortfolio = newUrl.includes("ankesh.vercel.app");
 
         if (!isPortfolio) {
             // Open in new tab for all non-portfolio sites

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ankesh Kumawat - Flutter Developer Resume</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            line-height: 1.5;
+            color: #000;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .resume-content {
+            padding: 40px 50px;
+        }
+
+        .header {
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #000;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #000;
+            margin-bottom: 5px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .header .title {
+            font-size: 14px;
+            color: #000;
+            margin-bottom: 10px;
+        }
+
+        .contact-info {
+            font-size: 12px;
+            color: #000;
+            line-height: 1.6;
+        }
+
+        .contact-info a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        .contact-info a:hover {
+            text-decoration: underline;
+        }
+
+        .project-link {
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 8px;
+            display: inline-block;
+        }
+
+        .project-link:hover {
+            text-decoration: underline;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            color: #000;
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding-bottom: 3px;
+            border-bottom: 1px solid #000;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary {
+            text-align: justify;
+            color: #000;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .skills-list {
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .skill-row {
+            margin-bottom: 8px;
+        }
+
+        .skill-row strong {
+            display: inline-block;
+            width: 180px;
+            font-weight: bold;
+        }
+
+        .project {
+            margin-bottom: 18px;
+        }
+
+        .project h3 {
+            font-size: 14px;
+            color: #000;
+            margin-bottom: 3px;
+            font-weight: bold;
+        }
+
+        .project .tech-stack {
+            font-size: 12px;
+            font-style: italic;
+            margin-bottom: 5px;
+        }
+
+        .project ul {
+            margin-left: 20px;
+            font-size: 13px;
+        }
+
+        .project li {
+            margin-bottom: 4px;
+        }
+
+        .experience, .education-item {
+            margin-bottom: 15px;
+        }
+
+        .experience h3, .education-item h3 {
+            font-size: 14px;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .experience .duration, .education-item .year {
+            font-size: 12px;
+            font-style: italic;
+            margin-bottom: 5px;
+        }
+
+        .experience ul {
+            margin-left: 20px;
+            font-size: 13px;
+        }
+
+        .experience li {
+            margin-bottom: 4px;
+        }
+
+        .simple-text {
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        @media print {
+            @page {
+                margin: 0.5in;
+                size: A4;
+            }
+
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+            }
+
+            .container {
+                box-shadow: none;
+                max-width: 100%;
+                margin: 0;
+            }
+
+            .download-btn {
+                display: none !important;
+            }
+
+            .resume-content {
+                padding: 0;
+            }
+
+            .header {
+                padding-bottom: 15px;
+                margin-bottom: 20px;
+            }
+
+            .section {
+                page-break-inside: avoid;
+                margin-bottom: 18px;
+            }
+
+            .project {
+                page-break-inside: avoid;
+            }
+
+            .section-title {
+                page-break-after: avoid;
+            }
+
+            a {
+                color: #000 !important;
+                text-decoration: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .resume-content {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .download-btn {
+                position: static;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .skill-row strong {
+                display: block;
+                width: 100%;
+                margin-bottom: 3px;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        <div class="resume-content">
+            <!-- Header -->
+            <div class="header">
+                <h1>ANKESH KUMAWAT</h1>
+                <div class="title">Flutter Developer | Cross-Platform App Engineer | AI-Integrated Mobile Architect</div>
+                <div class="contact-info">
+                    Phone: +91-7073949813 | Email: <a href="mailto:ankeshkumawat155@gmail.com">ankeshkumawat155@gmail.com</a><br>
+                    Location: Sikar, Rajasthan, India<br>
+                    GitHub: <a href="https://github.com/DevStudio2k25" target="_blank">github.com/DevStudio2k25</a> | 
+                    LinkedIn: <a href="https://www.linkedin.com/in/ankesh-kumawat-985362310" target="_blank">linkedin.com/in/ankesh-kumawat-985362310</a> | 
+                    Portfolio: <a href="https://ankesh.vercel.app" target="_blank">ankesh.vercel.app</a>
+                </div>
+            </div>
+
+            <!-- Professional Summary -->
+            <div class="section">
+                <h2 class="section-title">Professional Summary</h2>
+                <p class="summary">
+                    Self-taught Flutter Developer with <strong>3+ years</strong> of hands-on experience building AI-integrated cross-platform mobile applications. 
+                    Specialized in architecting scalable Flutter systems with clean architecture principles, custom backend integrations (Firebase & Supabase), 
+                    and intelligent recommendation engines. Proven track record of transforming product ideas into production-ready applications with 
+                    performance-optimized UI engineering and modular design patterns. Strong expertise in media streaming platforms, real-time data 
+                    synchronization, and AI-powered automation workflows.
+                </p>
+            </div>
+
+            <!-- Technical Skills -->
+            <div class="section">
+                <h2 class="section-title">Technical Skills</h2>
+                <div class="skills-list">
+                    <div class="skill-row"><strong>Programming Languages:</strong> Dart, JavaScript, TypeScript, Python, SQL</div>
+                    <div class="skill-row"><strong>Frameworks & Libraries:</strong> Flutter, Node.js, Express.js, FastAPI, Firebase SDK, Supabase SDK</div>
+                    <div class="skill-row"><strong>State Management:</strong> Riverpod, Bloc, Provider, GetX</div>
+                    <div class="skill-row"><strong>Backend & Cloud:</strong> Firebase (Auth, Firestore, Storage, Functions), Supabase (Auth, PostgreSQL, Realtime), Node.js REST Backend, Google Cloud Services</div>
+                    <div class="skill-row"><strong>Databases:</strong> Cloud Firestore, PostgreSQL, Supabase Database, SQLite, Hive</div>
+                    <div class="skill-row"><strong>APIs & Integration:</strong> REST APIs, WebSockets, Third-party API Integrations, OAuth Authentication, Media Streaming APIs, Payment Gateway Integration, Push Notifications</div>
+                    <div class="skill-row"><strong>DevOps & Tools:</strong> Git, GitHub, GitHub Actions, CI/CD Pipelines, Codemagic, Docker, Version Control</div>
+                    <div class="skill-row"><strong>Development Tools:</strong> VS Code, Android Studio, Xcode, Postman, Figma, Firebase Console, Supabase Dashboard</div>
+                    <div class="skill-row"><strong>AI & Automation:</strong> OpenAI API, Gemini API, Custom AI Recommendation Logic, AI Chatbot Implementation, Prompt Engineering</div>
+                    <div class="skill-row"><strong>Other Skills:</strong> Online & Offline Media Streaming, App Performance Optimization, Clean Architecture, Deep Linking, Analytics & Crash Reporting, App Store Deployment</div>
+                </div>
+            </div>
+
+            <!-- Key Projects -->
+            <div class="section">
+                <h2 class="section-title">Key Projects</h2>
+                
+                <div class="project">
+                    <h3>Bloomeetune - AI-Powered Music Player</h3>
+                    <div class="tech-stack">Flutter • Firebase • Isar • Clean Architecture</div>
+                    <ul>
+                    <ul>
+                        <li>Developed feature-rich music player with intelligent playlist recommendations</li>
+                        <li>Implemented offline-first architecture with local caching for uninterrupted streaming</li>
+                        <li>Built custom audio engine with background playback and smart shuffle algorithms</li>
+                        <li>Integrated Firebase for user authentication and cloud sync</li>
+                    </ul>
+                    <a href="https://github.com/Ankeshkumawat/BloomeeTunes/releases/latest" class="project-link" target="_blank">🔗 View Project</a>
+                </div>
+                <div class="project">
+                    <h3>Aniplix - Anime & Movie Streaming Platform</h3>
+                    <div class="tech-stack">Flutter • Firebase • Isar • Scraped APIs • MVVM Architecture</div>
+                    <ul>
+                        <li>Engineered full-featured streaming app with real-time content delivery</li>
+                        <li>Developed robust content scraping system with automated metadata synchronization</li>
+                        <li>Implemented intelligent recommendation engine based on viewing patterns</li>
+                        <li>Built dual-mode architecture supporting online streaming and offline downloads</li>
+                        <li>Optimized video player with adaptive bitrate streaming and buffer management</li>
+                    </ul>
+                    <a href="https://github.com/DevStudio2k25/Dev-apps/releases/latest" class="project-link" target="_blank">🔗 View Demo</a>
+                </div>
+
+                <div class="project">
+                    <h3>DevStudio - Developer Learning & AI Tools Platform</h3>
+                    <div class="tech-stack">Flutter • Supabase • PostgreSQL • Real-time Updates</div>
+                    <ul>
+                        <li>Created comprehensive learning platform with curated developer resources</li>
+                        <li>Built AI tools directory with intelligent search and workflow-based filtering</li>
+                        <li>Implemented real-time content updates using Supabase Realtime subscriptions</li>
+                        <li>Designed developer-focused UI with syntax highlighting and code snippets</li>
+                    </ul>
+                    <a href="https://github.com/DevStudio2k25" class="project-link" target="_blank">🔗 View on GitHub</a>
+                </div>
+            </div>
+
+            <!-- Work Experience -->
+            <div class="section">
+                <h2 class="section-title">Work Experience</h2>
+                <div class="experience">
+                    <h3>Freelance Flutter Developer</h3>
+                    <div class="duration">January 2025 - Present</div>
+                    <ul>
+                        <li>Delivering custom cross-platform mobile applications with AI integration focus</li>
+                        <li>Specializing in Firebase/Supabase implementations and media streaming solutions</li>
+                        <li>Managing complete development lifecycle from requirements to deployment</li>
+                        <li>Building production-ready applications with clean code practices</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Education -->
+            <div class="section">
+                <h2 class="section-title">Education</h2>
+                <div class="education-item">
+                    <h3>Higher Secondary Education (12th Grade)</h3>
+                    <div class="year">Rajasthan Board of Secondary Education (RBSE) • 2022</div>
+                </div>
+                <div class="education-item">
+                    <h3>Self-Taught Developer</h3>
+                    <div class="year">April 2022 - Present</div>
+                    <p style="color: #4a5568; margin-top: 8px;">
+                        Continuous learning through official documentation, open-source contributions, and hands-on project development. 
+                        Focus: Flutter ecosystem, AI integration, backend architecture, mobile optimization.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Soft Skills & Languages -->
+            <div class="section">
+                <h2 class="section-title">Soft Skills & Languages</h2>
+                <p class="simple-text">
+                    <strong>Soft Skills:</strong> Problem-solving, Self-learner, Independent Developer, Adaptability, Client Communication, Time Management, Product Thinking<br>
+                    <strong>Languages:</strong> Hindi (Native), English (Professional)
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
