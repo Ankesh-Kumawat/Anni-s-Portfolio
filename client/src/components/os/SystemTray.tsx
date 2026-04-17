@@ -12,7 +12,6 @@ export function SystemTray() {
   const [time, setTime] = useState(new Date());
   const { volume, setVolume } = useVolume();
   const { brightness, setBrightness } = useBrightness();
-  const [focusMode, setFocusMode] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(100);
   const [batteryLevel, setBatteryLevel] = useState<number | null>(null);
   const [isCharging, setIsCharging] = useState(false);
@@ -64,7 +63,7 @@ export function SystemTray() {
 
 
   return (
-    <div className="h-10 px-4 md:px-6 flex items-center justify-between text-sm font-medium text-muted-foreground bg-background border-b select-none shadow-sm z-50 relative">
+    <div className="h-11 px-4 md:px-6 flex items-center justify-between text-sm font-medium text-foreground bg-background/80 backdrop-blur-md border-b border-border/40 select-none shadow-sm z-[200] relative">
       <div className="flex items-center gap-6">
         <span className="font-bold text-foreground tracking-tight">OS</span>
         <button
@@ -85,17 +84,15 @@ export function SystemTray() {
         <ControlCenterPopover
           volume={[volume * 100]}
           brightness={brightness}
-          focusMode={focusMode}
           zoomLevel={zoomLevel}
           batteryLevel={batteryLevel}
           isCharging={isCharging}
           onVolumeChange={(val) => setVolume(val[0] / 100)}
           onBrightnessChange={setBrightness}
-          onFocusModeToggle={() => setFocusMode(!focusMode)}
         />
 
         {/* Date Time */}
-        <span className="tabular-nums text-xs md:text-sm font-medium hover:bg-muted/50 px-2 py-1 rounded-md cursor-default transition-colors">
+        <span className="tabular-nums text-[13px] md:text-sm font-medium hover:bg-white/10 hover:text-white px-3 py-1.5 rounded-full cursor-default transition-all border border-transparent hover:border-white/10">
           {format(time, "EEE MMM d h:mm aa")}
         </span>
       </div>

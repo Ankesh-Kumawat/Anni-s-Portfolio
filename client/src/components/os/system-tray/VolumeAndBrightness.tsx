@@ -1,5 +1,6 @@
-import { Monitor, Volume2 } from "lucide-react";
+import { Volume2, Sun } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
+import { cn } from "@/lib/utils";
 
 interface VolumeAndBrightnessProps {
     volume: number[];
@@ -15,45 +16,52 @@ export function VolumeAndBrightness({
     onBrightnessChange,
 }: VolumeAndBrightnessProps) {
     return (
-        <div className="space-y-4 bg-muted/30 p-4 rounded-xl border">
-            <div className="text-xs font-semibold text-muted-foreground mb-3">App Controls</div>
-            <div className="space-y-4">
+        <div className="space-y-6 bg-white/5 p-5 rounded-2xl border border-white/5">
+            <div className="space-y-5">
                 {/* Brightness Control */}
-                <div className="space-y-2">
+                <div className="space-y-3">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                            <Monitor className="w-4 h-4 text-muted-foreground" />
-                            <span className="text-xs">Brightness</span>
+                            <div className="p-1.5 rounded-lg bg-yellow-500/20 text-yellow-500">
+                                <Sun className="w-4 h-4" />
+                            </div>
+                            <span className="text-[11px] font-semibold text-white/80 tracking-wide uppercase">Brightness</span>
                         </div>
-                        <span className="text-xs font-medium">{brightness[0]}%</span>
+                        <span className="text-[10px] font-bold tabular-nums text-white/50">{brightness[0]}%</span>
                     </div>
                     <Slider
                         value={brightness}
                         onValueChange={onBrightnessChange}
                         max={100}
                         step={1}
-                        className="flex-1"
+                        className={cn(
+                            "flex-1 [&_[role=slider]]:h-4 [&_[role=slider]]:w-4 [&_[role=slider]]:border-2 [&_[role=slider]]:border-white [&_[role=slider]]:bg-primary",
+                            "[&_.relative]:h-1.5 [&_.bg-primary]:bg-yellow-500"
+                        )}
                     />
-                    <p className="text-[10px] text-muted-foreground">App-level brightness filter</p>
                 </div>
 
                 {/* Volume Control */}
-                <div className="space-y-2">
+                <div className="space-y-3">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                            <Volume2 className="w-4 h-4 text-muted-foreground" />
-                            <span className="text-xs">Volume</span>
+                            <div className="p-1.5 rounded-lg bg-blue-500/20 text-blue-500">
+                                <Volume2 className="w-4 h-4" />
+                            </div>
+                            <span className="text-[11px] font-semibold text-white/80 tracking-wide uppercase">Volume</span>
                         </div>
-                        <span className="text-xs font-medium">{volume[0]}%</span>
+                        <span className="text-[10px] font-bold tabular-nums text-white/50">{volume[0]}%</span>
                     </div>
                     <Slider
                         value={volume}
                         onValueChange={onVolumeChange}
                         max={100}
                         step={1}
-                        className="flex-1"
+                        className={cn(
+                            "flex-1 [&_[role=slider]]:h-4 [&_[role=slider]]:w-4 [&_[role=slider]]:border-2 [&_[role=slider]]:border-white [&_[role=slider]]:bg-primary",
+                            "[&_.relative]:h-1.5 [&_.bg-primary]:bg-blue-500"
+                        )}
                     />
-                    <p className="text-[10px] text-muted-foreground">Controls in-app audio only</p>
                 </div>
             </div>
         </div>

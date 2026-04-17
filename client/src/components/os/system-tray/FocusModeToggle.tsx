@@ -8,46 +8,17 @@ interface FocusModeToggleProps {
 
 export function FocusModeToggle({ focusMode, onToggle }: FocusModeToggleProps) {
     return (
-        <div className="bg-muted/30 p-4 rounded-xl border">
-            <button
-                onClick={onToggle}
-                className="w-full flex items-center justify-between hover:bg-muted/50 transition-colors rounded-lg p-2"
-            >
-                <div className="flex items-center gap-3">
-                    <div
-                        className={cn(
-                            "p-2 rounded-full transition-colors",
-                            focusMode
-                                ? "bg-orange-500 text-white"
-                                : "bg-orange-400/20 text-orange-500"
-                        )}
-                    >
-                        <Moon className="w-4 h-4" />
-                    </div>
-                    <div className="flex flex-col items-start">
-                        <span className="text-sm font-semibold">Focus Mode</span>
-                        <span className="text-xs text-muted-foreground">
-                            {focusMode ? "Enabled" : "Disabled"}
-                        </span>
-                    </div>
-                </div>
-                <div
-                    className={cn(
-                        "w-10 h-6 rounded-full transition-colors relative",
-                        focusMode ? "bg-orange-500" : "bg-muted"
-                    )}
-                >
-                    <div
-                        className={cn(
-                            "absolute top-1 w-4 h-4 rounded-full bg-white transition-transform",
-                            focusMode ? "translate-x-5" : "translate-x-1"
-                        )}
-                    />
-                </div>
-            </button>
-            <p className="text-[10px] text-muted-foreground mt-2 px-2">
-                Mutes app sounds, disables notifications, and reduces animations
-            </p>
-        </div>
+        <button 
+            onClick={onToggle}
+            className={cn(
+                "flex flex-col items-center justify-center p-3 rounded-2xl border transition-all gap-2 w-full",
+                focusMode 
+                    ? "bg-blue-500/20 border-blue-500/40 text-blue-400" 
+                    : "bg-white/5 border-white/5 text-white/70 hover:bg-white/10 hover:text-white"
+            )}
+        >
+            <Moon className={cn("w-5 h-5", focusMode && "fill-current")} />
+            <span className="text-[10px] font-bold uppercase tracking-wider">{focusMode ? "DND On" : "Focus Off"}</span>
+        </button>
     );
 }

@@ -67,4 +67,25 @@ declare module 'lucide-react' {
   export const Bug: Icon;
   export const FileCode: Icon;
   export const Menu: Icon;
+  export const Battery: Icon;
+  export const BatteryCharging: Icon;
+  export const HelpCircle: Icon;
+  export const ZoomIn: Icon;
+  export const AlertCircle: Icon;
+  export const Wifi: Icon;
+  export const Bluetooth: Icon;
+  export const Plane: Icon;
+  export const Activity: Icon;
+  export const Bell: Icon;
+  export const Shield: Icon;
+  export const Eye: Icon;
+  export const Clock: Icon;
+  export const AppWindow: Icon;
+  export const BatteryFull: Icon;
+  export const BatteryMedium: Icon;
+  export const BatteryLow: Icon;
+  export const WifiOff: Icon;
+  export const Cpu: Icon;
+  export const Server: Icon;
+  export const Zap: Icon;
 }
