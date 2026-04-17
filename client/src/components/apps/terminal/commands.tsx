@@ -287,44 +287,90 @@ export function handleCommand(cmd: string, launchApp: (AppId: AppId) => void): s
         case "sudo":
             if (args === "hire-me" || args === "hire me") {
                 return (
-                    <div className="space-y-2 p-3 rounded-lg bg-gradient-to-r from-green-900/30 to-emerald-900/30 border border-green-500/20">
-                        <div className="text-green-400 font-bold">Access Granted!</div>
-                        <div className="text-zinc-300 text-sm">
-                            Congratulations! You've unlocked the secret hiring protocol.
+                    <div className="space-y-3 p-4 rounded-xl bg-gradient-to-br from-green-500/10 via-emerald-500/5 to-transparent border border-green-500/20 shadow-[0_0_20px_rgba(34,197,94,0.1)]">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center animate-pulse">
+                                <CheckCircle2 className="w-6 h-6 text-green-400" />
+                            </div>
+                            <div>
+                                <div className="text-green-400 font-bold text-lg leading-tight">ACCESS GRANTED</div>
+                                <div className="text-zinc-500 text-[10px] uppercase tracking-widest">Hiring Protocol Initialized</div>
+                            </div>
                         </div>
-                        <div className="text-zinc-400 text-xs space-y-1">
-                            <div>Initiating candidate evaluation... <span className="text-green-400">PASSED</span></div>
-                            <div>Checking portfolio quality... <span className="text-green-400">EXCELLENT</span></div>
-                            <div>Verifying skill match... <span className="text-green-400">98% MATCH</span></div>
+                        
+                        <div className="space-y-2 pt-2 border-t border-green-500/10">
+                            <div className="text-zinc-300 text-sm">
+                                Congratulations! You've discovered the hidden hiring gateway.
+                            </div>
+                            <div className="grid grid-cols-2 gap-2">
+                                {[
+                                    ["Evaluation", "Passed", "text-green-400"],
+                                    ["Portfolio", "Elite", "text-cyan-400"],
+                                    ["Skills", "Matched", "text-emerald-400"],
+                                ] .map(([label, val, clr]) => (
+                                    <div key={label} className="bg-black/20 p-2 rounded border border-white/5">
+                                        <div className="text-[10px] text-zinc-500 uppercase">{label}</div>
+                                        <div className={`text-xs font-bold ${clr}`}>{val}</div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                        <div className="text-emerald-400 text-xs pt-1 border-t border-green-500/20">
-                            Reach out: ankeshkumawat.dev@gmail.com
+
+                        <div className="flex items-center justify-between gap-4 pt-2">
+                            <div className="text-emerald-400/80 text-[11px] font-mono">
+                                ankeshkumawat.dev@gmail.com
+                            </div>
+                            <button 
+                                onClick={() => launchApp("contact")}
+                                className="px-3 py-1.5 rounded-md bg-green-500 text-black text-[10px] font-bold hover:bg-green-400 transition-colors active:scale-95"
+                            >
+                                START CHAT
+                            </button>
+                        </div>
+                    </div>
+                );
+            } else if (args.startsWith("rm")) {
+                return (
+                    <div className="space-y-2 p-3 rounded-lg bg-red-900/10 border border-red-500/20">
+                        <div className="text-red-400 font-bold flex items-center gap-2">
+                            <XCircle className="w-4 h-4" />
+                            ⚠️ CRITICAL RESTRICTION
+                        </div>
+                        <div className="text-zinc-300 text-sm">Nice try! But this portfolio is delete-proof 😎</div>
+                        <div className="text-zinc-500 text-[10px]">
+                            Advanced anti-destruction protocols are active.
                         </div>
                     </div>
                 );
             }
             return (
-                <div className="text-red-400 flex items-center gap-2">
-                    <XCircle className="w-4 h-4" />
-                    <span>sudo: permission denied. Nice try though.</span>
+                <div className="text-red-400 flex items-center gap-2 font-mono text-sm">
+                    <XCircle className="w-3.5 h-3.5" />
+                    <span>sudo: permission denied. Secret keys required.</span>
                 </div>
             );
 
         case "rm":
-            if (args.startsWith("-rf")) {
+            if (args.includes("-rf") || args.includes("/")) {
                 return (
-                    <div className="space-y-1">
-                        <div className="text-red-400 font-bold text-sm">Nice try!</div>
-                        <div className="text-zinc-400 text-xs">
-                            This portfolio is protected by advanced anti-destruction protocols.
+                    <div className="space-y-2 p-3 rounded-lg bg-orange-900/10 border border-orange-500/20">
+                        <div className="text-yellow-400 font-bold flex items-center gap-2">
+                            <Info className="w-4 h-4" />
+                            ⚠️ DANGER DETECTED
                         </div>
-                        <div className="text-zinc-500 text-xs">
-                            Also, you don't have root access. This is MY machine.
+                        <div className="text-zinc-300 text-sm">
+                            Deleting system files... Just kidding! 😄
+                        </div>
+                        <div className="text-zinc-500 text-[10px]">
+                            This is a safe space. No files were harmed in the making of this joke.
                         </div>
                     </div>
                 );
             }
-            return <div className="text-red-400">rm: missing operand</div>;
+            return <div className="text-red-400 flex items-center gap-2">
+                <XCircle className="w-3.5 h-3.5" />
+                <span>rm: missing operand (try 'rm -rf /' for a surprise)</span>
+            </div>;
 
         case "uptime": {
             const bootTime = sessionStorage.getItem("boot-time");
@@ -496,56 +542,6 @@ export function handleCommand(cmd: string, launchApp: (AppId: AppId) => void): s
         case "clear":
             return "";
 
-        case "sudo":
-            if (args === "hire-me" || args === "hire me") {
-                return (
-                    <div className="space-y-3">
-                        <div className="text-green-400 font-bold animate-pulse">
-                            🚀 ACCESS GRANTED
-                        </div>
-                        <div className="text-zinc-300">
-                            Impressive! You know your way around a terminal.
-                        </div>
-                        <div className="text-cyan-400">
-                            → Let's talk: Check the Contact app!
-                        </div>
-                        <div className="text-zinc-500 text-xs mt-2">
-                            (Seriously though, I'd love to hear from you)
-                        </div>
-                    </div>
-                );
-            } else if (args.startsWith("rm")) {
-                return (
-                    <div className="space-y-2">
-                        <div className="text-red-400 font-bold">⚠️ CRITICAL ERROR</div>
-                        <div className="text-zinc-300">Nice try! But this portfolio is delete-proof 😎</div>
-                        <div className="text-zinc-500 text-xs">
-                            (Don't worry, nothing was harmed in the making of this joke)
-                        </div>
-                    </div>
-                );
-            }
-            return (
-                <div className="text-red-400">
-                    sudo: {args}: command not found
-                </div>
-            );
-
-        case "rm":
-            if (args.includes("-rf") || args.includes("/")) {
-                return (
-                    <div className="space-y-2">
-                        <div className="text-yellow-400">⚠️ WARNING: Dangerous command detected!</div>
-                        <div className="text-zinc-300">
-                            Deleting system files... Just kidding! 😄
-                        </div>
-                        <div className="text-zinc-500 text-xs">
-                            This is a safe space. No files were harmed.
-                        </div>
-                    </div>
-                );
-            }
-            return <div className="text-red-400">rm: missing operand</div>;
 
         case "hack":
         case "hacker":
