@@ -6,6 +6,7 @@ import { ProjectCard } from "./ProjectCard";
 import { StatsCard, HelpCard } from "./StatsCard";
 import { useProjectHandlers } from "./useProjectHandlers";
 import { useTechStacks } from "@/hooks/use-tech-stacks";
+import { JsonImportDialog } from "./JsonImportDialog";
 
 export default function Step4Projects({ data, setData }: StepProps) {
     const [expandedProject, setExpandedProject] = useState<number | null>(null);
@@ -80,10 +81,13 @@ export default function Step4Projects({ data, setData }: StepProps) {
                                     <p className="text-sm text-muted-foreground">{data.projects.projects.length} project{data.projects.projects.length !== 1 ? 's' : ''} added</p>
                                 </div>
                             </div>
-                            <Button onClick={handlers.addProject} type="button" size="lg" className="gap-2 px-6">
-                                <Plus className="w-4 h-4" />
-                                Add Project
-                            </Button>
+                            <div className="flex items-center gap-3">
+                                <JsonImportDialog data={data} setData={setData} />
+                                <Button onClick={handlers.addProject} type="button" size="lg" className="gap-2 px-6">
+                                    <Plus className="w-4 h-4" />
+                                    Add Project
+                                </Button>
+                            </div>
                         </div>
                     </div>
 
@@ -94,11 +98,14 @@ export default function Step4Projects({ data, setData }: StepProps) {
                                 <Folder className="w-8 h-8 text-muted-foreground/60" />
                             </div>
                             <h4 className="text-lg font-bold text-foreground mb-2">No projects yet</h4>
-                            <p className="text-muted-foreground mb-6">Click "Add Project" to showcase your work</p>
-                            <Button onClick={handlers.addProject} type="button" variant="outline" size="lg" className="gap-2">
-                                <Plus className="w-4 h-4" />
-                                Add Your First Project
-                            </Button>
+                            <p className="text-muted-foreground mb-6">Click "Add Project" to showcase your work, or import from JSON</p>
+                            <div className="flex items-center justify-center gap-3">
+                                <JsonImportDialog data={data} setData={setData} />
+                                <Button onClick={handlers.addProject} type="button" variant="outline" size="lg" className="gap-2">
+                                    <Plus className="w-4 h-4" />
+                                    Add Your First Project
+                                </Button>
+                            </div>
                         </div>
                     ) : (
                         <div className="space-y-5">

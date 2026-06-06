@@ -76,7 +76,7 @@ export function ProjectForm({
 
             {/* Multi-Platform Selection */}
             <div className="space-y-3">
-                <Label className="text-sm font-semibold text-foreground">Platform (Select Multiple)</Label>
+                <Label className="text-sm font-semibold text-foreground">Platform</Label>
                 <div className="grid grid-cols-3 gap-2">
                     {PLATFORM_OPTIONS.map((platform) => {
                         const isSelected = handlers.isPlatformSelected(index, platform);
@@ -96,11 +96,15 @@ export function ProjectForm({
                         );
                     })}
                 </div>
-                {project.platform && (
-                    <p className="text-xs text-muted-foreground">
-                        Selected: {project.platform}
-                    </p>
-                )}
+                <Input
+                    value={project.platform}
+                    onChange={(e) => handlers.updateProject(index, "platform", e.target.value)}
+                    placeholder="e.g. Web, Mobile, Desktop"
+                    className="h-10 text-sm bg-card font-mono"
+                />
+                <p className="text-xs text-muted-foreground">
+                    Type directly to edit or fix platform value
+                </p>
             </div>
 
             {/* Tech Stack */}
