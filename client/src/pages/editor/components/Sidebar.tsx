@@ -1,17 +1,17 @@
-import { User, Mail, Link2, FolderKanban, FileText, Music, Youtube, Settings, Smartphone, Download, Terminal } from "lucide-react";
+import { User, Mail, Link2, FolderKanban, FileText, Music, Youtube, Settings, Smartphone, Download, Terminal, ChevronRight } from "lucide-react";
 
 const NAV_ITEMS = [
-    { id: "personal", label: "Profile", icon: User },
-    { id: "contact", label: "Contact", icon: Mail },
-    { id: "social", label: "Social Links", icon: Link2 },
-    { id: "projects", label: "Projects", icon: FolderKanban },
-    { id: "notepad", label: "Notepad", icon: FileText },
-    { id: "advanced", label: "Settings", icon: Terminal },
-    { id: "music", label: "Music", icon: Music },
-    { id: "youtube", label: "YouTube", icon: Youtube },
-    { id: "preferences", label: "Preferences", icon: Settings },
-    { id: "apps", label: "Apps", icon: Smartphone },
-    { id: "review", label: "Review", icon: Download },
+    { id: "personal", label: "Profile", icon: User, tone: "coral" },
+    { id: "contact", label: "Contact", icon: Mail, tone: "teal" },
+    { id: "social", label: "Social Links", icon: Link2, tone: "violet" },
+    { id: "projects", label: "Projects", icon: FolderKanban, tone: "amber" },
+    { id: "notepad", label: "Notepad", icon: FileText, tone: "mint" },
+    { id: "advanced", label: "Settings", icon: Terminal, tone: "ink" },
+    { id: "music", label: "Music", icon: Music, tone: "rose" },
+    { id: "youtube", label: "YouTube", icon: Youtube, tone: "red" },
+    { id: "preferences", label: "Preferences", icon: Settings, tone: "blue" },
+    { id: "apps", label: "Apps", icon: Smartphone, tone: "green" },
+    { id: "review", label: "Review", icon: Download, tone: "slate" },
 ];
 
 interface SidebarProps {
@@ -21,9 +21,9 @@ interface SidebarProps {
 
 export default function Sidebar({ activeSection, onNavigate }: SidebarProps) {
     return (
-        <div className="py-3 px-2">
-            <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-2 px-2">Sections</p>
-            <nav className="space-y-0.5">
+        <div className="editor-nav-wrap">
+            <p className="editor-nav-label">Sections</p>
+            <nav className="editor-nav">
                 {NAV_ITEMS.map((item) => {
                     const Icon = item.icon;
                     const active = activeSection === item.id;
@@ -31,14 +31,15 @@ export default function Sidebar({ activeSection, onNavigate }: SidebarProps) {
                         <button
                             key={item.id}
                             onClick={() => onNavigate(item.id)}
-                            className={`w-full flex items-center gap-2 px-2.5 py-[6px] rounded-md text-left text-[13px] transition-all ${
-                                active
-                                    ? "bg-primary text-primary-foreground font-medium shadow-sm"
-                                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                            }`}
+                            data-active={active}
+                            data-tone={item.tone}
+                            className="editor-nav-item"
                         >
-                            <Icon className="h-3.5 w-3.5 flex-shrink-0" />
+                            <span className="editor-nav-icon">
+                                <Icon className="h-3.5 w-3.5" />
+                            </span>
                             <span className="truncate">{item.label}</span>
+                            <ChevronRight className="editor-nav-arrow" />
                         </button>
                     );
                 })}

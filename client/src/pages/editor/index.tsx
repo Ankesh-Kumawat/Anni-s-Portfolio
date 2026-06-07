@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Save, LogOut, Loader2, Monitor, User, Mail, Link2, FolderKanban, FileText, Terminal, Music as MusicIcon, Youtube, Settings, Smartphone, Download, Layers } from "lucide-react";
+import { Save, LogOut, Loader2, Settings, Layers } from "lucide-react";
 import Sidebar from "./components/Sidebar";
 import PersonalInfo from "./pages/PersonalInfo";
 import ContactPage from "./pages/Contact";
@@ -22,22 +22,7 @@ import { useLocation } from "wouter";
 import { calculateOverallCompletion } from "./lib/completionCalculator";
 import { TechStackManager } from "./pages/TechStacks";
 
-function MobileBlocker() {
-    return (
-        <div className="h-screen w-screen flex items-center justify-center bg-background p-6">
-            <div className="text-center max-w-sm">
-                <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
-                    <Monitor className="h-7 w-7 text-muted-foreground" />
-                </div>
-                <h1 className="text-xl font-bold mb-1">Desktop Only</h1>
-                <p className="text-sm text-muted-foreground">Use a larger screen to access the editor.</p>
-            </div>
-        </div>
-    );
-}
-
 export default function Editor() {
-    const [isMobile, setIsMobile] = useState(false);
     const [activeSection, setActiveSection] = useState("personal");
     const [saving, setSaving] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -101,13 +86,6 @@ export default function Editor() {
     }, [toast]);
 
     useEffect(() => {
-        const check = () => setIsMobile(window.innerWidth < 1024);
-        check();
-        window.addEventListener("resize", check);
-        return () => window.removeEventListener("resize", check);
-    }, []);
-
-    useEffect(() => {
         setData((prev: EditorData) => {
             const u = { ...prev };
             if (prev.about.personal.location && !prev.contact.location) u.contact.location = prev.about.personal.location;
@@ -147,7 +125,6 @@ export default function Editor() {
 
     const handleLogout = async () => { try { await logout(); setLocation("/admin-login"); } catch {} };
 
-    if (isMobile) return <MobileBlocker />;
     if (loading) return (
         <div className="fixed inset-0 flex items-center justify-center bg-background">
             <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -155,6 +132,19 @@ export default function Editor() {
     );
 
     const progress = calculateOverallCompletion(data);
+    const sectionTitle = {
+        personal: "Profile",
+        contact: "Contact",
+        social: "Social Links",
+        projects: "Projects",
+        notepad: "Notepad",
+        advanced: "System Settings",
+        music: "Music Library",
+        youtube: "YouTube",
+        preferences: "Preferences",
+        apps: "Apps",
+        review: "Review",
+    }[activeSection] || "Profile";
 
     const renderSection = () => {
         switch (activeSection) {
@@ -174,49 +164,67 @@ export default function Editor() {
     };
 
     return (
-        <div className="h-screen flex flex-col bg-background">
-            <header className="h-10 border-b flex items-center px-4 flex-shrink-0">
-                <div className="flex items-center gap-2">
-                    <Layers className="h-4 w-4 text-primary" />
-                    <span className="text-sm font-semibold">PortfolioOS</span>
+        <div className="editor-redesign h-screen flex bg-background text-foreground">
+            <aside className="editor-sidebar w-[248px] flex-shrink-0">
+                <div className="editor-brand">
+                    <div className="editor-brand-mark">
+                        <Layers className="h-4 w-4" />
+                    </div>
+                    <div className="min-w-0">
+                        <p className="editor-kicker">PortfolioOS</p>
+                        <h1>Editor Studio</h1>
+                    </div>
                 </div>
-                <div className="ml-3 flex items-center gap-1.5">
-                    <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-5 font-normal">{Math.round(progress)}%</Badge>
-                </div>
-                <div className="ml-auto flex items-center gap-1">
-                    <Button onClick={() => setShowTechStackManager(true)} variant="ghost" size="sm" className="h-7 gap-1 text-xs px-2">
-                        <Settings className="h-3 w-3" />
-                        Tech Stacks
-                    </Button>
-                    <Button onClick={handleSave} disabled={saving} size="sm" className="h-7 gap-1 text-xs px-2.5">
-                        {saving ? <Loader2 className="h-3 w-3 animate-spin" /> : <Save className="h-3 w-3" />}
-                        Save
-                    </Button>
-                    <Button onClick={handleLogout} variant="ghost" size="sm" className="h-7 px-2 text-muted-foreground">
-                        <LogOut className="h-3 w-3" />
-                    </Button>
-                </div>
-            </header>
 
-            <div className="flex-1 min-h-0 flex">
-                <aside className="w-[180px] flex-shrink-0 border-r">
-                    <Sidebar activeSection={activeSection} onNavigate={setActiveSection} />
-                </aside>
-                <main className="flex-1 min-h-0 overflow-y-auto bg-muted/20">
-                    <div className="p-6 max-w-6xl">
+                <div className="editor-progress-panel">
+                    <div className="flex items-center justify-between">
+                        <span>Completion</span>
+                        <Badge variant="outline">{Math.round(progress)}%</Badge>
+                    </div>
+                    <div className="editor-progress-track">
+                        <div style={{ width: `${Math.min(100, Math.max(0, Math.round(progress)))}%` }} />
+                    </div>
+                </div>
+
+                <Sidebar activeSection={activeSection} onNavigate={setActiveSection} />
+            </aside>
+
+            <div className="flex-1 min-w-0 flex flex-col">
+                <header className="editor-topbar">
+                    <div>
+                        <p className="editor-kicker">Current section</p>
+                        <h2>{sectionTitle}</h2>
+                    </div>
+                    <div className="ml-auto flex items-center gap-2">
+                        <Button onClick={() => setShowTechStackManager(true)} variant="outline" size="sm" className="editor-action">
+                            <Settings className="h-3.5 w-3.5" />
+                            Tech Stacks
+                        </Button>
+                        <Button onClick={handleSave} disabled={saving} size="sm" className="editor-save">
+                            {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
+                            Save
+                        </Button>
+                        <Button onClick={handleLogout} variant="ghost" size="sm" className="editor-logout">
+                            <LogOut className="h-3.5 w-3.5" />
+                        </Button>
+                    </div>
+                </header>
+
+                <main className="editor-content flex-1 min-h-0 overflow-y-auto">
+                    <div className="editor-content-inner">
                         {renderSection()}
                     </div>
                 </main>
             </div>
 
             {showTechStackManager && (
-                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                    <div className="bg-background border rounded-lg shadow-lg max-w-4xl w-full max-h-[85vh] overflow-hidden">
-                        <div className="flex items-center justify-between px-4 py-2.5 border-b">
-                            <h2 className="text-sm font-semibold">Tech Stack Manager</h2>
-                            <Button onClick={() => setShowTechStackManager(false)} variant="ghost" size="sm" className="h-7 text-xs">Close</Button>
+                <div className="editor-modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div className="editor-modal max-w-4xl w-full max-h-[85vh] overflow-hidden">
+                        <div className="editor-modal-header">
+                            <h2>Tech Stack Manager</h2>
+                            <Button onClick={() => setShowTechStackManager(false)} variant="ghost" size="sm">Close</Button>
                         </div>
-                        <div className="overflow-y-auto max-h-[calc(85vh-44px)]">
+                        <div className="overflow-y-auto max-h-[calc(85vh-56px)]">
                             <TechStackManager />
                         </div>
                     </div>

@@ -8,29 +8,36 @@ interface StatsCardProps {
 
 export function StatsCard({ data }: StatsCardProps) {
     return (
-        <div className="bg-card rounded-2xl p-6 border-2 border shadow-md">
-            <div className="flex items-center gap-2 mb-5">
-                <Sparkles className="w-5 h-5 text-primary" />
-                <h4 className="font-bold text-foreground">Statistics</h4>
+        <div className="editor-panel">
+            <div className="editor-panel-header">
+                <div className="flex items-center gap-3">
+                    <div className="editor-panel-icon">
+                        <Sparkles className="w-4 h-4" />
+                    </div>
+                    <div>
+                        <p className="editor-panel-eyebrow">Inspector</p>
+                        <h3>Statistics</h3>
+                    </div>
+                </div>
             </div>
-            <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 bg-primary/10 rounded-xl border border-primary">
+            <div className="editor-panel-body space-y-3">
+                <div className="editor-metric">
                     <span className="text-sm font-medium text-foreground">Total Projects</span>
                     <span className="text-2xl font-bold text-primary">{data.projects.projects.length}</span>
                 </div>
-                <div className="flex items-center justify-between p-4 bg-primary/10 rounded-xl border border-primary">
+                <div className="editor-metric">
                     <span className="text-sm font-medium text-foreground">Complete</span>
                     <span className="text-2xl font-bold text-primary">
                         {data.projects.projects.filter(p => p.name && p.tagline && p.description).length}
                     </span>
                 </div>
-                <div className="flex items-center justify-between p-4 bg-muted rounded-xl border border">
+                <div className="editor-metric neutral">
                     <span className="text-sm font-medium text-foreground">Total Images</span>
                     <span className="text-2xl font-bold text-foreground">
                         {data.projects.projects.reduce((acc, p) => acc + p.images.length, 0)}
                     </span>
                 </div>
-                <div className="flex items-center justify-between p-4 bg-primary/10 rounded-xl border-2 border-primary">
+                <div className="editor-metric">
                     <div className="flex items-center gap-2">
                         <Star className="w-4 h-4 text-primary fill-primary" />
                         <span className="text-sm font-medium text-foreground">In JSON</span>

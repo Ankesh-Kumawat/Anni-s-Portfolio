@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import type { StepProps } from "../../types";
 import { saveContactData } from "@/lib/firebase-service";
 import { useToast } from "@/hooks/use-toast";
-import { Mail, MapPin, MessageSquare, Copyright, Sparkles } from "lucide-react";
+import { Mail, MapPin, MessageSquare, Copyright, Sparkles, Save } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import SectionCard from "../../components/SectionCard";
 
 export default function ContactPage({ data, setData }: StepProps) {
     const [savingField, setSavingField] = useState<string | null>(null);
@@ -38,204 +39,143 @@ export default function ContactPage({ data, setData }: StepProps) {
         setData((prev) => ({ ...prev, contact: { ...prev.contact, [field]: value } }));
     };
 
-    return (
-        <div className="grid grid-cols-[1fr_320px] gap-5">
-            {/* Left: Form */}
-            <div className="space-y-4">
-                {/* Section Title */}
-                <div>
-                    <h2 className="text-lg font-semibold tracking-tight">Contact Details</h2>
-                    <p className="text-xs text-muted-foreground mt-0.5">Set up how visitors can reach you</p>
-                </div>
+    const contactReady = Number(!!data.contact.email) + Number(!!data.contact.location) + Number(!!data.contact.message) + Number(!!data.contact.copyright);
 
-                {/* Email */}
-                <div className="relative rounded-lg border bg-card overflow-hidden">
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary" />
-                    <div className="p-4 pl-5">
-                        <div className="flex items-center gap-2 mb-3">
-                            <div className="h-7 w-7 rounded-md bg-primary/10 flex items-center justify-center">
-                                <Mail className="h-3.5 w-3.5 text-primary" />
+    return (
+        <div className="editor-page-grid two editor-contact-page">
+            <div className="editor-page-main">
+                <SectionCard
+                    title="Contact Details"
+                    eyebrow={`${contactReady}/4 fields`}
+                    description="Public contact content for About, Contact, Browser, and footer surfaces."
+                    aside={
+                        <Button onClick={() => saveField("Contact")} disabled={savingField === "Contact"} size="sm" className="gap-1.5">
+                            <Save className="h-3.5 w-3.5" />
+                            Save
+                        </Button>
+                    }
+                >
+                    <div className="editor-contact-grid">
+                        <div className="editor-field">
+                            <div className="editor-field-head">
+                                <Mail className="h-3.5 w-3.5" />
+                                <Label>Email</Label>
                             </div>
-                            <div className="flex-1">
-                                <Label className="text-sm font-medium">Email Address</Label>
-                                <p className="text-[10px] text-muted-foreground">Primary contact method</p>
-                            </div>
-                        </div>
-                        <div className="flex gap-2">
                             <Input
                                 type="email"
                                 value={data.contact.email}
                                 onChange={(e) => update("email", e.target.value)}
                                 placeholder="you@example.com"
-                                className="h-9 text-sm"
+                                className="editor-compact-input"
                             />
-                            <Button
-                                onClick={() => saveField("Email")}
-                                disabled={savingField === "Email" || !data.contact.email}
-                                size="sm"
-                                className="h-9 px-4 gap-1.5 shrink-0"
-                            >
-                                {savingField === "Email" ? <div className="h-3.5 w-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" /> : "Save"}
-                            </Button>
                         </div>
-                    </div>
-                </div>
 
-                {/* Location */}
-                <div className="relative rounded-lg border bg-card overflow-hidden">
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary" />
-                    <div className="p-4 pl-5">
-                        <div className="flex items-center gap-2 mb-3">
-                            <div className="h-7 w-7 rounded-md bg-primary/10 flex items-center justify-center">
-                                <MapPin className="h-3.5 w-3.5 text-primary" />
+                        <div className="editor-field">
+                            <div className="editor-field-head">
+                                <MapPin className="h-3.5 w-3.5" />
+                                <Label>Location</Label>
+                                {isLocationAutoFilled && (
+                                    <Badge variant="secondary" className="editor-mini-badge">
+                                        <Sparkles className="h-2.5 w-2.5" />
+                                        Auto
+                                    </Badge>
+                                )}
                             </div>
-                            <div className="flex-1">
-                                <div className="flex items-center gap-1.5">
-                                    <Label className="text-sm font-medium">Location</Label>
-                                    {isLocationAutoFilled && (
-                                        <Badge variant="secondary" className="text-[9px] px-1 py-0 h-3.5 gap-0.5">
-                                            <Sparkles className="h-2 w-2" />
-                                            Auto-filled
-                                        </Badge>
-                                    )}
-                                </div>
-                                <p className="text-[10px] text-muted-foreground">Where you're based</p>
-                            </div>
-                        </div>
-                        <div className="flex gap-2">
                             <Input
                                 value={data.contact.location}
                                 onChange={(e) => update("location", e.target.value)}
                                 placeholder="City, Country"
-                                className="h-9 text-sm"
+                                className="editor-compact-input"
                             />
-                            <Button
-                                onClick={() => saveField("Location")}
-                                disabled={savingField === "Location" || !data.contact.location}
-                                size="sm"
-                                className="h-9 px-4 gap-1.5 shrink-0"
-                            >
-                                {savingField === "Location" ? <div className="h-3.5 w-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" /> : "Save"}
-                            </Button>
                         </div>
-                    </div>
-                </div>
 
-                {/* Welcome Message */}
-                <div className="relative rounded-lg border bg-card overflow-hidden">
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary" />
-                    <div className="p-4 pl-5">
-                        <div className="flex items-center justify-between mb-3">
-                            <div className="flex items-center gap-2">
-                                <div className="h-7 w-7 rounded-md bg-primary/10 flex items-center justify-center">
-                                    <MessageSquare className="h-3.5 w-3.5 text-primary" />
-                                </div>
-                                <div>
-                                    <div className="flex items-center gap-1.5">
-                                        <Label className="text-sm font-medium">Welcome Message</Label>
-                                        <span className="text-[10px] text-muted-foreground">Optional</span>
-                                    </div>
-                                    <p className="text-[10px] text-muted-foreground">Greeting for your contact page</p>
-                                </div>
+                        <div className="editor-field editor-field-wide">
+                            <div className="editor-field-head">
+                                <MessageSquare className="h-3.5 w-3.5" />
+                                <Label>Welcome Message</Label>
+                                <span>{data.contact.message.length}</span>
                             </div>
-                            <span className="text-[10px] text-muted-foreground tabular-nums">{data.contact.message.length}</span>
+                            <Textarea
+                                value={data.contact.message}
+                                onChange={(e) => update("message", e.target.value)}
+                                placeholder="Let's work together on your next project..."
+                                rows={7}
+                                className="editor-compact-textarea"
+                            />
                         </div>
-                        <Textarea
-                            value={data.contact.message}
-                            onChange={(e) => update("message", e.target.value)}
-                            placeholder="Let's work together on your next project..."
-                            rows={4}
-                            className="resize-none text-sm"
-                        />
-                    </div>
-                </div>
 
-                {/* Copyright */}
-                <div className="relative rounded-lg border bg-card overflow-hidden">
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary" />
-                    <div className="p-4 pl-5">
-                        <div className="flex items-center gap-2 mb-3">
-                            <div className="h-7 w-7 rounded-md bg-primary/10 flex items-center justify-center">
-                                <Copyright className="h-3.5 w-3.5 text-primary" />
-                            </div>
-                            <div className="flex-1">
-                                <div className="flex items-center gap-1.5">
-                                    <Label className="text-sm font-medium">Copyright</Label>
-                                    {isCopyrightAutoGenerated && (
-                                        <Badge variant="secondary" className="text-[9px] px-1 py-0 h-3.5 gap-0.5">
-                                            <Sparkles className="h-2 w-2" />
-                                            Auto
-                                        </Badge>
-                                    )}
-                                    <span className="text-[10px] text-muted-foreground">Optional</span>
-                                </div>
-                                <p className="text-[10px] text-muted-foreground">Footer legal notice</p>
-                            </div>
-                        </div>
-                        <Input
-                            value={data.contact.copyright}
-                            onChange={(e) => update("copyright", e.target.value)}
-                            placeholder="© 2024 Your Name. All rights reserved."
-                            className="h-9 text-sm"
-                        />
-                    </div>
-                </div>
-            </div>
-
-            {/* Right: Live Preview */}
-            <div className="relative">
-                <div className="sticky top-4 space-y-3">
-                    <h3 className="text-sm font-medium text-muted-foreground">Preview</h3>
-
-                    <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
-                        {/* Header accent */}
-                        <div className="h-1.5 bg-primary" />
-                        <div className="p-5 space-y-4">
-                            <div>
-                                <h4 className="text-sm font-semibold">Get In Touch</h4>
-                                <p className="text-[10px] text-muted-foreground mt-0.5">Have a project in mind? Let's talk.</p>
-                            </div>
-
-                            <div className="space-y-3">
-                                {data.contact.email && (
-                                    <div className="flex items-center gap-2.5">
-                                        <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                                            <Mail className="h-3.5 w-3.5 text-primary" />
-                                        </div>
-                                        <div className="min-w-0">
-                                            <p className="text-[10px] text-muted-foreground">Email</p>
-                                            <p className="text-xs font-medium truncate">{data.contact.email}</p>
-                                        </div>
-                                    </div>
-                                )}
-                                {data.contact.location && (
-                                    <div className="flex items-center gap-2.5">
-                                        <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                                            <MapPin className="h-3.5 w-3.5 text-primary" />
-                                        </div>
-                                        <div className="min-w-0">
-                                            <p className="text-[10px] text-muted-foreground">Location</p>
-                                            <p className="text-xs font-medium truncate">{data.contact.location}</p>
-                                        </div>
-                                    </div>
+                        <div className="editor-field editor-field-wide">
+                            <div className="editor-field-head">
+                                <Copyright className="h-3.5 w-3.5" />
+                                <Label>Copyright</Label>
+                                {isCopyrightAutoGenerated && (
+                                    <Badge variant="secondary" className="editor-mini-badge">
+                                        <Sparkles className="h-2.5 w-2.5" />
+                                        Auto
+                                    </Badge>
                                 )}
                             </div>
-
-                            {data.contact.message && (
-                                <div className="pt-2 border-t">
-                                    <p className="text-[11px] text-muted-foreground leading-relaxed">{data.contact.message}</p>
-                                </div>
-                            )}
-
-                            {data.contact.copyright && (
-                                <div className="pt-2 border-t">
-                                    <p className="text-[9px] text-muted-foreground/60">{data.contact.copyright}</p>
-                                </div>
-                            )}
+                            <Input
+                                value={data.contact.copyright}
+                                onChange={(e) => update("copyright", e.target.value)}
+                                placeholder="© 2026 Your Name. All rights reserved."
+                                className="editor-compact-input"
+                            />
                         </div>
                     </div>
-                </div>
+                </SectionCard>
             </div>
+
+            <div className="editor-page-side">
+                <SectionCard title="Preview" eyebrow="Output">
+                    <div className="editor-contact-preview">
+                        <div>
+                            <h4>Get In Touch</h4>
+                            <p>Have a project in mind? Let's talk.</p>
+                        </div>
+
+                        <div className="editor-contact-preview-list">
+                            <PreviewRow icon={Mail} label="Email" value={data.contact.email || "Not set"} />
+                            <PreviewRow icon={MapPin} label="Location" value={data.contact.location || "Not set"} />
+                        </div>
+
+                        {data.contact.message && <p className="editor-contact-message">{data.contact.message}</p>}
+                        {data.contact.copyright && <p className="editor-contact-copy">{data.contact.copyright}</p>}
+                    </div>
+                </SectionCard>
+
+                <SectionCard title="Status" eyebrow="Checklist">
+                    <div className="editor-contact-status">
+                        <StatusRow label="Email" done={!!data.contact.email} />
+                        <StatusRow label="Location" done={!!data.contact.location} />
+                        <StatusRow label="Message" done={!!data.contact.message} />
+                        <StatusRow label="Copyright" done={!!data.contact.copyright} />
+                    </div>
+                </SectionCard>
+            </div>
+        </div>
+    );
+}
+
+function PreviewRow({ icon: Icon, label, value }: { icon: React.ComponentType<{ className?: string }>; label: string; value: string }) {
+    return (
+        <div className="editor-contact-preview-row">
+            <div className="editor-panel-icon">
+                <Icon className="h-3.5 w-3.5" />
+            </div>
+            <div className="min-w-0">
+                <p>{label}</p>
+                <strong>{value}</strong>
+            </div>
+        </div>
+    );
+}
+
+function StatusRow({ label, done }: { label: string; done: boolean }) {
+    return (
+        <div className="editor-status-row" data-done={done}>
+            <span>{label}</span>
+            <b>{done ? "Done" : "Empty"}</b>
         </div>
     );
 }

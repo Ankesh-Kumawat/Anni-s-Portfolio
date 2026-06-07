@@ -4,6 +4,7 @@ import LinksList from "./LinksList";
 import SocialStats from "./SocialStats";
 import SocialPreview from "./SocialPreview";
 import { POPULAR_PLATFORMS } from "./platforms";
+import SectionCard from "../../components/SectionCard";
 
 export default function SocialLinksPage({ data, setData }: StepProps) {
     const togglePlatform = (platformValue: string) => {
@@ -43,16 +44,39 @@ export default function SocialLinksPage({ data, setData }: StepProps) {
     const isPlatformAdded = (platformValue: string) => data.social.links.some(link => link.platform === platformValue);
 
     return (
-        <div className="grid grid-cols-[1fr_380px] gap-6">
-            <div className="space-y-4">
-                <PlatformSelector isPlatformAdded={isPlatformAdded} togglePlatform={togglePlatform} />
-                {data.social.links.length > 0 && (
-                    <LinksList links={data.social.links} updateLink={updateLink} removeLink={removeLink} />
-                )}
+        <div className="editor-page-grid two">
+            <div className="editor-page-main">
+                <SectionCard
+                    title="Platform Picker"
+                    eyebrow="Channels"
+                    description="Choose the public links that should appear in the OS."
+                >
+                    <PlatformSelector isPlatformAdded={isPlatformAdded} togglePlatform={togglePlatform} />
+                </SectionCard>
+                <SectionCard
+                    title="Link Editor"
+                    eyebrow={`${data.social.links.length} selected`}
+                    description="Fill URLs and WhatsApp-specific fields."
+                >
+                    {data.social.links.length > 0 ? (
+                        <LinksList links={data.social.links} updateLink={updateLink} removeLink={removeLink} />
+                    ) : (
+                        <div className="editor-empty-state min-h-[180px]">
+                            <h4>No platforms selected</h4>
+                            <p>Select a channel above to start editing link details.</p>
+                        </div>
+                    )}
+                </SectionCard>
             </div>
-            <div className="space-y-4">
-                <SocialStats links={data.social.links} />
-                {data.social.links.length > 0 && <SocialPreview links={data.social.links} />}
+            <div className="editor-page-side">
+                <SectionCard title="Summary" eyebrow="Inspector">
+                    <SocialStats links={data.social.links} />
+                </SectionCard>
+                {data.social.links.length > 0 && (
+                    <SectionCard title="Preview" eyebrow="Output">
+                        <SocialPreview links={data.social.links} />
+                    </SectionCard>
+                )}
             </div>
         </div>
     );
