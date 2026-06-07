@@ -491,14 +491,7 @@
   }
 }
 
-/* ===============================
-   DESKTOP OS ZOOM (FINAL FIX)
-   =============================== */
-@media (min-width: 1024px) {
-  #scale-root {
-    zoom: 0.8;
-  }
-}
+/* Editor zoom removed - renders at 100% */
 
 /* Smooth drag-drop animations for image gallery */
 .draggable-image {

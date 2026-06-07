@@ -1,6 +1,6 @@
 // Cloudinary configuration
-export const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || "drtuvkfj8";
-export const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || "portfolio";
+export const CLOUDINARY_CLOUD_NAME = "drtuvkfj8";
+export const CLOUDINARY_UPLOAD_PRESET = "AniPlix Notices";
 
 export async function uploadToCloudinary(file: File): Promise<string> {
   const formData = new FormData();
