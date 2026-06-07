@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Save, LogOut, Loader2, Settings, Layers } from "lucide-react";
+import { Save, LogOut, Loader2, Layers } from "lucide-react";
 import Sidebar from "./components/Sidebar";
 import PersonalInfo from "./pages/PersonalInfo";
 import ContactPage from "./pages/Contact";
@@ -13,7 +13,6 @@ import MusicPage from "./pages/Music";
 import YouTubePage from "./pages/YouTube";
 import PreferencesPage from "./pages/Preferences";
 import AppsPage from "./pages/Apps";
-import ReviewPage from "./pages/Review";
 import type { EditorData } from "./types";
 import { saveAllData, getAllData } from "@/lib/firebase-service";
 import { useAuth } from "@/lib/auth-context";
@@ -26,7 +25,6 @@ export default function Editor() {
     const [activeSection, setActiveSection] = useState("personal");
     const [saving, setSaving] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [showTechStackManager, setShowTechStackManager] = useState(false);
     const { logout } = useAuth();
     const { toast } = useToast();
     const [, setLocation] = useLocation();
@@ -143,7 +141,7 @@ export default function Editor() {
         youtube: "YouTube",
         preferences: "Preferences",
         apps: "Apps",
-        review: "Review",
+        techstacks: "Tech Stacks",
     }[activeSection] || "Profile";
 
     const renderSection = () => {
@@ -158,7 +156,7 @@ export default function Editor() {
             case "youtube": return <YouTubePage data={data} setData={setData} />;
             case "preferences": return <PreferencesPage data={data} setData={setData} />;
             case "apps": return <AppsPage data={data} setData={setData} />;
-            case "review": return <ReviewPage data={data} setData={setData} />;
+            case "techstacks": return <TechStackManager />;
             default: return <PersonalInfo data={data} setData={setData} />;
         }
     };
@@ -196,10 +194,6 @@ export default function Editor() {
                         <h2>{sectionTitle}</h2>
                     </div>
                     <div className="ml-auto flex items-center gap-2">
-                        <Button onClick={() => setShowTechStackManager(true)} variant="outline" size="sm" className="editor-action">
-                            <Settings className="h-3.5 w-3.5" />
-                            Tech Stacks
-                        </Button>
                         <Button onClick={handleSave} disabled={saving} size="sm" className="editor-save">
                             {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
                             Save
@@ -216,20 +210,6 @@ export default function Editor() {
                     </div>
                 </main>
             </div>
-
-            {showTechStackManager && (
-                <div className="editor-modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4">
-                    <div className="editor-modal max-w-4xl w-full max-h-[85vh] overflow-hidden">
-                        <div className="editor-modal-header">
-                            <h2>Tech Stack Manager</h2>
-                            <Button onClick={() => setShowTechStackManager(false)} variant="ghost" size="sm">Close</Button>
-                        </div>
-                        <div className="overflow-y-auto max-h-[calc(85vh-56px)]">
-                            <TechStackManager />
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }

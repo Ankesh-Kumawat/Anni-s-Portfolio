@@ -1,4 +1,4 @@
-import { User, Mail, Link2, FolderKanban, FileText, Music, Youtube, Settings, Smartphone, Download, Terminal, ChevronRight } from "lucide-react";
+import { User, Mail, Link2, FolderKanban, FileText, Music, Youtube, Settings, Smartphone, Layers, Terminal, ChevronRight } from "lucide-react";
 
 const NAV_ITEMS = [
     { id: "personal", label: "Profile", icon: User, tone: "coral" },
@@ -11,7 +11,7 @@ const NAV_ITEMS = [
     { id: "youtube", label: "YouTube", icon: Youtube, tone: "red" },
     { id: "preferences", label: "Preferences", icon: Settings, tone: "blue" },
     { id: "apps", label: "Apps", icon: Smartphone, tone: "green" },
-    { id: "review", label: "Review", icon: Download, tone: "slate" },
+    { id: "techstacks", label: "Tech Stacks", icon: Layers, tone: "slate" },
 ];
 
 interface SidebarProps {
