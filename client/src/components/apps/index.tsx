@@ -38,16 +38,16 @@ export const APPS: AppConfig[] = [
     title: "Terminal",
     icon: <TerminalIcon className="w-full h-full text-emerald-500" />,
     component: <Terminal />,
-    width: 900,
-    height: 650
+    width: 1000,
+    height: 700
   },
   {
     id: "settings",
     title: "Settings",
     icon: <SettingsIcon className="w-full h-full text-slate-600" />,
     component: <Settings />,
-    width: 900,
-    height: 650
+    width: 1000,
+    height: 700
   },
   {
     id: "vscode",
@@ -87,8 +87,8 @@ export const APPS: AppConfig[] = [
     title: "Contact",
     icon: <Mail className="w-full h-full text-red-500" />,
     component: <Contact />,
-    width: 900,
-    height: 650
+    width: 1000,
+    height: 700
   },
   {
     id: "spotify" as any,
@@ -103,8 +103,8 @@ export const APPS: AppConfig[] = [
     title: "YouTube",
     icon: <Video className="w-full h-full text-red-600" />,
     component: <YouTube />,
-    width: 1100,
-    height: 800
+    width: 1000,
+    height: 700
   },
   {
     id: "db" as any,

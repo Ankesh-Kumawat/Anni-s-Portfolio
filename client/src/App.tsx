@@ -13,9 +13,6 @@ import { AuthProvider } from "@/lib/auth-context";
 import { Desktop } from "@/components/os/Desktop";
 import { OSNotificationContainer } from "@/components/os/OSNotificationContainer";
 import NotFound from "@/pages/not-found";
-import Editor from "@/pages/editor";
-import AdminLogin from "@/pages/admin-login";
-import ProtectedRoute from "@/components/ProtectedRoute";
 import { Analytics } from "@vercel/analytics/react";
 import { useEasterEggs } from "@/hooks/useEasterEggs";
 
@@ -37,14 +34,6 @@ function App() {
                       <OSNotificationContainer />
                       <Switch>
                         <Route path="/" component={Desktop} />
-                        <Route path="/admin-login" component={AdminLogin} />
-                        <Route path="/editor">
-                          {() => (
-                            <ProtectedRoute>
-                              <Editor />
-                            </ProtectedRoute>
-                          )}
-                        </Route>
                         <Route component={NotFound} />
                       </Switch>
                       {/* 📊 Vercel Analytics - Production only */}

@@ -44,14 +44,25 @@ export function Window({
   } = useOS();
   const nodeRef = useRef(null);
   const isActive = activeWindowId === id;
+
+  // Fixed per-app size — chhoti screen pe viewport me fit ho jaye
+  const initW =
+    typeof window !== "undefined"
+      ? Math.min(defaultWidth, window.innerWidth - 24)
+      : defaultWidth;
+  const initH =
+    typeof window !== "undefined"
+      ? Math.min(defaultHeight, window.innerHeight - 96)
+      : defaultHeight;
+
   const [isMaximized, setIsMaximized] = useState(false);
   const [size, setSize] = useState({
-    width: defaultWidth,
-    height: defaultHeight,
+    width: initW,
+    height: initH,
   });
   const [prevSize, setPrevSize] = useState({
-    width: defaultWidth,
-    height: defaultHeight,
+    width: initW,
+    height: initH,
   });
   const isMobile = useIsMobile();
 
@@ -76,19 +87,27 @@ export function Window({
     zoneIndex: number;
   } | null>(null);
 
-  // Windows-style cascaded launch position — har nayi window thodi
-  // staggered khulti hai, sab ek center me stack nahi hoti
-  const CASCADE_X = 30;
-  const CASCADE_Y = 24;
+  // Serpentine cascade — pehli app top-left se khulti hai, har window
+  // right khisakte waqt SAATH me niche bhi khisakti hai (proper diagonal).
+  // Chhoti screens par bhi diagonal dikhaye rakhta hai (MAX_DESCENT tak).
+  const CASCADE_X = 64;
+  const CASCADE_Y = 40;
+  const MAX_DESCENT = 240;
+  const SERPENTINE = 8; // 4 step right, phir 4 step wapas left
   const vw = typeof window !== "undefined" ? window.innerWidth : 1280;
   const vh = typeof window !== "undefined" ? window.innerHeight : 800;
   const siblingIndex = Math.max(0, openWindows.length - 1);
-  const slackX = Math.max(1, vw - defaultWidth - 24);
-  const slackY = Math.max(1, vh - defaultHeight - 96);
-  const cascadeX = (siblingIndex * CASCADE_X) % slackX;
-  const cascadeY = (siblingIndex * CASCADE_Y) % slackY;
+  const slackX = Math.max(0, vw - defaultWidth - 32);
+  const slackY = Math.max(0, vh - initH - 96);
+  const phase = siblingIndex % SERPENTINE;
+  const wave = phase < SERPENTINE / 2 ? phase : SERPENTINE - 1 - phase;
+  const cascadeX = Math.min(wave * CASCADE_X, slackX);
+  const cascadeY = Math.min(
+    siblingIndex * CASCADE_Y,
+    Math.max(slackY, MAX_DESCENT)
+  );
   const safeY = 52;
-  const defaultX = 12 + cascadeX;
+  const defaultX = 40 + cascadeX;
   const defaultY = safeY + cascadeY;
 
   const [position, setPosition] = useState({ x: defaultX, y: safeY });
@@ -292,14 +311,6 @@ export function Window({
     clearWindowSnap(id);
   }, [id, clearWindowSnap]);
 
-  const onResizeStart = useCallback(() => {
-    clearWindowSnap(id);
-  }, [id, clearWindowSnap]);
-
-  const onResize = (event: any, { size }: any) => {
-    setSize({ width: size.width, height: size.height });
-  };
-
   return (
     <>
       {/* Live snap-zone preview while dragging */}
@@ -427,15 +438,11 @@ export function Window({
               : {}),
           }}
         >
-          {/* 🖼️ Window Body Card */}
+          {/* 🖼️ Window Body Card — fixed size, sirf maximize/snap se size badalta hai */}
           <ResizableBox
             width={isMaximized || isMobile ? 9999 : size.width}
             height={isMaximized || isMobile ? 9999 : size.height}
-            onResize={onResize}
-            onResizeStart={onResizeStart}
-            minConstraints={[340, 240]}
-            maxConstraints={[2400, 1800]}
-            resizeHandles={isMaximized || isMobile ? [] : ["se", "s", "e"]}
+            resizeHandles={[]}
             className={cn(
               "relative flex flex-col bg-white/98 dark:bg-zinc-950/98 text-zinc-900 dark:text-zinc-100 border border-zinc-200 dark:border-zinc-800 rounded-3xl shadow-2xl transition-shadow duration-200 w-full h-full",
               isActive

@@ -131,12 +131,6 @@ export function ControlCenterPopover({
             <span className="text-xs font-bold tracking-tight text-zinc-700 dark:text-zinc-300 uppercase flex items-center gap-1.5">
               <Settings className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" /> Control Center
             </span>
-            <button
-              onClick={() => setLocation("/admin-login")}
-              className="text-[11px] flex items-center gap-1 text-zinc-500 hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400 px-2 py-0.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 transition-colors cursor-pointer"
-            >
-              <FileText className="w-3 h-3" /> Admin Editor
-            </button>
           </div>
 
           {/* Functional Quick Toggles Grid */}
