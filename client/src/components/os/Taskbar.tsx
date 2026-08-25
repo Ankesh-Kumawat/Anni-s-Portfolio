@@ -38,6 +38,8 @@ interface RecentApp {
   timestamp: number;
 }
 
+import { motion, AnimatePresence } from "framer-motion";
+
 function StartMenu({
   apps,
   open,
@@ -52,6 +54,7 @@ function StartMenu({
   recentApps: RecentApp[];
 }) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const inputRef = useRef<HTMLInputElement>(null);
   const { data: aboutData } = useFirestoreData<AboutData>("about");
   const avatarUrl = aboutData?.personal?.avatar;
@@ -61,7 +64,8 @@ function StartMenu({
   useEffect(() => {
     if (open) {
       setSearchQuery("");
-      setTimeout(() => inputRef.current?.focus(), 50);
+      setSelectedCategory("all");
+      setTimeout(() => inputRef.current?.focus(), 80);
     }
   }, [open]);
 
@@ -74,262 +78,312 @@ function StartMenu({
     return () => window.removeEventListener("keydown", handler);
   }, [onClose]);
 
-  const filtered = apps.filter((a) =>
-    a.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Categories mapping
+  const categoryMap: Record<string, string[]> = {
+    all: apps.map((a) => a.id),
+    dev: ["terminal", "vscode", "db"],
+    media: ["spotify", "youtube", "gallery"],
+    system: ["settings", "browser", "notepad"],
+    portfolio: ["about", "projects", "contact"],
+  };
+
+  const filtered = apps.filter((a) => {
+    const matchesSearch = a.title.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = selectedCategory === "all" || categoryMap[selectedCategory]?.includes(a.id);
+    return matchesSearch && matchesCategory;
+  });
 
   const menu = (
-    <>
-      {/* Backdrop — only intercept clicks when menu is open */}
-      <div
-        className={cn("fixed inset-0 z-[99]", !open && "pointer-events-none")}
-        onClick={onClose}
-        style={{ background: "transparent" }}
-      />
+    <AnimatePresence>
+      {open && (
+        <>
+          {/* Backdrop — click outside to close */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[99] bg-black/20 dark:bg-black/40 backdrop-blur-xs"
+            onClick={onClose}
+          />
 
-      {/* Start Menu Panel — centered horizontally, sits just above taskbar */}
-      <div
-        className={cn(
-          "fixed z-[100] left-1/2 -translate-x-1/2 flex flex-col overflow-hidden transition-all duration-300 ease-out",
-          open
-            ? "bottom-[90px] opacity-100 translate-y-0"
-            : "bottom-[70px] opacity-0 translate-y-4 pointer-events-none"
-        )}
-        style={{
-          width: "clamp(480px, 45vw, 580px)",
-          maxHeight: "calc(100vh - 120px)",
-          background: "rgba(18, 18, 22, 0.82)",
-          backdropFilter: "blur(40px) saturate(180%)",
-          WebkitBackdropFilter: "blur(40px) saturate(180%)",
-          border: "1px solid rgba(255,255,255,0.08)",
-          borderRadius: "16px",
-          boxShadow:
-            "0 32px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04) inset",
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Search Bar */}
-        <div className="px-6 pt-6 pb-4 shrink-0">
-          <div className="relative">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
-            <input
-              ref={inputRef}
-              type="text"
-              placeholder="Search for apps, settings, and documents"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-10 rounded-lg pl-10 pr-4 text-sm text-white placeholder:text-white/35 focus:outline-none transition-all"
-              style={{
-                background: "rgba(255,255,255,0.06)",
-                border: "1px solid rgba(255,255,255,0.1)",
-              }}
-              onFocus={(e) =>
-                (e.currentTarget.style.border = "1px solid rgba(255,255,255,0.3)")
-              }
-              onBlur={(e) =>
-                (e.currentTarget.style.border = "1px solid rgba(255,255,255,0.1)")
-              }
-            />
-          </div>
-        </div>
+          {/* Start Menu Panel — Centered with rich spring physics */}
+          <motion.div
+            initial={{ opacity: 0, y: 35, scale: 0.92 }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              transition: {
+                type: "spring",
+                damping: 24,
+                stiffness: 320,
+              },
+            }}
+            exit={{
+              opacity: 0,
+              y: 25,
+              scale: 0.95,
+              transition: { duration: 0.18, ease: "easeOut" },
+            }}
+            className="fixed z-[100] left-1/2 -translate-x-1/2 bottom-[74px] flex flex-col overflow-hidden bg-white/98 dark:bg-zinc-950/98 text-zinc-900 dark:text-zinc-100 border border-zinc-200/90 dark:border-zinc-800/90 rounded-[28px] shadow-2xl"
+            style={{
+              width: "clamp(540px, 48vw, 660px)",
+              maxHeight: "calc(100vh - 110px)",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* 🔍 Search Bar & Quick Category Filters */}
+            <div className="p-5 pb-3 shrink-0 space-y-3 border-b border-zinc-100 dark:border-zinc-900">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 dark:text-zinc-500" />
+                <input
+                  ref={inputRef}
+                  type="text"
+                  placeholder="Search apps, files, or settings..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full h-11 rounded-2xl pl-11 pr-12 text-xs font-medium bg-zinc-100/90 dark:bg-zinc-900/90 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all shadow-xs"
+                />
+                <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[10px] font-semibold text-zinc-400 dark:text-zinc-600 px-1.5 py-0.5 rounded-md bg-zinc-200/60 dark:bg-zinc-800/80 border border-zinc-300/40 dark:border-zinc-700/40">
+                  ESC
+                </span>
+              </div>
 
-        {/* Scrollable content */}
-        <div className="flex-1 overflow-y-auto no-scrollbar px-6 pb-4">
-          {searchQuery ? (
-            // ── Search Results ──
-            <div>
-              <p className="text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-3">
-                Best match
-              </p>
-              {filtered.length === 0 ? (
-                <p className="text-sm text-white/40 text-center py-8">
-                  No results for "{searchQuery}"
-                </p>
-              ) : (
-                <div className="flex flex-col gap-1">
-                  {filtered.map((app) => (
-                    <div
-                      key={app.id}
-                      onClick={() => {
-                        launchApp(app.id);
-                        onClose();
-                      }}
-                      className="flex items-center gap-3 p-2.5 rounded-lg cursor-pointer transition-colors hover:bg-white/8"
-                      style={{ "--hover-bg": "rgba(255,255,255,0.06)" } as React.CSSProperties}
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style.background = "rgba(255,255,255,0.06)")
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style.background = "transparent")
-                      }
-                    >
-                      <div className="w-8 h-8 flex items-center justify-center shrink-0">
-                        {app.icon}
-                      </div>
-                      <span className="text-sm font-medium text-white/90 flex-1">
-                        {app.title}
-                      </span>
-                      <span className="text-xs text-white/30">App</span>
+              {/* Category Pills */}
+              <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-1">
+                {[
+                  { id: "all", label: "All Apps" },
+                  { id: "portfolio", label: "Portfolio" },
+                  { id: "dev", label: "Dev Tools" },
+                  { id: "media", label: "Media & Audio" },
+                  { id: "system", label: "System" },
+                ].map((cat) => (
+                  <button
+                    key={cat.id}
+                    onClick={() => setSelectedCategory(cat.id)}
+                    className={cn(
+                      "px-3 py-1 rounded-full text-[11px] font-semibold tracking-tight transition-all duration-200 cursor-pointer shrink-0",
+                      selectedCategory === cat.id
+                        ? "bg-indigo-600 text-white shadow-xs shadow-indigo-500/30"
+                        : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200/80 hover:text-zinc-900 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
+                    )}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 📱 Scrollable Applications & Recent Sections */}
+            <div className="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-6">
+              {searchQuery ? (
+                // ── Live Search Results ──
+                <div>
+                  <p className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-3 px-1">
+                    Matching Results ({filtered.length})
+                  </p>
+                  {filtered.length === 0 ? (
+                    <div className="text-center py-12">
+                      <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
+                        No apps found matching "{searchQuery}"
+                      </p>
+                      <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-1">
+                        Try checking your spelling or searching for a different keyword.
+                      </p>
                     </div>
-                  ))}
+                  ) : (
+                    <div className="grid grid-cols-2 gap-2">
+                      {filtered.map((app, idx) => (
+                        <motion.div
+                          key={app.id}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0, transition: { delay: idx * 0.03 } }}
+                          onClick={() => {
+                            launchApp(app.id);
+                            onClose();
+                          }}
+                          className="flex items-center gap-3 p-3 rounded-2xl cursor-pointer transition-all bg-zinc-50 hover:bg-zinc-100/90 border border-zinc-200/70 hover:border-indigo-500/40 dark:bg-zinc-900/60 dark:hover:bg-zinc-900 dark:border-zinc-800/70 shadow-xs hover:shadow-sm group"
+                        >
+                          <div className="w-9 h-9 flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
+                            {app.icon}
+                          </div>
+                          <div className="flex flex-col flex-1 overflow-hidden">
+                            <span className="text-xs font-bold text-zinc-900 dark:text-zinc-100 truncate">
+                              {app.title}
+                            </span>
+                            <span className="text-[10px] text-zinc-500 dark:text-zinc-400 truncate">
+                              Launch application
+                            </span>
+                          </div>
+                          <ChevronRight className="w-3.5 h-3.5 text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </motion.div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                // ── Default Pinned + Recent Grid View ──
+                <div className="space-y-6">
+                  {/* Pinned Applications */}
+                  <div>
+                    <div className="flex items-center justify-between mb-3 px-1">
+                      <span className="text-xs font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">
+                        Applications
+                      </span>
+                      <span className="text-[11px] font-medium text-zinc-400 dark:text-zinc-500">
+                        {filtered.length} total
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-6 gap-2">
+                      {filtered.map((app, idx) => (
+                        <motion.div
+                          key={app.id}
+                          initial={{ opacity: 0, scale: 0.85, y: 12 }}
+                          animate={{
+                            opacity: 1,
+                            scale: 1,
+                            y: 0,
+                            transition: {
+                              type: "spring",
+                              damping: 18,
+                              stiffness: 280,
+                              delay: idx * 0.025,
+                            },
+                          }}
+                          whileHover={{ y: -4, scale: 1.06 }}
+                          whileTap={{ scale: 0.94 }}
+                          onClick={() => {
+                            launchApp(app.id);
+                            onClose();
+                          }}
+                          className="flex flex-col items-center gap-2 p-2.5 pt-3 pb-2.5 rounded-2xl cursor-pointer transition-colors hover:bg-zinc-100/90 dark:hover:bg-zinc-900 border border-transparent hover:border-zinc-200 dark:hover:border-zinc-800 group select-none shadow-xs hover:shadow-md"
+                        >
+                          <div className="w-10 h-10 flex items-center justify-center">
+                            {app.icon}
+                          </div>
+                          <span className="text-[10px] font-bold text-zinc-700 dark:text-zinc-300 text-center leading-tight truncate w-full group-hover:text-indigo-600 dark:group-hover:text-white transition-colors">
+                            {app.title}
+                          </span>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Separator */}
+                  <div className="h-px bg-zinc-200/80 dark:bg-zinc-800/80" />
+
+                  {/* Recent Activity / Recommendations */}
+                  <div>
+                    <div className="flex items-center justify-between mb-3 px-1">
+                      <span className="text-xs font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">
+                        Recent Activity
+                      </span>
+                    </div>
+                    {recentApps.length === 0 ? (
+                      <div className="text-center py-6 bg-zinc-50/80 dark:bg-zinc-900/40 rounded-2xl border border-dashed border-zinc-200 dark:border-zinc-800/80">
+                        <p className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">
+                          No recently opened apps yet
+                        </p>
+                        <p className="text-[10px] text-zinc-400 dark:text-zinc-500 mt-0.5">
+                          Apps you launch will appear here for fast access
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-2.5">
+                        {recentApps.slice(0, 4).map((recent, idx) => {
+                          const app = apps.find((a) => a.id === recent.id);
+                          if (!app) return null;
+                          return (
+                            <motion.div
+                              key={recent.id}
+                              initial={{ opacity: 0, x: -8 }}
+                              animate={{ opacity: 1, x: 0, transition: { delay: idx * 0.04 } }}
+                              whileHover={{ scale: 1.02 }}
+                              onClick={() => {
+                                launchApp(app.id);
+                                onClose();
+                              }}
+                              className="flex items-center gap-3 p-2.5 rounded-2xl cursor-pointer transition-all bg-zinc-50 hover:bg-zinc-100/90 border border-zinc-200/70 hover:border-indigo-500/40 dark:bg-zinc-900/60 dark:hover:bg-zinc-900 dark:border-zinc-800/70 shadow-xs"
+                            >
+                              <div className="w-7 h-7 shrink-0 flex items-center justify-center">
+                                {app.icon}
+                              </div>
+                              <div className="flex flex-col flex-1 overflow-hidden">
+                                <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200 truncate">
+                                  {app.title}
+                                </span>
+                                <span className="text-[9px] font-medium text-zinc-400 dark:text-zinc-500 truncate">
+                                  Opened {timeAgo(recent.timestamp)}
+                                </span>
+                              </div>
+                            </motion.div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
-          ) : (
-            // ── Default View ──
-            <div className="flex flex-col gap-6">
-              {/* Pinned */}
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-sm font-semibold text-white/90">Pinned</span>
-                  <button
-                    className="text-xs text-white/50 flex items-center gap-1 px-2 py-1 rounded-md transition-colors"
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background = "rgba(255,255,255,0.06)")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = "transparent")
-                    }
-                  >
-                    All apps <ChevronRight className="w-3 h-3" />
-                  </button>
-                </div>
-                <div className="grid grid-cols-6 gap-1">
-                  {apps.map((app) => (
-                    <div
-                      key={app.id}
-                      onClick={() => {
-                        launchApp(app.id);
-                        onClose();
-                      }}
-                      className="flex flex-col items-center gap-1.5 p-2 pt-3 pb-2 rounded-xl cursor-pointer transition-all active:scale-90"
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style.background = "rgba(255,255,255,0.07)")
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style.background = "transparent")
-                      }
-                    >
-                      <div className="w-9 h-9 flex items-center justify-center">
-                        {app.icon}
-                      </div>
-                      <span className="text-[10px] font-medium text-white/70 text-center leading-tight truncate w-full">
-                        {app.title}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
 
-              {/* Separator */}
-              <div style={{ height: "1px", background: "rgba(255,255,255,0.06)" }} />
-
-              {/* Recommended — real recently opened apps */}
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm font-semibold text-white/90">Recommended</span>
-                </div>
-                {recentApps.length === 0 ? (
-                  <div className="text-center py-6">
-                    <p className="text-sm text-white/30">No recently opened apps yet.</p>
-                    <p className="text-xs text-white/20 mt-1">Apps you open will appear here.</p>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-2 gap-1">
-                    {recentApps.slice(0, 4).map((recent) => {
-                      const app = apps.find((a) => a.id === recent.id);
-                      if (!app) return null;
-                      return (
-                        <div
-                          key={recent.id}
-                          onClick={() => { launchApp(app.id); onClose(); }}
-                          className="flex items-center gap-3 p-2.5 rounded-lg cursor-pointer transition-all"
-                          onMouseEnter={(e) =>
-                            (e.currentTarget.style.background = "rgba(255,255,255,0.06)")
-                          }
-                          onMouseLeave={(e) =>
-                            (e.currentTarget.style.background = "transparent")
-                          }
-                        >
-                          <div className="w-7 h-7 shrink-0 flex items-center justify-center">{app.icon}</div>
-                          <div className="flex flex-col overflow-hidden">
-                            <span className="text-sm font-medium text-white/85 truncate">{app.title}</span>
-                            <span className="text-[10px] text-white/35 truncate">{timeAgo(recent.timestamp)}</span>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Footer */}
-        <div
-          className="shrink-0 px-4 py-3 flex items-center justify-between"
-          style={{
-            background: "rgba(0,0,0,0.25)",
-            borderTop: "1px solid rgba(255,255,255,0.05)",
-          }}
-        >
-          <button
-            onClick={() => {
-              launchApp("about");
-              onClose();
-            }}
-            className="flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all cursor-pointer"
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.background = "rgba(255,255,255,0.07)")
-            }
-            onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-          >
-            {/* Profile Avatar */}
-            <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 ring-2 ring-white/10">
-              {avatarUrl ? (
-                <img
-                  src={avatarUrl}
-                  alt={displayName}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                    (e.currentTarget.nextElementSibling as HTMLElement)!.style.display = 'flex';
-                  }}
-                />
-              ) : null}
-              <div
-                className="w-full h-full bg-gradient-to-br from-primary to-purple-600 items-center justify-center text-white font-bold text-sm"
-                style={{ display: avatarUrl ? 'none' : 'flex' }}
+            {/* 👑 Bottom User Profile & Power Actions */}
+            <div className="shrink-0 px-5 py-3 flex items-center justify-between bg-zinc-50 dark:bg-zinc-900/90 border-t border-zinc-200/80 dark:border-zinc-800/80">
+              <button
+                onClick={() => {
+                  launchApp("about");
+                  onClose();
+                }}
+                className="flex items-center gap-3 px-2 py-1 rounded-2xl hover:bg-zinc-200/60 dark:hover:bg-zinc-800/80 transition-all cursor-pointer group text-left"
               >
-                {displayName.charAt(0).toUpperCase()}
-              </div>
+                {/* Profile Avatar */}
+                <div className="relative w-9 h-9 rounded-full overflow-hidden shrink-0 ring-2 ring-indigo-500/40 shadow-xs">
+                  {avatarUrl ? (
+                    <img
+                      src={avatarUrl}
+                      alt={displayName}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.style.display = "none";
+                        (
+                          e.currentTarget.nextElementSibling as HTMLElement
+                        )!.style.display = "flex";
+                      }}
+                    />
+                  ) : null}
+                  <div
+                    className="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-600 items-center justify-center text-white font-bold text-xs"
+                    style={{ display: avatarUrl ? "none" : "flex" }}
+                  >
+                    {displayName.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-zinc-950" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                    {displayName}
+                  </span>
+                  <span className="text-[10px] text-zinc-500 dark:text-zinc-400">
+                    Developer • Portfolio OS
+                  </span>
+                </div>
+              </button>
+
+              <button
+                onClick={() => {
+                  onClose();
+                  window.location.reload();
+                }}
+                title="Restart OS"
+                className="w-9 h-9 flex items-center justify-center rounded-2xl bg-zinc-200/60 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-rose-500 hover:text-white dark:hover:bg-rose-600 dark:hover:text-white transition-all cursor-pointer shadow-xs active:scale-95"
+              >
+                <Power className="w-4 h-4" />
+              </button>
             </div>
-            <span className="text-sm font-semibold text-white/85">
-              {displayName}
-            </span>
-          </button>
-          <button
-            onClick={() => {
-              onClose();
-              window.dispatchEvent(new Event("os-restart"));
-            }}
-            title="Restart"
-            className="w-9 h-9 flex items-center justify-center rounded-full transition-all text-white/60"
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(255,255,255,0.08)";
-              e.currentTarget.style.color = "rgba(255,255,255,0.9)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "transparent";
-              e.currentTarget.style.color = "rgba(255,255,255,0.6)";
-            }}
-          >
-            <Power className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-    </>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
   );
 
   return createPortal(menu, document.body);
@@ -436,32 +490,33 @@ export function Taskbar({ apps, hasOpenWindows = false }: TaskbarProps) {
 
       <div
         className={cn(
-          "fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-auto transition-all duration-300",
+          "fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-auto transition-all duration-300",
           shouldShow
             ? "translate-y-0 opacity-100"
-            : "translate-y-24 opacity-0 pointer-events-none"
+            : "translate-y-20 opacity-0 pointer-events-none"
         )}
         onMouseEnter={() => behavior === "auto-hide" && setIsHovering(true)}
         onMouseLeave={() => behavior === "auto-hide" && setIsHovering(false)}
       >
-        <div className="bg-background/95 border shadow-lg px-2 py-2 rounded-xl flex items-center gap-2 transition-all duration-300">
+        <div className="bg-white/95 dark:bg-zinc-950/95 border border-zinc-200 dark:border-zinc-800 shadow-2xl px-2 py-1.5 rounded-2xl flex items-center gap-1.5 transition-all duration-300">
           {/* Start Button */}
           <button
             onClick={() => setStartOpen((v) => !v)}
+            title="Start Menu"
             className={cn(
-              "relative w-14 h-14 flex items-center justify-center rounded-lg transition-all duration-200 group mr-2 cursor-pointer",
+              "relative w-10 h-10 flex items-center justify-center rounded-xl transition-all duration-200 group cursor-pointer",
               startOpen
-                ? "bg-primary text-primary-foreground"
-                : "hover:bg-muted text-foreground"
+                ? "bg-indigo-600 text-white shadow-md shadow-indigo-500/20"
+                : "hover:bg-zinc-100 dark:hover:bg-zinc-800/80 text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white"
             )}
           >
             {/* Windows-style grid icon */}
             <svg
-              width="22"
-              height="22"
+              width="18"
+              height="18"
               viewBox="0 0 22 22"
               fill="currentColor"
-              className="transition-transform group-hover:scale-110"
+              className="transition-transform group-hover:scale-110 group-active:scale-90"
             >
               <rect x="0" y="0" width="10" height="10" rx="2" />
               <rect x="12" y="0" width="10" height="10" rx="2" />
@@ -471,7 +526,7 @@ export function Taskbar({ apps, hasOpenWindows = false }: TaskbarProps) {
           </button>
 
           {/* Separator */}
-          <div className="w-px h-8 bg-border mx-1" />
+          <div className="w-px h-6 bg-zinc-200 dark:bg-zinc-800 mx-0.5" />
 
           {/* App Icons */}
           <TooltipProvider>
@@ -504,29 +559,29 @@ export function Taskbar({ apps, hasOpenWindows = false }: TaskbarProps) {
                       }}
                     >
                       <div
-                        className="bg-background/98 backdrop-blur-xl border-2 shadow-2xl rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-200 hover:scale-105"
-                        style={{ width: "320px" }}
+                        className="bg-white/98 dark:bg-zinc-950/98 border border-zinc-200 dark:border-zinc-800 shadow-2xl rounded-2xl overflow-hidden hover:border-indigo-500/50 transition-all duration-200 hover:scale-102"
+                        style={{ width: "280px" }}
                       >
-                        <div className="bg-muted/30 border-b px-3 py-2 flex items-center gap-2">
-                          <div className="w-5 h-5 flex items-center justify-center text-primary">
+                        <div className="bg-zinc-50 dark:bg-zinc-900/80 border-b border-zinc-200 dark:border-zinc-800 px-3 py-2 flex items-center gap-2">
+                          <div className="w-4 h-4 flex items-center justify-center">
                             {app.icon}
                           </div>
-                          <span className="font-semibold text-sm flex-1">
+                          <span className="font-semibold text-xs text-zinc-900 dark:text-zinc-100 flex-1 truncate">
                             {app.title}
                           </span>
                           <div
                             className={cn(
-                              "text-xs px-2 py-0.5 rounded-full",
+                              "text-[10px] px-2 py-0.5 rounded-full font-medium",
                               isMinimized
-                                ? "bg-yellow-500/20 text-yellow-600 dark:text-yellow-400"
-                                : "bg-green-500/20 text-green-600 dark:text-green-400"
+                                ? "bg-amber-500/15 text-amber-600 dark:text-amber-400"
+                                : "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
                             )}
                           >
                             {isMinimized ? "Minimized" : "Active"}
                           </div>
                         </div>
-                        <div className="p-3 bg-gradient-to-br from-muted/20 to-muted/5">
-                          <div className="w-full aspect-video bg-background/80 rounded-lg border-2 shadow-inner overflow-hidden relative">
+                        <div className="p-2.5 bg-zinc-100/50 dark:bg-zinc-900/40">
+                          <div className="w-full aspect-video bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-inner overflow-hidden relative">
                             <div
                               className="absolute inset-0 scale-[0.25] origin-top-left pointer-events-none"
                               style={{ width: "400%", height: "400%" }}
@@ -535,11 +590,10 @@ export function Taskbar({ apps, hasOpenWindows = false }: TaskbarProps) {
                                 {app.component}
                               </div>
                             </div>
-                            <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent" />
                           </div>
                         </div>
-                        <div className="px-3 py-2 bg-muted/20 border-t text-center">
-                          <p className="text-xs text-muted-foreground font-medium">
+                        <div className="px-3 py-1.5 bg-zinc-50 dark:bg-zinc-900/80 border-t border-zinc-200 dark:border-zinc-800 text-center">
+                          <p className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">
                             Click to {isActive ? "minimize" : "restore"}
                           </p>
                         </div>
@@ -559,40 +613,34 @@ export function Taskbar({ apps, hasOpenWindows = false }: TaskbarProps) {
                         setHoverTimeout(t);
                       }}
                       className={cn(
-                        "relative w-14 h-14 flex items-center justify-center rounded-lg transition-all duration-200 cursor-pointer",
+                        "relative w-10 h-10 flex items-center justify-center rounded-xl transition-all duration-200 cursor-pointer hover:-translate-y-1 hover:scale-105 active:scale-95",
                         isActive
-                          ? "bg-accent text-accent-foreground"
-                          : "hover:bg-muted text-muted-foreground hover:text-foreground"
+                          ? "bg-zinc-100 dark:bg-zinc-800/90 shadow-2xs"
+                          : "hover:bg-zinc-100 dark:hover:bg-zinc-800/60"
                       )}
                     >
-                      <div className="w-8 h-8 transition-transform group-hover:scale-110 group-active:scale-95">
+                      <div className="w-6 h-6 flex items-center justify-center">
                         {app.icon}
                       </div>
+
+                      {/* Running App Indicator Pill */}
                       {isOpen && (
-                        <span className="absolute bottom-1 w-1 h-1 rounded-full bg-primary" />
+                        <span
+                          className={cn(
+                            "absolute -bottom-0.5 rounded-full transition-all duration-200",
+                            isActive
+                              ? "w-4 h-1 bg-indigo-600 dark:bg-indigo-400 shadow-xs shadow-indigo-500/50"
+                              : "w-1.5 h-1.5 bg-zinc-400 dark:bg-zinc-500"
+                          )}
+                        />
                       )}
                     </button>
 
                     {/* Tooltip — only when app is NOT open */}
                     {!isOpen && (
-                      <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-3 opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-200 z-50">
-                        <div
-                          className="relative whitespace-nowrap px-3 py-1.5 rounded-lg text-[11px] font-medium text-white/90 shadow-xl"
-                          style={{
-                            background: "rgba(15,20,35,0.95)",
-                            border: "1px solid rgba(255,255,255,0.1)",
-                            backdropFilter: "blur(12px)",
-                          }}
-                        >
+                      <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-200 z-50">
+                        <div className="relative whitespace-nowrap px-2.5 py-1 rounded-lg text-[10px] font-semibold bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 shadow-xl border border-zinc-800 dark:border-zinc-200">
                           {app.title}
-                          <div
-                            className="absolute top-full left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 -mt-1"
-                            style={{
-                              background: "rgba(15,20,35,0.95)",
-                              borderRight: "1px solid rgba(255,255,255,0.1)",
-                              borderBottom: "1px solid rgba(255,255,255,0.1)",
-                            }}
-                          />
                         </div>
                       </div>
                     )}

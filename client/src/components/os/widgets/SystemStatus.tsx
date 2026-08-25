@@ -1,218 +1,228 @@
 import { useState, useEffect } from "react";
-import { Battery, Activity, Cpu, Wifi, Globe, Shield, Zap, Server, ChevronRight } from "lucide-react";
+import {
+  Activity,
+  Cpu,
+  Wifi,
+  Shield,
+  Zap,
+  Clock,
+  Layers,
+} from "lucide-react";
 import { useOS } from "@/lib/os-context";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 export function SystemStatus() {
-    const { notifications, openWindows } = useOS();
-    const unreadCount = notifications.filter((n) => !n.read).length;
+  const { openWindows } = useOS();
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [uptime, setUptime] = useState(0);
+  const [batteryLevel, setBatteryLevel] = useState<number | null>(null);
+  const [isCharging, setIsCharging] = useState(false);
 
-    const [isOnline, setIsOnline] = useState(navigator.onLine);
-    const [uptime, setUptime] = useState(0);
-    const [batteryLevel, setBatteryLevel] = useState<number | null>(null);
-    const [isCharging, setIsCharging] = useState(false);
-    
-    // CPU Simulation state
-    const [cpuUsage, setCpuUsage] = useState<number[]>(Array(12).fill(10));
-    
-    useEffect(() => {
-        const goOnline = () => setIsOnline(true);
-        const goOffline = () => setIsOnline(false);
-        window.addEventListener("online", goOnline);
-        window.addEventListener("offline", goOffline);
-        return () => {
-            window.removeEventListener("online", goOnline);
-            window.removeEventListener("offline", goOffline);
-        };
-    }, []);
+  // Live CPU Simulation
+  const [cpuUsage, setCpuUsage] = useState<number[]>([
+    25, 40, 30, 55, 35, 60, 45, 50, 65, 30, 45, 40,
+  ]);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setUptime((prev) => prev + 1);
-            // Simulate wild CPU fluctuations like a real hacker terminal
-            setCpuUsage(prev => {
-                const newBars = [...prev.slice(1), Math.floor(Math.random() * 80) + 15];
-                return newBars;
-            });
-        }, 1200);
-        return () => clearInterval(interval);
-    }, []);
-
-    useEffect(() => {
-        const getBattery = async () => {
-            if ("getBattery" in navigator) {
-                try {
-                    const battery = await (navigator as any).getBattery();
-                    setBatteryLevel(Math.round(battery.level * 100));
-                    setIsCharging(battery.charging);
-                    battery.addEventListener("levelchange", () => setBatteryLevel(Math.round(battery.level * 100)));
-                    battery.addEventListener("chargingchange", () => setIsCharging(battery.charging));
-                } catch {}
-            }
-        };
-        getBattery();
-    }, []);
-
-    const formatUptime = (seconds: number) => {
-        const h = Math.floor(seconds / 3600);
-        const m = Math.floor((seconds % 3600) / 60);
-        const s = seconds % 60;
-        return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  useEffect(() => {
+    const goOnline = () => setIsOnline(true);
+    const goOffline = () => setIsOnline(false);
+    window.addEventListener("online", goOnline);
+    window.addEventListener("offline", goOffline);
+    return () => {
+      window.removeEventListener("online", goOnline);
+      window.removeEventListener("offline", goOffline);
     };
+  }, []);
 
-    // Calculate circumference for circular progress
-    const radius = 36;
-    const circumference = 2 * Math.PI * radius;
-    const currentBat = batteryLevel ?? 100;
-    const strokeDashoffset = circumference - (currentBat / 100) * circumference;
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setUptime((prev) => prev + 1);
+      setCpuUsage((prev) => [
+        ...prev.slice(1),
+        Math.floor(Math.random() * 50) + 20,
+      ]);
+    }, 1500);
+    return () => clearInterval(interval);
+  }, []);
 
-    return (
-        <div className="relative w-full max-w-sm rounded-[2rem] bg-black/50 backdrop-blur-3xl border border-white/10 shadow-2xl overflow-hidden group">
-            
-            {/* Animated Edge Light */}
-            <div className="absolute inset-0 z-0">
-                <div className="absolute inset-[-50%] w-[200%] h-[200%] animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_0_340deg,rgba(0,255,255,0.4)_360deg)] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-            </div>
-            
-            {/* Inner Content Wrapper */}
-            <div className="relative z-10 m-[1px] bg-black/60 rounded-[calc(2rem-1px)] h-full backdrop-blur-xl">
-                
-                {/* Horizontal Scanline Effect */}
-                <div className="absolute inset-0 z-20 pointer-events-none opacity-10 bg-[linear-gradient(transparent_0%,rgba(6,182,212,0.8)_50%,transparent_100%)] h-4 animate-[translate-y_3s_ease-in-out_infinite]" style={{ backgroundSize: "100% 4px" }} />
+  useEffect(() => {
+    const getBattery = async () => {
+      if ("getBattery" in navigator) {
+        try {
+          const battery = await (navigator as any).getBattery();
+          setBatteryLevel(Math.round(battery.level * 100));
+          setIsCharging(battery.charging);
+          battery.addEventListener("levelchange", () =>
+            setBatteryLevel(Math.round(battery.level * 100))
+          );
+          battery.addEventListener("chargingchange", () =>
+            setIsCharging(battery.charging)
+          );
+        } catch {}
+      }
+    };
+    getBattery();
+  }, []);
 
-                <div className="p-6 pb-5 space-y-6">
-                    {/* Header HUD */}
-                    <div className="flex justify-between items-start">
-                        <div>
-                            <div className="flex items-center gap-2 mb-1">
-                                <Activity className="w-5 h-5 text-cyan-400 animate-pulse" />
-                                <h3 className="font-black text-white text-[14px] tracking-[0.2em] uppercase">Telemetry</h3>
-                            </div>
-                            <div className="flex items-center gap-2.5">
-                                <div className="h-[2px] w-6 bg-cyan-500/50" />
-                                <span className={cn("text-[8px] font-mono tracking-widest", isOnline ? "text-cyan-400" : "text-red-500")}>
-                                    LINK: {isOnline ? 'ESTABLISHED' : 'FAILED'}
-                                </span>
-                            </div>
-                        </div>
+  const formatUptime = (seconds: number) => {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    return `${h.toString().padStart(2, "0")}:${m
+      .toString()
+      .padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+  };
 
-                        {/* Animated Alert Badge */}
-                        <div className="flex flex-col items-end gap-1">
-                            <div className="px-2 py-0.5 rounded-sm bg-red-500/20 border border-red-500/50 flex items-center gap-2">
-                                <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping" />
-                                <span className="text-[10px] font-mono font-bold text-red-500">SYS_WARN: {unreadCount}</span>
-                            </div>
-                            <span className="text-[7px] font-mono text-white/30 tracking-widest">ENCRYPTED // {openWindows.length} PROC</span>
-                        </div>
-                    </div>
+  const currentBat = batteryLevel ?? 98;
+  const radius = 30;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - (currentBat / 100) * circumference;
 
-                    <div className="grid grid-cols-2 gap-4">
-                        
-                        {/* Left Side: Circular HUD Data */}
-                        <div className="flex flex-col items-center justify-center relative">
-                            {/* SVG Ring Progress */}
-                            <div className="relative w-28 h-28 flex items-center justify-center">
-                                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                                    {/* Background Track */}
-                                    <circle cx="50" cy="50" r={radius} stroke="rgba(255,255,255,0.05)" strokeWidth="4" fill="none" />
-                                    {/* Decorative outer dotted track */}
-                                    <circle cx="50" cy="50" r="44" stroke="rgba(6,182,212,0.15)" strokeWidth="1" fill="none" strokeDasharray="3 3" className="animate-[spin_20s_linear_infinite]" />
-                                    {/* Progress Ring */}
-                                    <circle 
-                                        cx="50" cy="50" r={radius} 
-                                        stroke={isCharging || currentBat > 20 ? "url(#bat-gradient)" : "url(#bat-red)"} 
-                                        strokeWidth="5" fill="none" strokeLinecap="round"
-                                        style={{ strokeDasharray: circumference, strokeDashoffset, transition: "stroke-dashoffset 1s ease-in-out" }}
-                                    />
-                                    <defs>
-                                        <linearGradient id="bat-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                            <stop offset="0%" stopColor="#06b6d4" />
-                                            <stop offset="100%" stopColor="#3b82f6" />
-                                        </linearGradient>
-                                        <linearGradient id="bat-red" x1="0%" y1="0%" x2="100%" y2="0%">
-                                            <stop offset="0%" stopColor="#ef4444" />
-                                            <stop offset="100%" stopColor="#b91c1c" />
-                                        </linearGradient>
-                                    </defs>
-                                </svg>
-                                
-                                <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                                    <Zap className={cn("w-4 h-4 mb-0.5", isCharging ? "text-cyan-400 animate-pulse" : "text-white/40")} />
-                                    <span className="text-xl font-black text-white tabular-nums tracking-tighter">
-                                        {currentBat}<span className="text-[10px] text-cyan-500">%</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <span className="mt-2 text-[8px] font-mono text-white/50 tracking-widest">{isCharging ? "PWR_CHARGING" : "PWR_BATT"}</span>
-                        </div>
+  const currentCpu = cpuUsage[cpuUsage.length - 1];
 
-                        {/* Right Side: Modules */}
-                        <div className="flex flex-col gap-3 justify-center">
-                            
-                            {/* CPU Matrix */}
-                            <div className="p-3 bg-white/[0.02] border border-cyan-500/20 rounded-xl relative overflow-hidden group/cpu">
-                                <div className="absolute right-0 top-0 text-cyan-900/40 pointer-events-none">
-                                    <Cpu className="w-16 h-16 transform rotate-12 scale-150" />
-                                </div>
-                                <div className="flex items-center justify-between mb-2 relative z-10">
-                                    <span className="text-[10px] font-mono text-cyan-300 font-bold uppercase">CPU_Thread</span>
-                                    <span className="text-[10px] font-mono text-white/60 tabular-nums">{cpuUsage[cpuUsage.length-1]}%</span>
-                                </div>
-                                <div className="flex items-end gap-1 h-8 relative z-10 pl-1">
-                                    {cpuUsage.map((val, i) => (
-                                        <div key={i} className="w-[4px] bg-cyan-400/80 rounded-t-sm transition-all duration-300" style={{ height: `${val}%` }} />
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Uptime Module */}
-                            <div className="p-3 bg-white/[0.02] border border-purple-500/20 rounded-xl flex items-center justify-between relative overflow-hidden">
-                                <div className="absolute left-[-10px] bottom-[-10px] text-purple-900/40 pointer-events-none">
-                                    <Server className="w-12 h-12" />
-                                </div>
-                                <div className="relative z-10 flex flex-col">
-                                    <span className="text-[9px] font-mono text-purple-300 font-bold uppercase mb-0.5">Uptime_CLK</span>
-                                    <span className="text-sm font-black tracking-widest text-white tabular-nums">{formatUptime(uptime)}</span>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    {/* Footer HUD Info */}
-                    <div className="pt-4 border-t border-white/5 grid grid-cols-2 gap-4">
-                        <div className="flex items-center gap-2.5">
-                            <div className="w-6 h-6 rounded-md bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center">
-                                <Shield className="w-3 h-3 text-emerald-400" />
-                            </div>
-                            <div className="flex flex-col">
-                                <span className="text-[8px] font-mono text-white/40">NODE SEC</span>
-                                <span className="text-[10px] font-mono font-bold text-emerald-400">VERIFIED</span>
-                            </div>
-                        </div>
-                        <div className="flex items-center justify-end gap-2.5">
-                            <div className="flex flex-col text-right">
-                                <span className="text-[8px] font-mono text-white/40">LATENCY</span>
-                                <span className="text-[10px] font-mono font-bold text-white/90">
-                                    {isOnline ? "12ms" : "---"}
-                                </span>
-                            </div>
-                            <div className="w-6 h-6 rounded-md bg-white/5 border border-white/10 flex items-center justify-center">
-                                <Globe className={cn("w-3 h-3", isOnline ? "text-cyan-400" : "text-white/40")} />
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-            
-            {/* Global Keyframes injected for custom tailwind */}
-            <style dangerouslySetInnerHTML={{__html: `
-                @keyframes translate-y {
-                    0% { transform: translateY(-100%); }
-                    100% { transform: translateY(500%); }
-                }
-            `}} />
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="w-full rounded-3xl bg-white/90 dark:bg-zinc-950/90 text-zinc-900 dark:text-zinc-100 border border-zinc-200/90 dark:border-zinc-800/90 shadow-2xl p-5 backdrop-blur-xl transition-all duration-300 select-none hover:shadow-indigo-500/10"
+    >
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-xl bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 flex items-center justify-center">
+            <Activity className="w-4 h-4" />
+          </div>
+          <div>
+            <h4 className="text-xs font-bold text-zinc-900 dark:text-zinc-100 leading-tight">
+              System Telemetry
+            </h4>
+            <span className="text-[10px] text-zinc-400 dark:text-zinc-500 font-medium">
+              AniPlix OS v2.4 • Online
+            </span>
+          </div>
         </div>
-    );
+
+        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <span>Active</span>
+        </div>
+      </div>
+
+      {/* Grid Specs */}
+      <div className="grid grid-cols-2 gap-3 mb-4">
+        {/* Battery Circle Card */}
+        <div className="flex items-center gap-3 p-3 rounded-2xl bg-zinc-50/80 dark:bg-zinc-900/60 border border-zinc-200/60 dark:border-zinc-800/60 shadow-2xs">
+          <div className="relative w-14 h-14 shrink-0 flex items-center justify-center">
+            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 70 70">
+              <circle
+                cx="35"
+                cy="35"
+                r={radius}
+                className="stroke-zinc-200 dark:stroke-zinc-800"
+                strokeWidth="5"
+                fill="none"
+              />
+              <circle
+                cx="35"
+                cy="35"
+                r={radius}
+                className={cn(
+                  isCharging
+                    ? "stroke-indigo-500"
+                    : currentBat > 20
+                    ? "stroke-emerald-500"
+                    : "stroke-rose-500"
+                )}
+                strokeWidth="5"
+                fill="none"
+                strokeLinecap="round"
+                style={{
+                  strokeDasharray: circumference,
+                  strokeDashoffset,
+                  transition: "stroke-dashoffset 0.8s ease-in-out",
+                }}
+              />
+            </svg>
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+              {isCharging ? (
+                <Zap className="w-3.5 h-3.5 text-indigo-500 animate-bounce" />
+              ) : (
+                <span className="text-[11px] font-mono font-black text-zinc-900 dark:text-zinc-100">
+                  {currentBat}%
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="flex flex-col overflow-hidden">
+            <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
+              Power
+            </span>
+            <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200 truncate">
+              {isCharging ? "Charging" : `${currentBat}% Left`}
+            </span>
+            <span className="text-[9px] text-zinc-400 dark:text-zinc-500">
+              {isCharging ? "AC Adapter" : "On Battery"}
+            </span>
+          </div>
+        </div>
+
+        {/* CPU & Memory Live Waveform */}
+        <div className="p-3 rounded-2xl bg-zinc-50/80 dark:bg-zinc-900/60 border border-zinc-200/60 dark:border-zinc-800/60 shadow-2xs flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center gap-1.5">
+              <Cpu className="w-3.5 h-3.5 text-indigo-500" />
+              <span className="text-[10px] font-bold text-zinc-700 dark:text-zinc-300">
+                CPU Load
+              </span>
+            </div>
+            <span className="text-[10px] font-mono font-bold text-indigo-600 dark:text-indigo-400">
+              {currentCpu}%
+            </span>
+          </div>
+
+          {/* Equalizer Bars */}
+          <div className="flex items-end gap-1 h-6 pt-1">
+            {cpuUsage.map((val, i) => (
+              <div
+                key={i}
+                className="flex-1 bg-indigo-500 dark:bg-indigo-400 rounded-xs transition-all duration-300"
+                style={{ height: `${Math.max(15, val)}%` }}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Footer Info Row */}
+      <div className="pt-3 border-t border-zinc-100 dark:border-zinc-900 grid grid-cols-2 gap-2 text-[10px] font-medium text-zinc-500 dark:text-zinc-400">
+        <div className="flex items-center gap-2">
+          <Clock className="w-3.5 h-3.5 text-indigo-500" />
+          <div className="flex flex-col">
+            <span className="text-[9px] text-zinc-400 dark:text-zinc-500">
+              Uptime
+            </span>
+            <span className="font-mono font-bold text-zinc-800 dark:text-zinc-200">
+              {formatUptime(uptime)}
+            </span>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-end gap-2">
+          <div className="flex flex-col text-right">
+            <span className="text-[9px] text-zinc-400 dark:text-zinc-500">
+              Running Procs
+            </span>
+            <span className="font-mono font-bold text-zinc-800 dark:text-zinc-200">
+              {openWindows.length} Active
+            </span>
+          </div>
+          <div className="w-6 h-6 rounded-lg bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center">
+            <Layers className="w-3.5 h-3.5 text-indigo-500" />
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
 }
