@@ -2,6 +2,12 @@ import React, { useRef, useState, useEffect, useCallback } from "react";
 import Draggable from "react-draggable";
 import { ResizableBox } from "react-resizable";
 import { useOS, AppId } from "@/lib/os-context";
+import {
+  SNAP_TEMPLATES,
+  getTemplate,
+  zoneToRect,
+  zoneGridStyle,
+} from "@/lib/snapLayouts";
 import { cn } from "@/lib/utils";
 import "react-resizable/css/styles.css";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -25,8 +31,17 @@ export function Window({
   defaultHeight = 620,
   zIndex,
 }: WindowProps) {
-  const { closeWindow, minimizeWindow, focusWindow, activeWindowId, openWindows } =
-    useOS();
+  const {
+    closeWindow,
+    minimizeWindow,
+    focusWindow,
+    activeWindowId,
+    openWindows,
+    snapLayoutId,
+    snapAssignments,
+    assignSnapZone,
+    clearWindowSnap,
+  } = useOS();
   const nodeRef = useRef(null);
   const isActive = activeWindowId === id;
   const [isMaximized, setIsMaximized] = useState(false);
@@ -39,18 +54,42 @@ export function Window({
     height: defaultHeight,
   });
   const isMobile = useIsMobile();
-  const [snapHint, setSnapHint] = useState(false);
 
-  // Center window calculation
-  const defaultX =
-    typeof window !== "undefined"
-      ? (window.innerWidth - defaultWidth) / 2
-      : 50;
-  const defaultY =
-    typeof window !== "undefined"
-      ? (window.innerHeight - defaultHeight) / 2
-      : 50;
-  const safeY = Math.max(defaultY, 50);
+  // Snap system state
+  const [parentSize, setParentSize] = useState({ w: 0, h: 0 });
+  const [snapMenuOpen, setSnapMenuOpen] = useState(false);
+  const snapMenuTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isDraggingRef = useRef(false);
+  const dragHitRef = useRef<{ templateId: string; zoneIndex: number } | null>(
+    null
+  );
+  const [dragPreview, setDragPreview] = useState<{
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+  } | null>(null);
+  const [showLayoutsPicker, setShowLayoutsPicker] = useState(false);
+  const showRef = useRef(false);
+  const pickerZoneRef = useRef<{
+    templateId: string;
+    zoneIndex: number;
+  } | null>(null);
+
+  // Windows-style cascaded launch position — har nayi window thodi
+  // staggered khulti hai, sab ek center me stack nahi hoti
+  const CASCADE_X = 30;
+  const CASCADE_Y = 24;
+  const vw = typeof window !== "undefined" ? window.innerWidth : 1280;
+  const vh = typeof window !== "undefined" ? window.innerHeight : 800;
+  const siblingIndex = Math.max(0, openWindows.length - 1);
+  const slackX = Math.max(1, vw - defaultWidth - 24);
+  const slackY = Math.max(1, vh - defaultHeight - 96);
+  const cascadeX = (siblingIndex * CASCADE_X) % slackX;
+  const cascadeY = (siblingIndex * CASCADE_Y) % slackY;
+  const safeY = 52;
+  const defaultX = 12 + cascadeX;
+  const defaultY = safeY + cascadeY;
 
   const [position, setPosition] = useState({ x: defaultX, y: safeY });
   const [prevPosition, setPrevPosition] = useState({ x: defaultX, y: safeY });
@@ -62,6 +101,48 @@ export function Window({
 
   const windowState = openWindows.find((w) => w.id === id);
   const isMinimized = windowState?.minimized || false;
+
+  // My snap assignment from the active layout
+  const myAssignment =
+    snapLayoutId != null ? snapAssignments[id] : undefined;
+  const activeTemplate = getTemplate(snapLayoutId);
+
+  // Measure the desktop workspace so zones can be converted to pixels
+  useEffect(() => {
+    const parent = (nodeRef.current as unknown as HTMLElement | null)
+      ?.offsetParent as HTMLElement | null;
+    if (!parent) return;
+    const update = () =>
+      setParentSize({ w: parent.clientWidth, h: parent.clientHeight });
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(parent);
+    window.addEventListener("resize", update);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+
+  // Apply my assigned zone whenever layout/assignments/workspace changes
+  useEffect(() => {
+    if (isMobile || myAssignment == null || !activeTemplate) return;
+    if (!parentSize.w || !parentSize.h) return;
+    if (isDraggingRef.current) return;
+    const zone = activeTemplate.zones[myAssignment];
+    if (!zone) return;
+    const rect = zoneToRect(zone, parentSize);
+    setIsMaximized(false);
+    setSize({ width: Math.round(rect.w), height: Math.round(rect.h) });
+    setPosition({ x: Math.round(rect.x), y: Math.round(rect.y) });
+  }, [myAssignment, snapLayoutId, parentSize.w, parentSize.h, isMobile]);
+
+  // Cleanup snap-menu timer
+  useEffect(() => {
+    return () => {
+      if (snapMenuTimer.current) clearTimeout(snapMenuTimer.current);
+    };
+  }, []);
 
   // Opening animation
   useEffect(() => {
@@ -90,6 +171,7 @@ export function Window({
 
   const toggleMaximize = () => {
     if (isMobile) return;
+    clearWindowSnap(id);
     if (isMaximized) {
       setSize(prevSize);
       setPosition(prevPosition);
@@ -101,29 +183,118 @@ export function Window({
     focusWindow(id);
   };
 
-  // Snap to top edge: detect during drag using MOUSE position
+  // Apply a zone picked from the Snap Layouts flyout
+  const applyZone = (templateId: string, zoneIndex: number) => {
+    setSnapMenuOpen(false);
+    focusWindow(id);
+    if (templateId === "full") {
+      clearWindowSnap(id);
+      if (!isMaximized) toggleMaximize();
+      return;
+    }
+    setIsMaximized(false);
+    assignSnapZone(templateId, zoneIndex, id);
+  };
+
+  // Detect edge / corner snap targets during drag (mouse position based).
+  // Top band pe Snap Layouts picker khulta hai (Windows 11 style).
   const handleDrag = useCallback((e: any, data: any) => {
     setPosition({ x: data.x, y: data.y });
 
     const mouseEvent = e as MouseEvent;
-    const my = mouseEvent.clientY;
+    const parent = (nodeRef.current as unknown as HTMLElement | null)
+      ?.offsetParent as HTMLElement | null;
+    if (!parent) return;
 
-    if (my <= 10) {
-      setSnapHint(true);
-    } else {
-      setSnapHint(false);
+    const pr = parent.getBoundingClientRect();
+    const mx = mouseEvent.clientX - pr.left;
+    const my = mouseEvent.clientY - pr.top;
+    const W = pr.width;
+    const H = pr.height;
+
+    const CORNER = 30; // corner hot-zone
+    const EDGE = 26; // side edge hot-zone
+    const TOP_TRIGGER = 36; // picker open
+    const TOP_RELEASE = 12; // raw top edge = maximize on release
+    const TOP_EXIT = 96; // picker close
+
+    let hit: { templateId: string; zoneIndex: number } | null = null;
+    let pickerJustOpened = false;
+
+    if (showRef.current) {
+      if (my > TOP_EXIT) {
+        showRef.current = false;
+        setShowLayoutsPicker(false);
+        pickerZoneRef.current = null;
+        setDragPreview(null);
+      } else if (my <= TOP_RELEASE) {
+        hit = { templateId: "full", zoneIndex: 0 };
+      }
+    } else if (my <= TOP_TRIGGER) {
+      showRef.current = true;
+      pickerJustOpened = true;
+      setShowLayoutsPicker(true);
+      hit = { templateId: "full", zoneIndex: 0 };
+    }
+
+    if (!showRef.current && !pickerJustOpened && !hit) {
+      if (mx <= CORNER && my <= CORNER)
+        hit = { templateId: "grid-4", zoneIndex: 0 };
+      else if (mx >= W - CORNER && my <= CORNER)
+        hit = { templateId: "grid-4", zoneIndex: 1 };
+      else if (mx <= CORNER && my >= H - CORNER)
+        hit = { templateId: "grid-4", zoneIndex: 2 };
+      else if (mx >= W - CORNER && my >= H - CORNER)
+        hit = { templateId: "grid-4", zoneIndex: 3 };
+      else if (mx <= EDGE) hit = { templateId: "halves", zoneIndex: 0 };
+      else if (mx >= W - EDGE) hit = { templateId: "halves", zoneIndex: 1 };
+    }
+
+    dragHitRef.current = hit;
+    if (hit) {
+      const t = getTemplate(hit.templateId)!;
+      setDragPreview(zoneToRect(t.zones[hit.zoneIndex], { w: W, h: H }));
+    } else if (!showRef.current) {
+      setDragPreview(null);
     }
   }, []);
 
-  // Snap on drag stop
+  // Apply the pending snap / picked zone on drop
   const handleDragStop = useCallback(() => {
-    if (snapHint) {
-      setPrevSize(size);
-      setPrevPosition(position);
-      setIsMaximized(true);
+    const picked = pickerZoneRef.current;
+    const hit = dragHitRef.current;
+    isDraggingRef.current = false;
+
+    if (picked) {
+      assignSnapZone(picked.templateId, picked.zoneIndex, id);
+      focusWindow(id);
+    } else if (hit) {
+      if (hit.templateId === "full") {
+        setPrevSize(size);
+        setPrevPosition(position);
+        setIsMaximized(true);
+        clearWindowSnap(id);
+      } else {
+        assignSnapZone(hit.templateId, hit.zoneIndex, id);
+      }
+      focusWindow(id);
     }
-    setSnapHint(false);
-  }, [snapHint, size, position]);
+
+    dragHitRef.current = null;
+    pickerZoneRef.current = null;
+    showRef.current = false;
+    setDragPreview(null);
+    setShowLayoutsPicker(false);
+  }, [size, position, id, assignSnapZone, clearWindowSnap, focusWindow]);
+
+  const handleDragStart = useCallback(() => {
+    isDraggingRef.current = true;
+    clearWindowSnap(id);
+  }, [id, clearWindowSnap]);
+
+  const onResizeStart = useCallback(() => {
+    clearWindowSnap(id);
+  }, [id, clearWindowSnap]);
 
   const onResize = (event: any, { size }: any) => {
     setSize({ width: size.width, height: size.height });
@@ -131,15 +302,93 @@ export function Window({
 
   return (
     <>
-      {/* Snap preview hint */}
-      {snapHint && (
-        <div className="absolute inset-x-2 top-11 bottom-16 z-[9998] rounded-3xl border-2 border-indigo-500/50 bg-indigo-500/10 backdrop-blur-xs transition-all duration-200 pointer-events-none" />
+      {/* Live snap-zone preview while dragging */}
+      {dragPreview && (
+        <div
+          className="absolute z-[9998] rounded-2xl border-2 border-indigo-500/60 bg-indigo-500/15 shadow-[0_0_40px_rgba(99,102,241,0.25)] backdrop-blur-[2px] pointer-events-none transition-all duration-100 ease-out"
+          style={{
+            left: dragPreview.x,
+            top: dragPreview.y,
+            width: dragPreview.w,
+            height: dragPreview.h,
+          }}
+        />
+      )}
+
+      {/* Snap Layouts Picker — window ko top pe le jao, wahi 5 templates milte hain */}
+      {showLayoutsPicker && (
+        <div className="absolute left-1/2 -translate-x-1/2 top-4 z-[9999] pointer-events-auto">
+          <div className="flex items-end gap-3 p-3 rounded-2xl bg-white/95 dark:bg-zinc-900/95 border border-zinc-200/90 dark:border-zinc-700/80 shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-top-2 duration-150">
+            {SNAP_TEMPLATES.map((t) => (
+              <div key={t.id} className="flex flex-col items-center gap-1.5">
+                <div
+                  className={cn(
+                    "grid p-[4px] rounded-xl border bg-zinc-50 dark:bg-zinc-800/60 transition-colors",
+                    snapLayoutId === t.id && myAssignment != null
+                      ? "border-indigo-400 dark:border-indigo-500"
+                      : "border-zinc-200 dark:border-zinc-700"
+                  )}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: `repeat(${t.cols}, 1fr)`,
+                    gridTemplateRows: `repeat(${t.rows}, 1fr)`,
+                    gap: 3,
+                    width: t.cols * 38,
+                    height:
+                      t.rows === t.cols ? t.rows * 28 : Math.max(48, t.rows * 28),
+                  }}
+                >
+                  {t.zones.map((z, i) => {
+                    const isMine =
+                      snapLayoutId === t.id && myAssignment === i;
+                    return (
+                      <button
+                        key={i}
+                        onMouseEnter={(e) => {
+                          e.stopPropagation();
+                          pickerZoneRef.current = {
+                            templateId: t.id,
+                            zoneIndex: i,
+                          };
+                          setDragPreview(zoneToRect(z, parentSize));
+                        }}
+                        onMouseLeave={() => {
+                          const pz = pickerZoneRef.current;
+                          if (
+                            pz &&
+                            pz.templateId === t.id &&
+                            pz.zoneIndex === i
+                          ) {
+                            pickerZoneRef.current = null;
+                            setDragPreview(null);
+                          }
+                        }}
+                        title={`${t.name} — zone ${i + 1}`}
+                        className={cn(
+                          "rounded-md min-h-[10px] transition-colors cursor-pointer",
+                          isMine
+                            ? "bg-indigo-500 ring-1 ring-indigo-300 dark:ring-indigo-600"
+                            : "bg-zinc-300 dark:bg-zinc-600 hover:bg-indigo-400 dark:hover:bg-indigo-400"
+                        )}
+                        style={zoneGridStyle(z, t.cols, t.rows)}
+                      />
+                    );
+                  })}
+                </div>
+                <span className="text-[10px] font-medium text-zinc-500 dark:text-zinc-400">
+                  {t.name}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
 
       <Draggable
         handle=".window-header"
         nodeRef={nodeRef}
         onMouseDown={() => focusWindow(id)}
+        onStart={handleDragStart}
         onDrag={handleDrag}
         onStop={handleDragStop}
         bounds="parent"
@@ -183,6 +432,7 @@ export function Window({
             width={isMaximized || isMobile ? 9999 : size.width}
             height={isMaximized || isMobile ? 9999 : size.height}
             onResize={onResize}
+            onResizeStart={onResizeStart}
             minConstraints={[340, 240]}
             maxConstraints={[2400, 1800]}
             resizeHandles={isMaximized || isMobile ? [] : ["se", "s", "e"]}
@@ -254,15 +504,37 @@ export function Window({
                 </button>
 
                 {/* Maximize — emerald, hosts Snap Layouts flyout */}
-                <div className="relative">
+                <div
+                  className="relative"
+                  onMouseEnter={() => {
+                    if (isMobile) return;
+                    if (snapMenuTimer.current)
+                      clearTimeout(snapMenuTimer.current);
+                    if (!snapMenuOpen) {
+                      snapMenuTimer.current = setTimeout(
+                        () => setSnapMenuOpen(true),
+                        300
+                      );
+                    }
+                  }}
+                  onMouseLeave={() => {
+                    if (snapMenuTimer.current)
+                      clearTimeout(snapMenuTimer.current);
+                    snapMenuTimer.current = setTimeout(
+                      () => setSnapMenuOpen(false),
+                      200
+                    );
+                  }}
+                >
                   {!isMobile && (
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         toggleMaximize();
+                        setSnapMenuOpen(false);
                       }}
                       onDoubleClick={(e) => e.stopPropagation()}
-                      title={isMaximized ? "Restore" : "Maximize"}
+                      title={isMaximized ? "Restore" : "Maximize — hover for Snap Layouts"}
                       className="group/max relative w-[19px] h-[19px] rounded-full bg-emerald-500 hover:bg-emerald-400 text-white hover:!scale-110 flex items-center justify-center transition-all duration-150 cursor-pointer shadow-sm hover:shadow-[0_0_12px_rgba(16,185,129,0.6)] active:!scale-90"
                     >
                       <svg
@@ -284,6 +556,66 @@ export function Window({
                         )}
                       </svg>
                     </button>
+                  )}
+
+                  {/* Snap Layouts Flyout — pick a template, pick a zone */}
+                  {snapMenuOpen && !isMobile && (
+                    <div
+                      onMouseDown={(e) => e.stopPropagation()}
+                      onDoubleClick={(e) => e.stopPropagation()}
+                      className="absolute right-0 top-full mt-2 z-50 p-2 rounded-xl bg-white/95 dark:bg-zinc-900/95 border border-zinc-200/90 dark:border-zinc-700/80 shadow-2xl backdrop-blur-xl animate-in fade-in zoom-in-95 duration-150 origin-top-right"
+                    >
+                      <div className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-1.5 px-0.5">
+                        Snap Layouts
+                      </div>
+                      <div className="flex gap-1.5">
+                        {SNAP_TEMPLATES.map((t) => (
+                          <div
+                            key={t.id}
+                            title={t.name}
+                            className={cn(
+                              "grid content-start p-[3px] rounded-lg border bg-zinc-50 dark:bg-zinc-800/60 transition-colors",
+                              snapLayoutId === t.id && myAssignment != null
+                                ? "border-indigo-400 dark:border-indigo-500"
+                                : "border-zinc-200 dark:border-zinc-700"
+                            )}
+                            style={{
+                              display: "grid",
+                              gridTemplateColumns: `repeat(${t.cols}, 1fr)`,
+                              gridTemplateRows: `repeat(${t.rows}, 1fr)`,
+                              gap: 2,
+                              width: t.cols * 20,
+                              height: t.rows === t.cols ? t.rows * 15 : Math.max(26, t.rows * 15),
+                            }}
+                          >
+                            {t.zones.map((z, i) => {
+                              const isMine =
+                                snapLayoutId === t.id && myAssignment === i;
+                              return (
+                                <button
+                                  key={i}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    applyZone(t.id, i);
+                                  }}
+                                  title={`${t.name} — zone ${i + 1}`}
+                                  className={cn(
+                                    "rounded-[3px] min-h-[7px] transition-colors cursor-pointer",
+                                    isMine
+                                      ? "bg-indigo-500 ring-1 ring-indigo-300 dark:ring-indigo-600"
+                                      : "bg-zinc-300 dark:bg-zinc-600 hover:bg-indigo-400 dark:hover:bg-indigo-400"
+                                  )}
+                                  style={zoneGridStyle(z, t.cols, t.rows)}
+                                />
+                              );
+                            })}
+                          </div>
+                        ))}
+                      </div>
+                      <div className="text-[9px] text-zinc-400 dark:text-zinc-500 mt-1.5 px-0.5">
+                        Click a zone · other apps auto-fill
+                      </div>
+                    </div>
                   )}
                 </div>
 

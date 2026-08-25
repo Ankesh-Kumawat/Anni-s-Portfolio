@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
+import { SNAP_TEMPLATES } from "./snapLayouts";
 
 export type AppId =
   | "about"
@@ -44,11 +45,15 @@ interface OSContextType {
   openWindows: WindowState[];
   activeWindowId: AppId | null;
   notifications: OSNotification[];
+  snapLayoutId: string | null;
+  snapAssignments: Partial<Record<AppId, number>>;
   launchApp: (id: AppId) => void;
   closeWindow: (id: AppId) => void;
   minimizeWindow: (id: AppId) => void;
   focusWindow: (id: AppId) => void;
   isAppOpen: (id: AppId) => boolean;
+  assignSnapZone: (templateId: string, zoneIndex: number, windowId: AppId) => void;
+  clearWindowSnap: (windowId: AppId) => void;
   addNotification: (title: string, message: string) => void;
   markNotificationRead: (id: string) => void;
   clearNotifications: () => void;
@@ -61,6 +66,10 @@ export function OSProvider({ children }: { children: ReactNode }) {
   const [activeWindowId, setActiveWindowId] = useState<AppId | null>(null);
   const [zIndexCounter, setZIndexCounter] = useState(10);
   const [notifications, setNotifications] = useState<OSNotification[]>([]);
+  const [snapLayoutId, setSnapLayoutId] = useState<string | null>(null);
+  const [snapAssignments, setSnapAssignments] = useState<
+    Partial<Record<AppId, number>>
+  >({});
 
   const launchApp = (id: AppId) => {
     // Check if running on mobile
@@ -92,6 +101,12 @@ export function OSProvider({ children }: { children: ReactNode }) {
 
   const closeWindow = (id: AppId) => {
     setOpenWindows((prev) => prev.filter((w) => w.id !== id));
+    setSnapAssignments((prev) => {
+      if (!(id in prev)) return prev;
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
     if (activeWindowId === id) {
       setActiveWindowId(null);
     }
@@ -127,6 +142,48 @@ export function OSProvider({ children }: { children: ReactNode }) {
     return openWindows.some((w) => w.id === id);
   };
 
+  /**
+   * Assign a single window to a snap zone. Only THIS window moves —
+   * every other app stays exactly where it is. If another window
+   * already occupies the clicked zone, that window is freed instead.
+   */
+  const assignSnapZone = (
+    templateId: string,
+    zoneIndex: number,
+    windowId: AppId
+  ) => {
+    const template = SNAP_TEMPLATES.find((t) => t.id === templateId);
+    if (!template || zoneIndex < 0 || zoneIndex >= template.zones.length)
+      return;
+
+    const next: Partial<Record<AppId, number>> = {};
+
+    if (snapLayoutId === templateId) {
+      for (const [wid, zi] of Object.entries(snapAssignments)) {
+        const otherId = wid as AppId;
+        if (otherId === windowId) continue;
+        const z = zi as number;
+        if (z !== zoneIndex && z < template.zones.length) {
+          next[otherId] = z;
+        }
+      }
+    }
+
+    next[windowId] = zoneIndex;
+    setSnapLayoutId(templateId);
+    setSnapAssignments(next);
+  };
+
+  /** Free a window from its snap zone (e.g. user dragged/resized it manually). */
+  const clearWindowSnap = (windowId: AppId) => {
+    setSnapAssignments((prev) => {
+      if (!(windowId in prev)) return prev;
+      const next = { ...prev };
+      delete next[windowId];
+      return next;
+    });
+  };
+
   const addNotification = (title: string, message: string) => {
     const notification: OSNotification = {
       id: Date.now().toString(),
@@ -159,11 +216,15 @@ export function OSProvider({ children }: { children: ReactNode }) {
         openWindows,
         activeWindowId,
         notifications,
+        snapLayoutId,
+        snapAssignments,
         launchApp,
         closeWindow,
         minimizeWindow,
         focusWindow,
         isAppOpen,
+        assignSnapZone,
+        clearWindowSnap,
         addNotification,
         markNotificationRead,
         clearNotifications,
